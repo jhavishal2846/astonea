@@ -39,7 +39,7 @@ function drawProcedural(
   const progress = frameCount > 1 ? frameIndex / (frameCount - 1) : 0
   const hue   = 200 + progress * 80
   const hue2  = 210 + progress * 80
-
+ 
   /* Background gradient */
   const bg = ctx.createLinearGradient(0, 0, w, h)
   bg.addColorStop(0,   `hsl(${hue},70%,12%)`)
