@@ -1,0 +1,150 @@
+import type { Metadata } from 'next'
+import { PageHeader } from '@/components/PageHeader'
+import { Reveal } from '@/components/StaggerReveal'
+
+export const metadata: Metadata = {
+  title: 'CSR',
+  description: 'Astonea Labs\' corporate social responsibility — ecological preservation, social empowerment, and community advancement.',
+}
+
+const focusAreas = [
+  {
+    title: 'Ecological Preservation',
+    desc: 'Promoting eco-conscious manufacturing practices, reducing industrial waste, and supporting environmental stewardship in the communities where we operate.',
+    icon: '🌱',
+  },
+  {
+    title: 'Social Empowerment',
+    desc: 'Initiatives that uplift individuals through education, skill development, and access to healthcare — creating lasting socioeconomic change.',
+    icon: '🤝',
+  },
+  {
+    title: 'Community Advancement',
+    desc: 'Direct investment in the welfare and development of communities surrounding our manufacturing and operational footprint in Haryana and Chandigarh.',
+    icon: '🏘',
+  },
+]
+
+const principles = [
+  'CSR is integrated into every layer of our business strategy — not treated as an afterthought or compliance checkbox',
+  'We are committed to sustainability, ethical governance, and societal enrichment as core operating values',
+  'Our CSR activities are governed by a formal CSR Policy reviewed and approved by the Board of Directors',
+  'The Astonea Foundation acts as the primary vehicle for community engagement and philanthropic activities',
+  'All CSR expenditure and activities are disclosed in the Annual Report in accordance with the Companies Act, 2013',
+]
+
+export default function CSRPage() {
+  return (
+    <div className="flex-1 flex flex-col">
+      <PageHeader
+        eyebrow="Corporate Social Responsibility"
+        title="CSR"
+        description="Sowing responsibility today, reaping a brighter world tomorrow."
+        breadcrumb={[{ label: 'CSR', href: '/csr' }]}
+      />
+
+      {/* Philosophy */}
+      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+        <div className="container-wide">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <Reveal>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--color-primary)' }}>
+                  Our Philosophy
+                </p>
+                <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-6 text-balance" style={{ color: 'var(--color-ink)' }}>
+                  Beyond compliance — purpose-driven responsibility
+                </h2>
+                <p className="text-base leading-relaxed mb-5" style={{ color: 'var(--color-ink-muted)' }}>
+                  At Astonea Labs, corporate social responsibility goes beyond mandatory compliance. We integrate
+                  sustainability, ethical governance, and societal enrichment into the very fabric of our operations —
+                  treating every initiative as a deliberate act of foresight for generations yet to come.
+                </p>
+                <p className="text-base leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
+                  Our approach is guided by a formal CSR Policy approved by the Board of Directors, with activities
+                  executed through the <strong>Astonea Foundation</strong> — our dedicated non-profit arm committed
+                  to nurturing a resilient and luminous legacy.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <div className="p-10 rounded-3xl" style={{ background: 'var(--color-slate-950)' }}>
+                <p className="font-display text-2xl font-semibold italic text-white leading-snug mb-6">
+                  "Sowing responsibility today, reaping a brighter world tomorrow."
+                </p>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  — Astonea Labs CSR Philosophy
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Focus areas */}
+      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+        <div className="container-wide">
+          <Reveal>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+              Focus Areas
+            </p>
+            <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-14 text-balance" style={{ color: 'var(--color-ink)' }}>
+              Three pillars of our CSR commitment
+            </h2>
+          </Reveal>
+          <div className="grid sm:grid-cols-3 gap-6">
+            {focusAreas.map((f, i) => (
+              <Reveal key={f.title} delay={i * 80}>
+                <div className="p-10 rounded-2xl border h-full text-center" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
+                  <div className="text-4xl mb-5">{f.icon}</div>
+                  <h3 className="font-display text-xl font-semibold mb-4" style={{ color: 'var(--color-ink)' }}>{f.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{f.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Principles */}
+      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+        <div className="container-wide">
+          <div className="max-w-3xl">
+            <Reveal>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+                Our Commitments
+              </p>
+              <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-10 text-balance" style={{ color: 'var(--color-ink)' }}>
+                How we hold ourselves accountable
+              </h2>
+            </Reveal>
+            <div className="space-y-4">
+              {principles.map((p, i) => (
+                <Reveal key={i} delay={i * 60}>
+                  <div className="flex items-start gap-4 p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold font-mono" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
+                      {i + 1}
+                    </div>
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{p}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+
+            <Reveal delay={200}>
+              <p className="mt-10 text-sm" style={{ color: 'var(--color-ink-subtle)' }}>
+                For full details on CSR spending, activities, and policy, refer to the CSR section in the company's
+                Annual Report, available at the{' '}
+                <a href="/annual-reports" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
+                  Annual Reports
+                </a>{' '}
+                page.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

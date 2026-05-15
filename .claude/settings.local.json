@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:astonea.org)",
+      "Bash(ffprobe -v quiet -print_format json -show_streams -show_format \"D:/astonea-labs/public/home.mp4\")",
+      "Bash(ffmpeg -y -i \"D:/astonea-labs/public/home.mp4\" -vf \"fps=30,scale=1920:1080\" -quality 80 \"D:/astonea-labs/public/frames/home-hero/frame_%04d.webp\")",
+      "Bash(ffmpeg -y -i \"D:/astonea-labs/public/home.mp4\" -vf \"fps=24,scale=1920:1080\" -q:v 3 \"D:/astonea-labs/public/frames/home-hero/frame_%04d.jpg\")",
+      "Bash(ffmpeg -encoders)",
+      "Bash(ffmpeg -y -i \"D:/astonea-labs/public/home.mp4\" -vf \"fps=30,scale=1920:1080\" -c:v libwebp -q:v 80 -f image2 \"D:/astonea-labs/public/frames/home-hero/frame_%04d.webp\")",
+      "Bash(cd /d D:\\\\astonea-labs)",
+      "Bash(npx next *)",
+      "PowerShell($r1 = Invoke-WebRequest -Uri \"https://duyucare.dops.agency/images/main_animation/desktop/1.webp\" -Method Head -UseBasicParsing; \"$\\($r1.StatusCode\\) — $\\($r1.Headers['Content-Type']\\) — $\\($r1.Headers['Content-Length']\\) bytes\")",
+      "PowerShell($r = Invoke-WebRequest -Uri \"https://duyucare.dops.agency/images/main_animation/desktop/1059.webp\" -Method Head -UseBasicParsing; \"$\\($r.StatusCode\\)\"; $r2 = Invoke-WebRequest -Uri \"https://duyucare.dops.agency/images/main_animation/desktop/1060.webp\" -Method Head -UseBasicParsing -ErrorAction SilentlyContinue; \"1060: $\\($r2.StatusCode\\)\")",
+      "PowerShell(curl.exe --version | Select-Object -First 2)",
+      "PowerShell(Get-Content *)",
+      "PowerShell(curl.exe -Z --parallel-max 5 -K \"$env:TEMP\\\\curl-frames-ascii.txt\" 2>&1 | Select-Object -First 10)",
+      "WebFetch(domain:prnt.sc)"
+    ]
+  }
+}
