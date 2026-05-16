@@ -83,47 +83,52 @@ export default function Regulation46Page() {
       <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="max-w-3xl space-y-14">
-            {disclosureCategories.map((cat, ci) => (
-              <div key={cat.heading}>
-                <Reveal>
-                  <h2 className="font-display text-xl font-bold mb-6 pb-3 border-b" style={{ color: 'var(--color-ink)', borderColor: 'var(--color-border)' }}>
-                    {cat.heading}
-                  </h2>
-                </Reveal>
-                <div className="space-y-3">
-                  {cat.items.map((item, ii) => (
-                    <Reveal key={item.title} delay={(ci + ii) * 40}>
-                      <div className="flex items-start gap-4 p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-primary-xlight)' }}>
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: 'var(--color-primary)' }}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12" />
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-semibold text-sm mb-1" style={{ color: 'var(--color-ink)' }}>{item.title}</p>
-                          <p className="text-xs leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{item.desc}</p>
-                        </div>
-                        {item.href ? (
-                          item.href.startsWith('/pdf/') ? (
-                            <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border self-start transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
-                              PDF
-                            </a>
-                          ) : (
-                            <Link href={item.href} className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border self-start transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
-                              View
-                            </Link>
-                          )
-                        ) : (
-                          <span className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-subtle)' }}>
-                            Soon
-                          </span>
-                        )}
-                      </div>
-                    </Reveal>
-                  ))}
+            {disclosureCategories.map((cat, ci) => {
+              let itemIndex = 0
+              return (
+                <div key={cat.heading}>
+                  <Reveal>
+                    <h2 className="font-display text-xl font-bold mb-6 pb-3 border-b" style={{ color: 'var(--color-ink)', borderColor: 'var(--color-border)' }}>
+                      {cat.heading}
+                    </h2>
+                  </Reveal>
+                  <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
+                    {cat.items.map((item, ii) => {
+                      itemIndex++
+                      const idx = itemIndex
+                      return (
+                        <Reveal key={item.title} delay={(ci + ii) * 40}>
+                          <div className="flex items-start gap-4 p-5 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-surface)' }}>
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-mono font-bold" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
+                              {String(idx).padStart(2, '0')}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold text-sm mb-1" style={{ color: 'var(--color-ink)' }}>{item.title}</p>
+                              <p className="text-xs leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{item.desc}</p>
+                            </div>
+                            {item.href ? (
+                              item.href.startsWith('/pdf/') ? (
+                                <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border self-start transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+                                  PDF
+                                </a>
+                              ) : (
+                                <Link href={item.href} className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border self-start transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+                                  View
+                                </Link>
+                              )
+                            ) : (
+                              <span className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-subtle)' }}>
+                                Soon
+                              </span>
+                            )}
+                          </div>
+                        </Reveal>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           <Reveal delay={300}>

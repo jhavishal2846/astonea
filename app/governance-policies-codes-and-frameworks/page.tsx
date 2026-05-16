@@ -37,7 +37,7 @@ const frameworks = [
 
 function DocRow({ index, title, desc, href }: { index: number; title: string; desc: string; href?: string }) {
   return (
-    <div className="flex items-start gap-4 p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+    <div className="flex items-start gap-4 p-5 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-surface)' }}>
       <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-mono font-bold" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
         {String(index).padStart(2, '0')}
       </div>
@@ -82,7 +82,7 @@ export default function GovernancePoliciesPage() {
               Board-approved governance policies
             </h2>
           </Reveal>
-          <div className="space-y-3 max-w-3xl">
+          <div className="space-y-px max-w-3xl" style={{ background: 'var(--color-border)' }}>
             {policies.map((p, i) => (
               <Reveal key={p.title} delay={i * 40}>
                 <DocRow index={i + 1} {...p} />
@@ -103,7 +103,7 @@ export default function GovernancePoliciesPage() {
               Codes governing conduct & disclosure
             </h2>
           </Reveal>
-          <div className="space-y-3 max-w-3xl">
+          <div className="space-y-px max-w-3xl" style={{ background: 'var(--color-border)' }}>
             {codes.map((c, i) => (
               <Reveal key={c.title} delay={i * 40}>
                 <DocRow index={i + 1} {...c} />
@@ -124,7 +124,7 @@ export default function GovernancePoliciesPage() {
               Frameworks governing compliance & evaluation
             </h2>
           </Reveal>
-          <div className="space-y-3 max-w-3xl">
+          <div className="space-y-px max-w-3xl" style={{ background: 'var(--color-border)' }}>
             {frameworks.map((f, i) => (
               <Reveal key={f.title} delay={i * 40}>
                 <DocRow index={i + 1} {...f} />
@@ -134,7 +134,8 @@ export default function GovernancePoliciesPage() {
 
           <Reveal delay={200}>
             <p className="mt-10 text-sm max-w-2xl" style={{ color: 'var(--color-ink-subtle)' }}>
-              All policies are reviewed periodically by the Board of Directors. For the most current versions of any policy document, contact <a href="mailto:cs@astonea.org" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>cs@astonea.org</a>.
+              All policies are reviewed periodically by the Board of Directors. For the most current versions of any policy document, contact{' '}
+              <a href="mailto:cs@astonea.org" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>cs@astonea.org</a>.
               CIN: L24304CH2017PLC041482.
             </p>
           </Reveal>

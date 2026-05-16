@@ -60,6 +60,13 @@ const keyFacts = [
   { label: 'Investor Contact', value: 'cs@astonea.org' },
 ]
 
+const irServices = [
+  { label: 'Investor Grievances', desc: 'SEBI-compliant investor grievance mechanism' },
+  { label: 'Share Transfers', desc: 'Registrar and share transfer agent contact' },
+  { label: 'Corporate Announcements', desc: 'Material events and exchange filings' },
+  { label: 'Newspaper Publications', desc: 'Statutory notices in approved newspapers' },
+]
+
 export default function InvestorInsightsPage() {
   return (
     <div className="flex-1 flex flex-col">
@@ -71,9 +78,9 @@ export default function InvestorInsightsPage() {
       />
 
       {/* Key facts */}
-      <section className="py-16" style={{ background: 'var(--color-surface)' }}>
+      <section className="py-14 border-b" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
         <div className="container-wide">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
             {keyFacts.map((f) => (
               <div key={f.label} className="flex flex-col">
                 <span className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--color-ink-subtle)' }}>{f.label}</span>
@@ -102,10 +109,10 @@ export default function InvestorInsightsPage() {
                   <span className="font-mono text-xs font-bold tracking-widest mb-5 block" style={{ color: 'var(--color-primary-light)' }}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <h3 className="font-semibold text-base mb-2 group-hover:text-primary transition-colors" style={{ color: 'var(--color-ink)' }}>{l.title}</h3>
+                  <h3 className="font-semibold text-base mb-2" style={{ color: 'var(--color-ink)' }}>{l.title}</h3>
                   <p className="text-xs leading-relaxed flex-1" style={{ color: 'var(--color-ink-muted)' }}>{l.desc}</p>
-                  <div className="mt-4 flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>
-                    View <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
+                  <div className="mt-4 text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>
+                    View →
                   </div>
                 </Link>
               </Reveal>
@@ -126,17 +133,17 @@ export default function InvestorInsightsPage() {
                 <h2 className="font-display text-3xl font-bold text-white leading-snug mb-5">
                   Questions? Reach our Company Secretary.
                 </h2>
-                <p className="text-base leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                <p className="text-base leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.72)' }}>
                   For investor grievances, shareholding queries, transfer requests, or compliance-related matters —
                   please reach out to our Compliance Officer.
                 </p>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Company Secretary & Compliance Officer</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.55)' }}>Company Secretary & Compliance Officer</p>
                     <p className="text-sm text-white">Mr. Ankit Kapoor</p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Email</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.55)' }}>Email</p>
                     <a href="mailto:cs@astonea.org" className="text-sm hover:underline" style={{ color: 'var(--color-primary-light)' }}>cs@astonea.org</a>
                   </div>
                 </div>
@@ -144,15 +151,10 @@ export default function InvestorInsightsPage() {
             </Reveal>
             <Reveal delay={80}>
               <div className="grid grid-cols-2 gap-4">
-                {[
-                  { label: 'Investor Grievances', desc: 'SEBI-compliant investor grievance mechanism' },
-                  { label: 'Share Transfers', desc: 'Registrar and share transfer agent contact' },
-                  { label: 'Corporate Announcements', desc: 'Material events and exchange filings' },
-                  { label: 'Newspaper Publications', desc: 'Statutory notices in approved newspapers' },
-                ].map((item) => (
-                  <div key={item.label} className="p-5 rounded-xl border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.08)' }}>
+                {irServices.map((item) => (
+                  <div key={item.label} className="p-5 rounded-xl border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
                     <p className="text-sm font-semibold text-white mb-1">{item.label}</p>
-                    <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>{item.desc}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>{item.desc}</p>
                   </div>
                 ))}
               </div>

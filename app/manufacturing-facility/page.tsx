@@ -9,29 +9,29 @@ export const metadata: Metadata = {
 }
 
 const capabilities = [
-  { label: 'Tablets & Capsules', detail: 'Conventional, film-coated, enteric-coated, and extended-release solid dosage forms.' },
-  { label: 'Syrups & Suspensions', detail: 'Liquid oral formulations manufactured under controlled aseptic conditions.' },
-  { label: 'Ointments & Creams', detail: 'Semi-solid topical preparations with precision texture and stability profiles.' },
-  { label: 'External Preparations', detail: 'Gels, lotions, and dermatological formulations across pharmaceutical and cosmetic lines.' },
-  { label: 'Cosmetic Preparations', detail: 'Serums, face wash, hair care, and personal-care white-label production.' },
-  { label: 'Nutraceuticals', detail: 'AYUSH-approved herbal, nutraceutical, and wellness formulations.' },
+  { num: '01', label: 'Tablets & Capsules', detail: 'Conventional, film-coated, enteric-coated, and extended-release solid dosage forms.' },
+  { num: '02', label: 'Syrups & Suspensions', detail: 'Liquid oral formulations manufactured under controlled aseptic conditions.' },
+  { num: '03', label: 'Ointments & Creams', detail: 'Semi-solid topical preparations with precision texture and stability profiles.' },
+  { num: '04', label: 'External Preparations', detail: 'Gels, lotions, and dermatological formulations across pharmaceutical and cosmetic lines.' },
+  { num: '05', label: 'Cosmetic Preparations', detail: 'Serums, face wash, hair care, and personal-care white-label production.' },
+  { num: '06', label: 'Nutraceuticals', detail: 'AYUSH-approved herbal, nutraceutical, and wellness formulations.' },
 ]
 
 const standards = [
-  { label: 'WHO-GMP', desc: 'World Health Organization Good Manufacturing Practices — our core production standard.' },
-  { label: 'ISO Standards', desc: 'ISO-certified quality management systems across manufacturing and support functions.' },
-  { label: 'cGMP', desc: 'Current Good Manufacturing Practice guidelines governing all production processes.' },
-  { label: 'AYUSH Approved', desc: 'Certified manufacturing lines for Ayurvedic, Unani, Siddha, and Homeopathic products.' },
-  { label: 'USFDA OTC', desc: 'USFDA audit completed for OTC (Over-the-Counter) product manufacturing.' },
+  { code: 'WHO-GMP', label: 'WHO-GMP', desc: 'World Health Organization Good Manufacturing Practices — our core production standard.' },
+  { code: 'ISO', label: 'ISO Standards', desc: 'ISO-certified quality management systems across manufacturing and support functions.' },
+  { code: 'cGMP', label: 'cGMP', desc: 'Current Good Manufacturing Practice guidelines governing all production processes.' },
+  { code: 'AYUSH', label: 'AYUSH Approved', desc: 'Certified manufacturing lines for Ayurvedic, Unani, Siddha, and Homeopathic products.' },
+  { code: 'USFDA', label: 'USFDA OTC', desc: 'USFDA audit completed for OTC (Over-the-Counter) product manufacturing.' },
 ]
 
 const infrastructure = [
-  { title: 'Modern Machinery', desc: 'Advanced process-control systems and precision manufacturing equipment for batch-to-batch consistency.' },
-  { title: 'Dedicated Manufacturing Zones', desc: 'Segregated production areas for different dosage forms, preventing cross-contamination.' },
-  { title: 'Quality Control Lab', desc: 'Sophisticated analytical instruments for raw material, in-process, and finished-goods testing.' },
-  { title: 'Quality Assurance Department', desc: 'Independent QA team conducting in-process audits, stability studies, and compliance reviews.' },
-  { title: 'Controlled Environments', desc: 'HVAC-regulated, ISO-classified cleanrooms ensuring sterility and particulate control.' },
-  { title: 'Logistics Access', desc: 'Proximity to North Indian commercial and regulatory centres with strong transport connectivity.' },
+  { num: '01', title: 'Modern Machinery', desc: 'Advanced process-control systems and precision manufacturing equipment for batch-to-batch consistency.' },
+  { num: '02', title: 'Dedicated Manufacturing Zones', desc: 'Segregated production areas for different dosage forms, preventing cross-contamination.' },
+  { num: '03', title: 'Quality Control Lab', desc: 'Sophisticated analytical instruments for raw material, in-process, and finished-goods testing.' },
+  { num: '04', title: 'Quality Assurance Department', desc: 'Independent QA team conducting in-process audits, stability studies, and compliance reviews.' },
+  { num: '05', title: 'Controlled Environments', desc: 'HVAC-regulated, ISO-classified cleanrooms ensuring sterility and particulate control.' },
+  { num: '06', title: 'Logistics Access', desc: 'Proximity to North Indian commercial and regulatory centres with strong transport connectivity.' },
 ]
 
 export default function ManufacturingFacilityPage() {
@@ -103,12 +103,13 @@ export default function ManufacturingFacilityPage() {
               Built for precision and compliance
             </h2>
           </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: 'rgba(255,255,255,0.08)' }}>
             {infrastructure.map((item, i) => (
               <Reveal key={item.title} delay={i * 60}>
-                <div className="p-8 rounded-2xl border h-full" style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
-                  <h3 className="font-semibold text-white mb-3">{item.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>{item.desc}</p>
+                <div className="flex flex-col gap-3 p-8 h-full" style={{ background: 'var(--color-slate-950)' }}>
+                  <span className="font-mono text-xs font-bold tracking-widest" style={{ color: 'var(--color-primary-light)' }}>{item.num}</span>
+                  <h3 className="font-semibold text-white">{item.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>{item.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -125,10 +126,13 @@ export default function ManufacturingFacilityPage() {
               Diverse dosage forms under one roof
             </h2>
           </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: 'var(--color-border)' }}>
             {capabilities.map((c, i) => (
               <Reveal key={c.label} delay={i * 60}>
-                <div className="flex flex-col gap-2 p-6 rounded-xl border" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
+                <div className="flex flex-col gap-3 p-8 h-full" style={{ background: 'var(--color-bg)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                    {c.num}
+                  </span>
                   <span className="text-sm font-semibold" style={{ color: 'var(--color-ink)' }}>{c.label}</span>
                   <span className="text-xs leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{c.detail}</span>
                 </div>
@@ -155,8 +159,8 @@ export default function ManufacturingFacilityPage() {
             {standards.map((s, i) => (
               <Reveal key={s.label} delay={i * 60}>
                 <div className="flex items-start gap-4 p-6 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-bold" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
-                    ✓
+                  <div className="px-3 py-1.5 rounded-lg flex-shrink-0 text-xs font-bold font-mono" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
+                    {s.code}
                   </div>
                   <div>
                     <p className="font-semibold text-sm mb-1" style={{ color: 'var(--color-ink)' }}>{s.label}</p>
@@ -168,7 +172,7 @@ export default function ManufacturingFacilityPage() {
           </div>
           <Reveal delay={200}>
             <div className="mt-10">
-              <Link href="/certifications" className="inline-flex items-center gap-2 text-sm font-semibold transition-colors" style={{ color: 'var(--color-primary)' }}>
+              <Link href="/certifications" className="text-sm font-semibold transition-colors hover:underline" style={{ color: 'var(--color-primary)' }}>
                 View All Certifications →
               </Link>
             </div>

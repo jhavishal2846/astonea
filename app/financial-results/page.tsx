@@ -39,28 +39,27 @@ const deviationStatements = [
   { period: 'H1 FY 2025–26 (Sep 30, 2025)', label: 'Non-Applicability of Statement of Deviation or Variation', href: '/pdf/Non- Applicability of Statement of Variation or Deviation.pdf' },
 ]
 
+const typeColors: Record<string, { bg: string; text: string }> = {
+  Annual:        { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
+  'Half-Yearly': { bg: 'rgba(232,169,0,0.12)',        text: '#8A6000' },
+  Restated:      { bg: 'var(--color-slate-100)',       text: 'var(--color-slate-600)' },
+}
+
 function DocRow({ period, label, type, href }: { period: string; label: string; type?: string; href?: string }) {
-  const typeColors: Record<string, { bg: string; text: string }> = {
-    Annual:        { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
-    'Half-Yearly': { bg: 'rgba(232,169,0,0.1)',         text: 'var(--color-accent-dark)' },
-    Restated:      { bg: 'var(--color-slate-100)',       text: 'var(--color-slate-600)' },
-  }
   const tc = type ? (typeColors[type] ?? typeColors.Restated) : null
 
   return (
-    <div className="flex items-center justify-between p-5 rounded-xl border transition-colors hover:border-blue-200" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+    <div className="flex items-center justify-between p-5 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-surface)' }}>
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-primary-xlight)' }}>
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--color-primary)' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-          </svg>
+        <div className="px-2.5 py-1.5 rounded-lg flex-shrink-0" style={{ background: 'var(--color-primary-xlight)' }}>
+          <span className="text-xs font-mono font-bold" style={{ color: 'var(--color-primary)' }}>DOC</span>
         </div>
         <div>
           <p className="font-medium text-sm" style={{ color: 'var(--color-ink)' }}>{label}</p>
           <p className="text-xs mt-0.5" style={{ color: 'var(--color-ink-subtle)' }}>{period}</p>
         </div>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-shrink-0">
         {tc && (
           <span className="hidden sm:block text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: tc.bg, color: tc.text }}>
             {type}
@@ -75,6 +74,24 @@ function DocRow({ period, label, type, href }: { period: string; label: string; 
             Soon
           </span>
         )}
+      </div>
+    </div>
+  )
+}
+
+function Section({ eyebrow, heading, children }: { eyebrow: string; heading: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <Reveal>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+          {eyebrow}
+        </p>
+        <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-6" style={{ color: 'var(--color-ink)' }}>
+          {heading}
+        </h2>
+      </Reveal>
+      <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
+        {children}
       </div>
     </div>
   )
@@ -97,102 +114,46 @@ export default function FinancialResultsPage() {
         <div className="container-wide">
           <div className="max-w-3xl space-y-14">
 
-            {/* Annual */}
-            <div>
-              <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
-                  Annual Financial Statements
-                </p>
-                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
-                  Audited Annual Results
-                </h2>
-              </Reveal>
-              <div className="space-y-3">
-                {annualResults.map((r, i) => (
-                  <Reveal key={r.period} delay={i * 50}>
-                    <DocRow {...r} />
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+            <Section eyebrow="Annual Financial Statements" heading="Audited Annual Results">
+              {annualResults.map((r, i) => (
+                <Reveal key={r.period} delay={i * 50}>
+                  <DocRow {...r} />
+                </Reveal>
+              ))}
+            </Section>
 
-            {/* Interim */}
-            <div>
-              <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
-                  Interim & Restated Statements
-                </p>
-                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
-                  Half-Yearly & Restated Results
-                </h2>
-              </Reveal>
-              <div className="space-y-3">
-                {interimResults.map((r, i) => (
-                  <Reveal key={r.period} delay={i * 50}>
-                    <DocRow {...r} />
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+            <Section eyebrow="Interim & Restated Statements" heading="Half-Yearly & Restated Results">
+              {interimResults.map((r, i) => (
+                <Reveal key={r.period} delay={i * 50}>
+                  <DocRow {...r} />
+                </Reveal>
+              ))}
+            </Section>
 
-            {/* Annual Returns MGT-7 */}
-            <div>
-              <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
-                  Annual Returns
-                </p>
-                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
-                  Form MGT-7
-                </h2>
-              </Reveal>
-              <div className="space-y-3">
-                {annualReturns.map((r, i) => (
-                  <Reveal key={r.period} delay={i * 50}>
-                    <DocRow {...r} />
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+            <Section eyebrow="Annual Returns" heading="Form MGT-7">
+              {annualReturns.map((r, i) => (
+                <Reveal key={r.period} delay={i * 50}>
+                  <DocRow {...r} />
+                </Reveal>
+              ))}
+            </Section>
 
-            {/* Board Meeting Notices */}
-            <div>
-              <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
-                  Board Meeting Notices
-                </p>
-                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
-                  Notices for Financial Results
-                </h2>
-              </Reveal>
-              <div className="space-y-3">
-                {boardNotices.map((r, i) => (
-                  <Reveal key={r.date} delay={i * 50}>
-                    <DocRow label={r.label} period={r.date} href={r.href} />
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+            <Section eyebrow="Board Meeting Notices" heading="Notices for Financial Results">
+              {boardNotices.map((r, i) => (
+                <Reveal key={r.date} delay={i * 50}>
+                  <DocRow label={r.label} period={r.date} href={r.href} />
+                </Reveal>
+              ))}
+            </Section>
 
-            {/* Deviation Statements */}
-            <div>
-              <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
-                  Statement of Deviation or Variation
-                </p>
-                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
-                  IPO Proceeds Utilisation
-                </h2>
-              </Reveal>
-              <div className="space-y-3">
-                {deviationStatements.map((r, i) => (
-                  <Reveal key={r.period} delay={i * 50}>
-                    <DocRow {...r} />
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+            <Section eyebrow="Statement of Deviation or Variation" heading="IPO Proceeds Utilisation">
+              {deviationStatements.map((r, i) => (
+                <Reveal key={r.period} delay={i * 50}>
+                  <DocRow {...r} />
+                </Reveal>
+              ))}
+            </Section>
 
-            {/* Disclaimer */}
             <Reveal>
               <div className="p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
                 <p className="text-xs leading-relaxed" style={{ color: 'var(--color-ink-subtle)' }}>

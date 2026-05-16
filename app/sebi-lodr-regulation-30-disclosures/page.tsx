@@ -48,7 +48,7 @@ const eventCategories = [
       { title: 'Incorporation of WOS — Astonea LLC (USA)', date: '26 Jan 2026', desc: 'Astonea Labs Limited incorporated a wholly-owned foreign subsidiary, Astonea LLC, in Sheridan, Wyoming, USA.', href: '/pdf/Incorporation of WOS- USA.pdf' },
     ],
   },
-  {  
+  {
     heading: 'IPO & Acquisitions',
     items: [
       { title: 'Acquisition of Equity Stake — Damaira Pharmaceuticals', date: '31 Mar 2026', desc: 'Astonea Labs acquired approximately 25.74% equity stake in Damaira Pharmaceuticals Private Limited for INR 6.25 Crores.', href: '/pdf/Acquisition.pdf' },
@@ -101,10 +101,10 @@ export default function Regulation30Page() {
                     {cat.heading}
                   </h2>
                 </Reveal>
-                <div className="space-y-3">
+                <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
                   {cat.items.map((item, ii) => (
                     <Reveal key={item.title} delay={(ci + ii) * 40}>
-                      <div className="flex items-start gap-4 p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                      <div className="flex items-start gap-4 p-5 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-surface)' }}>
                         <div className="flex-1">
                           <div className="flex items-start justify-between gap-4 mb-2">
                             <p className="font-semibold text-sm" style={{ color: 'var(--color-ink)' }}>{item.title}</p>

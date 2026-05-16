@@ -69,9 +69,9 @@ export default function PublicOfferingPage() {
               </div>
             </Reveal>
 
-            <StaggerReveal className="space-y-3">
+            <StaggerReveal className="space-y-px" style={{ background: 'var(--color-border)' }}>
               {listingDetails.map((d) => (
-                <div key={d.label} className="flex items-start gap-4 p-4 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                <div key={d.label} className="flex items-start gap-4 p-4" style={{ background: 'var(--color-surface)' }}>
                   <p className="text-xs font-semibold w-40 flex-shrink-0" style={{ color: 'var(--color-ink-subtle)' }}>{d.label}</p>
                   <p className="text-sm font-medium" style={{ color: 'var(--color-ink)' }}>{d.value}</p>
                 </div>
@@ -92,14 +92,12 @@ export default function PublicOfferingPage() {
               IPO & listing documents
             </h2>
           </Reveal>
-          <div className="space-y-3 max-w-3xl">
+          <div className="space-y-px max-w-3xl" style={{ background: 'var(--color-border)' }}>
             {documents.map((d, i) => (
               <Reveal key={d.title} delay={i * 50}>
-                <div className="flex items-start gap-4 p-5 rounded-xl border" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-primary-xlight)' }}>
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: 'var(--color-primary)' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                    </svg>
+                <div className="flex items-start gap-4 p-5 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-bg)' }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-mono font-bold" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
+                    {String(i + 1).padStart(2, '0')}
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-sm mb-1" style={{ color: 'var(--color-ink)' }}>{d.title}</p>

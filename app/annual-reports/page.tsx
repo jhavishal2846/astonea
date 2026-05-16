@@ -70,10 +70,10 @@ export default function AnnualReportsPage() {
             </h2>
           </Reveal>
 
-          <div className="space-y-4 max-w-3xl">
+          <div className="space-y-px max-w-3xl" style={{ background: 'var(--color-border)' }}>
             {reports.map((r, i) => (
               <Reveal key={r.year} delay={i * 60}>
-                <div className="flex items-start gap-6 p-6 rounded-2xl border transition-colors hover:border-blue-200" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                <div className="flex items-start gap-6 p-6 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-surface)' }}>
                   <div className="flex-shrink-0 w-20 h-20 rounded-xl flex flex-col items-center justify-center" style={{ background: 'var(--color-primary-xlight)' }}>
                     <span className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>FY</span>
                     <span className="font-display font-bold text-sm leading-tight text-center" style={{ color: 'var(--color-primary)' }}>{r.year}</span>
@@ -84,7 +84,7 @@ export default function AnnualReportsPage() {
                     <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{r.desc}</p>
                   </div>
 
-                  <div className="flex-shrink-0 flex items-center gap-2">
+                  <div className="flex-shrink-0 flex items-center">
                     <a
                       href={r.href}
                       target="_blank"
