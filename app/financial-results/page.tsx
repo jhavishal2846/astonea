@@ -8,26 +8,44 @@ export const metadata: Metadata = {
 }
 
 const annualResults = [
-  { period: 'FY 2024–2025', label: 'Annual Financial Statements', type: 'Annual' },
-  { period: 'FY 2023–2024', label: 'Annual Financial Statements', type: 'Annual' },
-  { period: 'FY 2022–2023', label: 'Annual Financial Statements', type: 'Annual' },
-  { period: 'FY 2021–2022', label: 'Annual Financial Statements', type: 'Annual' },
-  { period: 'FY 2020–2021', label: 'Annual Financial Statements', type: 'Annual' },
+  { period: 'FY 2024–2025', label: 'Annual Financial Statements', type: 'Annual', href: '/pdf/Financial Statements FY 2024-25.pdf' },
+  { period: 'FY 2023–2024', label: 'Annual Financial Statements', type: 'Annual', href: '/pdf/Financial Statements FY 2023-24.pdf' },
+  { period: 'FY 2022–2023', label: 'Annual Financial Statements', type: 'Annual', href: '/pdf/Annual Report FY 2022-23.pdf' },
+  { period: 'FY 2021–2022', label: 'Annual Financial Statements', type: 'Annual', href: '/pdf/Annual Report FY 2021-22.pdf' },
+  { period: 'FY 2020–2021', label: 'Annual Financial Statements', type: 'Annual', href: '/pdf/Annual Report FY 2020-21.pdf' },
 ]
 
 const interimResults = [
-  { period: 'Half-Yearly — Sep 2025', label: 'Unaudited Financial Results for H1 FY2025-26', type: 'Half-Yearly' },
+  { period: 'Half-Yearly — Sep 2025', label: 'Unaudited Financial Results for H1 FY2025-26', type: 'Half-Yearly', href: '/pdf/financialresults-Half Yearly Result- 30.09.2025.pdf' },
   { period: 'Restated — Dec 31, 2024', label: 'Restated Financial Statements as at Dec 31, 2024', type: 'Restated' },
   { period: 'Restated — Mar 31, 2024', label: 'Restated Financial Statements as at Mar 31, 2024', type: 'Restated' },
 ]
 
-function DocRow({ period, label, type }: { period: string; label: string; type: string }) {
+const annualReturns = [
+  { period: 'FY 2024–2025', label: 'Annual Return — Form MGT-7', href: '/pdf/Form MGT-7 2024-25.pdf' },
+  { period: 'FY 2023–2024', label: 'Annual Return — Form MGT-7', href: '/pdf/Form MGT 7 23-24.pdf' },
+  { period: 'FY 2022–2023', label: 'Annual Return — Form MGT-7', href: '/pdf/Form MGT 7 22-23.pdf' },
+  { period: 'FY 2021–2022', label: 'Annual Return — Form MGT-7A', href: '/pdf/Form MGT 7A 21-22.pdf' },
+  { period: 'FY 2020–2021', label: 'Annual Return — Form MGT-7', href: '/pdf/Form MGT 7 20-21.pdf' },
+  { period: 'FY 2019–2020', label: 'Annual Return — Form MGT-7', href: '/pdf/Form MGT 7 19-20.pdf' },
+]
+
+const boardNotices = [
+  { date: '6 Nov 2025', label: 'Board Meeting Notice — 6th November 2025', href: '/pdf/board-meeting-ntc-06th Nov, 2025.pdf' },
+  { date: '4 Jul 2025', label: 'Board Meeting Notice — 4th July 2025', href: '/pdf/board-meeting-ntc-04th July, 2025.pdf' },
+]
+
+const deviationStatements = [
+  { period: 'H1 FY 2025–26 (Sep 30, 2025)', label: 'Non-Applicability of Statement of Deviation or Variation', href: '/pdf/Non- Applicability of Statement of Variation or Deviation.pdf' },
+]
+
+function DocRow({ period, label, type, href }: { period: string; label: string; type?: string; href?: string }) {
   const typeColors: Record<string, { bg: string; text: string }> = {
-    Annual:     { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
-    'Half-Yearly': { bg: 'rgba(232,169,0,0.1)', text: 'var(--color-accent-dark)' },
-    Restated:   { bg: 'var(--color-slate-100)', text: 'var(--color-slate-600)' },
+    Annual:        { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
+    'Half-Yearly': { bg: 'rgba(232,169,0,0.1)',         text: 'var(--color-accent-dark)' },
+    Restated:      { bg: 'var(--color-slate-100)',       text: 'var(--color-slate-600)' },
   }
-  const tc = typeColors[type] ?? typeColors.Restated
+  const tc = type ? (typeColors[type] ?? typeColors.Restated) : null
 
   return (
     <div className="flex items-center justify-between p-5 rounded-xl border transition-colors hover:border-blue-200" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
@@ -43,12 +61,20 @@ function DocRow({ period, label, type }: { period: string; label: string; type: 
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <span className="hidden sm:block text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: tc.bg, color: tc.text }}>
-          {type}
-        </span>
-        <span className="text-xs font-medium px-3 py-1.5 rounded-full border cursor-default" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-muted)' }}>
-          PDF
-        </span>
+        {tc && (
+          <span className="hidden sm:block text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: tc.bg, color: tc.text }}>
+            {type}
+          </span>
+        )}
+        {href ? (
+          <a href={href} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+            PDF
+          </a>
+        ) : (
+          <span className="text-xs font-medium px-3 py-1.5 rounded-full border cursor-default" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-muted)' }}>
+            Soon
+          </span>
+        )}
       </div>
     </div>
   )
@@ -109,6 +135,63 @@ export default function FinancialResultsPage() {
               </div>
             </div>
 
+            {/* Annual Returns MGT-7 */}
+            <div>
+              <Reveal>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+                  Annual Returns
+                </p>
+                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
+                  Form MGT-7
+                </h2>
+              </Reveal>
+              <div className="space-y-3">
+                {annualReturns.map((r, i) => (
+                  <Reveal key={r.period} delay={i * 50}>
+                    <DocRow {...r} />
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+
+            {/* Board Meeting Notices */}
+            <div>
+              <Reveal>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+                  Board Meeting Notices
+                </p>
+                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
+                  Notices for Financial Results
+                </h2>
+              </Reveal>
+              <div className="space-y-3">
+                {boardNotices.map((r, i) => (
+                  <Reveal key={r.date} delay={i * 50}>
+                    <DocRow label={r.label} period={r.date} href={r.href} />
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+
+            {/* Deviation Statements */}
+            <div>
+              <Reveal>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+                  Statement of Deviation or Variation
+                </p>
+                <h2 className="font-display text-2xl lg:text-3xl font-bold leading-snug mb-8" style={{ color: 'var(--color-ink)' }}>
+                  IPO Proceeds Utilisation
+                </h2>
+              </Reveal>
+              <div className="space-y-3">
+                {deviationStatements.map((r, i) => (
+                  <Reveal key={r.period} delay={i * 50}>
+                    <DocRow {...r} />
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+
             {/* Disclaimer */}
             <Reveal>
               <div className="p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
@@ -117,6 +200,7 @@ export default function FinancialResultsPage() {
                 </p>
               </div>
             </Reveal>
+
           </div>
         </div>
       </section>

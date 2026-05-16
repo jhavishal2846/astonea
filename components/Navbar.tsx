@@ -313,11 +313,16 @@ export default function Navbar() {
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   /* Scroll-based solid/glass transition.
-     On the homepage the hero is 600vh; the sticky canvas unpins at ~500vh.
-     Keep nav transparent for that full section, then go solid. */
+     Large screens (≥1024px) show the 600vh scroll animation — stay transparent
+     until the animation section ends (~5× viewport height).
+     Small screens show a static hero (~100svh) — go solid just after it. */
   useEffect(() => {
-    const getThreshold = () =>
-      pathname === '/' ? window.innerHeight * 5 : 64
+    const getThreshold = () => {
+      if (pathname !== '/') return 64
+      return window.innerWidth >= 1024
+        ? window.innerHeight * 5
+        : window.innerHeight * 0.9
+    }
 
     const check = () => setScrolled(window.scrollY > getThreshold())
     check()

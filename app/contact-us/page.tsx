@@ -8,17 +8,14 @@ const offices = [
   {
     label: 'Registered Office',
     address: 'SCO 321-322, Basement, Sector 35B\nChandigarh — 160022',
-    icon: '🏛',
   },
   {
     label: 'Corporate Office',
     address: 'Plot No. 63, Industrial Area Phase-II\nPanchkula, Haryana — 134113',
-    icon: '🏢',
   },
   {
     label: 'Manufacturing Facility',
     address: 'Vill. Haripur, Tehsil Raipur Rani\nDist. Panchkula, Haryana — 134204',
-    icon: '🏭',
   },
 ]
 
@@ -67,7 +64,9 @@ export default function ContactUsPage() {
             {offices.map((o, i) => (
               <Reveal key={o.label} delay={i * 80}>
                 <div className="p-8 rounded-2xl border h-full" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  <div className="text-3xl mb-4">{o.icon}</div>
+                  <p className="font-mono text-xs font-bold tracking-widest mb-6" style={{ color: 'var(--color-primary-light)' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </p>
                   <h3 className="font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>{o.label}</h3>
                   <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--color-ink-muted)' }}>{o.address}</p>
                 </div>

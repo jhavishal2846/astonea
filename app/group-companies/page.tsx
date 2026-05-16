@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 
@@ -54,9 +55,87 @@ const companies = [
 ]
 
 const tagStyles: Record<string, { bg: string; text: string }> = {
-  Listed:     { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
-  Private:    { bg: 'var(--color-slate-100)',       text: 'var(--color-slate-600)' },
-  'Non-Profit': { bg: 'rgba(16,185,129,0.1)',       text: '#059669' },
+  Listed:       { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
+  Private:      { bg: 'var(--color-slate-100)',       text: 'var(--color-slate-600)' },
+  'Non-Profit': { bg: 'rgba(16,185,129,0.1)',         text: '#059669' },
+}
+
+const groupFinancials: { company: string; docs: { label: string; period: string; href?: string }[] }[] = [
+  {
+    company: 'Ascot Biolabs Private Limited',
+    docs: [
+      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Ascot Biolabs - Financial Statements 24-25.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Ascot Biolabs - Financial Statements 23-24.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2022–2023' },
+    ],
+  },
+  {
+    company: 'Shinto Organics Private Limited',
+    docs: [
+      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/SHINTO ORGANIC PVT LTD B.S.  2024-25.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Shinto Organics - Financial Statements 23-24.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2022–2023', href: '/pdf/Shinto Organics - Financial Statements 22-23.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2021–2022', href: '/pdf/Shinto Organics - Financial Statements 21-22.pdf' },
+    ],
+  },
+  {
+    company: 'Astonea One Private Limited',
+    docs: [
+      { label: 'Balance Sheet', period: 'FY 2024–2025', href: '/pdf/ASTONEA ONE -BS 2024-25.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2023–2024' },
+      { label: 'Annual Financial Statements', period: 'FY 2022–2023' },
+    ],
+  },
+  {
+    company: 'Astonea Limited',
+    docs: [
+      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Astonea Limited - Financial Statements 24-25.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Astonea Limited-23-24.pdf' },
+      { label: 'Balance Sheet', period: 'FY 2022–2023', href: '/pdf/ASTONEA LIMITED BALANCE SHEET-22-23.pdf' },
+    ],
+  },
+  {
+    company: 'Chemist India Limited',
+    docs: [
+      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Chemist India Ltd - Financial Statements 24-25.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Chemist India Ltd - Financial Statements 23-24.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2022–2023', href: '/pdf/Chemist India Ltd - Financial Statements 22-23.pdf' },
+      { label: 'Annual Financial Statements', period: 'FY 2021–2022', href: '/pdf/Chemist India Ltd - Financial Statements 21-22.pdf' },
+    ],
+  },
+  {
+    company: 'Astonea Foundation',
+    docs: [
+      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Astonea Foundation- Financial Statements 24-25.pdf' },
+    ],
+  },
+]
+
+function DocRow({ label, period, href }: { label: string; period: string; href?: string }) {
+  return (
+    <div className="flex items-center justify-between p-4 rounded-xl border" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-primary-xlight)' }}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} style={{ color: 'var(--color-primary)' }}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+          </svg>
+        </div>
+        <div>
+          <p className="font-medium text-sm" style={{ color: 'var(--color-ink)' }}>{label}</p>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--color-ink-subtle)' }}>{period}</p>
+        </div>
+      </div>
+      {href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+          PDF
+        </a>
+      ) : (
+        <span className="text-xs font-medium px-3 py-1.5 rounded-full border" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-muted)' }}>
+          Soon
+        </span>
+      )}
+    </div>
+  )
 }
 
 export default function GroupCompaniesPage() {
@@ -113,6 +192,48 @@ export default function GroupCompaniesPage() {
                 </Reveal>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Group financials */}
+      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+        <div className="container-wide">
+          <Reveal>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+              Financial Documents
+            </p>
+            <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-4 text-balance" style={{ color: 'var(--color-ink)' }}>
+              Group company financials
+            </h2>
+            <p className="text-base mb-14 max-w-2xl" style={{ color: 'var(--color-ink-muted)' }}>
+              Annual financial statements for each entity within the Astonea group. For Astonea Labs Limited financials, refer to the{' '}
+              <Link href="/financial-results" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
+                Financial Results
+              </Link>{' '}
+              and{' '}
+              <Link href="/annual-reports" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
+                Annual Reports
+              </Link>{' '}
+              pages.
+            </p>
+          </Reveal>
+
+          <div className="space-y-12 max-w-3xl">
+            {groupFinancials.map((group, gi) => (
+              <Reveal key={group.company} delay={gi * 60}>
+                <div>
+                  <h3 className="font-display text-lg font-semibold mb-4 pb-3 border-b" style={{ color: 'var(--color-ink)', borderColor: 'var(--color-border)' }}>
+                    {group.company}
+                  </h3>
+                  <div className="space-y-3">
+                    {group.docs.map((doc, di) => (
+                      <DocRow key={`${group.company}-${doc.period}`} {...doc} />
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>

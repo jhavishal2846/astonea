@@ -11,17 +11,14 @@ const focusAreas = [
   {
     title: 'Ecological Preservation',
     desc: 'Promoting eco-conscious manufacturing practices, reducing industrial waste, and supporting environmental stewardship in the communities where we operate.',
-    icon: '🌱',
   },
   {
     title: 'Social Empowerment',
     desc: 'Initiatives that uplift individuals through education, skill development, and access to healthcare — creating lasting socioeconomic change.',
-    icon: '🤝',
   },
   {
     title: 'Community Advancement',
     desc: 'Direct investment in the welfare and development of communities surrounding our manufacturing and operational footprint in Haryana and Chandigarh.',
-    icon: '🏘',
   },
 ]
 
@@ -96,8 +93,10 @@ export default function CSRPage() {
           <div className="grid sm:grid-cols-3 gap-6">
             {focusAreas.map((f, i) => (
               <Reveal key={f.title} delay={i * 80}>
-                <div className="p-10 rounded-2xl border h-full text-center" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-                  <div className="text-4xl mb-5">{f.icon}</div>
+                <div className="p-10 rounded-2xl border h-full" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
+                  <p className="font-mono text-xs font-bold tracking-widest mb-6" style={{ color: 'var(--color-primary-light)' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </p>
                   <h3 className="font-display text-xl font-semibold mb-4" style={{ color: 'var(--color-ink)' }}>{f.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{f.desc}</p>
                 </div>

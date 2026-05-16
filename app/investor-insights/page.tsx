@@ -13,49 +13,41 @@ const quickLinks = [
     title: 'Financial Results',
     desc: 'Quarterly and annual audited financial statements from FY 2020-21 onwards.',
     href: '/financial-results',
-    icon: '📊',
   },
   {
     title: 'Annual Reports',
     desc: 'Full-year consolidated annual reports with board reports and governance disclosures.',
     href: '/annual-reports',
-    icon: '📋',
   },
   {
     title: 'SEBI LODR Reg. 46',
     desc: 'Statutory disclosures under Regulation 46 of the SEBI Listing Obligations regulations.',
     href: '/sebi-lodr-regulation-46-disclosures',
-    icon: '📁',
   },
   {
     title: 'SEBI LODR Reg. 30',
     desc: 'Event-based disclosures and material information filings under Regulation 30.',
     href: '/sebi-lodr-regulation-30-disclosures',
-    icon: '📌',
   },
   {
     title: 'Corporate Governance',
     desc: 'Board composition, committees, meeting schedules, and governance framework.',
     href: '/corporate-governance',
-    icon: '⚖',
   },
   {
     title: 'Governance Policies',
     desc: "Codes of conduct, policies, and frameworks governing the company's operations.",
     href: '/governance-policies-codes-and-frameworks',
-    icon: '📜',
   },
   {
     title: 'Board of Directors',
     desc: 'Profiles and details of the Board of Directors overseeing corporate governance.',
     href: '/board-of-directors',
-    icon: '👥',
   },
   {
     title: 'Public Offering',
     desc: 'Information relating to IPO, rights issues, and public capital market activities.',
     href: '/public-offering',
-    icon: '🏦',
   },
 ]
 
@@ -107,7 +99,9 @@ export default function InvestorInsightsPage() {
             {quickLinks.map((l, i) => (
               <Reveal key={l.title} delay={i * 50}>
                 <Link href={l.href} className="group flex flex-col p-6 rounded-2xl border h-full transition-all hover:border-blue-200 hover:shadow-md" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  <span className="text-2xl mb-4">{l.icon}</span>
+                  <span className="font-mono text-xs font-bold tracking-widest mb-5 block" style={{ color: 'var(--color-primary-light)' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   <h3 className="font-semibold text-base mb-2 group-hover:text-primary transition-colors" style={{ color: 'var(--color-ink)' }}>{l.title}</h3>
                   <p className="text-xs leading-relaxed flex-1" style={{ color: 'var(--color-ink-muted)' }}>{l.desc}</p>
                   <div className="mt-4 flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>

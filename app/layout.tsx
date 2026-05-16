@@ -41,6 +41,12 @@ export const metadata: Metadata = {
     'SEBI listed pharma',
   ],
   metadataBase: new URL('https://astonea.org'),
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/icon.svg',
+  },
   openGraph: {
     type:        'website',
     siteName:    'Astonea Labs Limited',

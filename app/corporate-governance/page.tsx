@@ -40,7 +40,7 @@ const governanceDocs = [
   { title: 'Corporate Documents', desc: 'Memorandum and Articles of Association, incorporation documents, and statutory registers.', href: '/governance-policies-codes-and-frameworks' },
   { title: 'Governance Policies', desc: 'Formal policies governing operations, related-party transactions, whistleblower mechanism, and more.', href: '/governance-policies-codes-and-frameworks' },
   { title: 'Codes of Conduct', desc: 'Code of conduct for Directors, Key Managerial Personnel, and Senior Management of the Company.', href: '/governance-policies-codes-and-frameworks' },
-  { title: 'Secretarial Audit Report', desc: 'Annual secretarial audit report from a practicing Company Secretary as required under the Companies Act, 2013.', href: '/annual-reports' },
+  { title: 'Secretarial Audit Report', desc: 'Annual secretarial audit report from a practicing Company Secretary as required under the Companies Act, 2013.', href: '/pdf/Secretarial Audit Report.pdf' },
   { title: 'Board Meeting Notices & Minutes', desc: 'Notices of Board meetings and committee meetings as disclosed under SEBI LODR Regulations.', href: '/sebi-lodr-regulation-46-disclosures' },
   { title: 'SEBI Disclosures', desc: 'Statutory disclosures under SEBI LODR Regulation 30 (event-based) and Regulation 46 (website disclosures).', href: '/sebi-lodr-regulation-46-disclosures' },
 ]

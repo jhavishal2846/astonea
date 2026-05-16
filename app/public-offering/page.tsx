@@ -20,7 +20,9 @@ const listingDetails = [
 ]
 
 const documents = [
-  { title: 'Prospectus / Offer Document', desc: 'Draft Red Herring Prospectus (DRHP) and final Prospectus filed with SEBI at the time of IPO.' },
+  { title: 'Draft Red Herring Prospectus (DRHP)', desc: 'Draft Red Herring Prospectus dated August 16, 2024 filed with SEBI prior to the IPO.', href: '/pdf/Draft Red Herring Prospectus (DRHP).pdf' },
+  { title: 'Red Herring Prospectus (RHP)', desc: 'Red Herring Prospectus dated May 15, 2025 filed with the Registrar of Companies.', href: '/pdf/Red Herring Prospectus(PDF).pdf' },
+  { title: 'Prospectus', desc: 'Final Prospectus dated May 30, 2025 — the definitive offer document for the IPO.', href: '/pdf/Prospectus.pdf' },
   { title: 'Share Allotment Details', desc: 'Details of shares allotted to various categories of investors during the public offering.' },
   { title: 'Basis of Allotment', desc: 'Basis of allotment of equity shares as determined by the Registrar to the Issue.' },
   { title: 'Listing Agreement', desc: 'Equity listing agreement executed with BSE and NSE at the time of listing of equity shares.' },
@@ -103,9 +105,15 @@ export default function PublicOfferingPage() {
                     <p className="font-semibold text-sm mb-1" style={{ color: 'var(--color-ink)' }}>{d.title}</p>
                     <p className="text-xs leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{d.desc}</p>
                   </div>
-                  <span className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-subtle)' }}>
-                    PDF
-                  </span>
+                  {'href' in d && d.href ? (
+                    <a href={d.href} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+                      PDF
+                    </a>
+                  ) : (
+                    <span className="text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 border" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-muted)' }}>
+                      Soon
+                    </span>
+                  )}
                 </div>
               </Reveal>
             ))}

@@ -8,11 +8,42 @@ export const metadata: Metadata = {
 }
 
 const reports = [
-  { year: '2024–25', title: 'Annual Report FY 2024–2025', desc: 'Consolidated annual report including audited financials, board report, and corporate governance disclosures for FY 2024-25.' },
-  { year: '2023–24', title: 'Annual Report FY 2023–2024', desc: 'Full-year annual report covering financial performance, CSR activities, and regulatory disclosures for FY 2023-24.' },
-  { year: '2022–23', title: 'Annual Report FY 2022–2023', desc: 'Annual report with audited financial statements, director\'s report, and shareholder information for FY 2022-23.' },
-  { year: '2021–22', title: 'Annual Report FY 2021–2022', desc: 'Annual report covering the company\'s first full year as a listed entity on BSE and NSE.' },
-  { year: '2020–21', title: 'Annual Report FY 2020–2021', desc: 'Annual report for FY 2020-21 with audited standalone financial statements and governance disclosures.' },
+  {
+    year: '2024–25',
+    title: 'Annual Report FY 2024–2025',
+    desc: 'Consolidated annual report including audited financials, board report, and corporate governance disclosures for FY 2024-25.',
+    href: '/pdf/Annual Report for the FY 2024-25.pdf',
+  },
+  {
+    year: '2023–24',
+    title: 'Annual Report FY 2023–2024',
+    desc: 'Full-year annual report covering financial performance, CSR activities, and regulatory disclosures for FY 2023-24.',
+    href: '/pdf/Annual Report FY 2023-24.pdf',
+  },
+  {
+    year: '2022–23',
+    title: 'Annual Report FY 2022–2023',
+    desc: 'Annual report with audited financial statements, director\'s report, and shareholder information for FY 2022-23.',
+    href: '/pdf/Annual Report FY 2022-23.pdf',
+  },
+  {
+    year: '2021–22',
+    title: 'Annual Report FY 2021–2022',
+    desc: 'Annual report covering the company\'s first full year as a listed entity on BSE and NSE.',
+    href: '/pdf/Annual Report FY 2021-22.pdf',
+  },
+  {
+    year: '2020–21',
+    title: 'Annual Report FY 2020–2021',
+    desc: 'Annual report for FY 2020-21 with audited standalone financial statements and governance disclosures.',
+    href: '/pdf/Annual Report FY 2020-21.pdf',
+  },
+  {
+    year: '2019–20',
+    title: 'Annual Report FY 2019–2020',
+    desc: 'Annual report for FY 2019-20 with audited standalone financial statements and governance disclosures.',
+    href: '/pdf/Annual Report FY 2019-20.pdf',
+  },
 ]
 
 export default function AnnualReportsPage() {
@@ -43,7 +74,6 @@ export default function AnnualReportsPage() {
             {reports.map((r, i) => (
               <Reveal key={r.year} delay={i * 60}>
                 <div className="flex items-start gap-6 p-6 rounded-2xl border transition-colors hover:border-blue-200" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  {/* Year badge */}
                   <div className="flex-shrink-0 w-20 h-20 rounded-xl flex flex-col items-center justify-center" style={{ background: 'var(--color-primary-xlight)' }}>
                     <span className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>FY</span>
                     <span className="font-display font-bold text-sm leading-tight text-center" style={{ color: 'var(--color-primary)' }}>{r.year}</span>
@@ -55,9 +85,15 @@ export default function AnnualReportsPage() {
                   </div>
 
                   <div className="flex-shrink-0 flex items-center gap-2">
-                    <span className="text-xs font-medium px-3 py-1.5 rounded-full border cursor-default" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-muted)' }}>
+                    <a
+                      href={r.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50"
+                      style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
+                    >
                       PDF
-                    </span>
+                    </a>
                   </div>
                 </div>
               </Reveal>
