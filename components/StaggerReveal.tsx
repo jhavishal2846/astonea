@@ -6,6 +6,7 @@ import { motion, useInView } from 'framer-motion'
 interface StaggerRevealProps {
   children: ReactNode
   className?: string
+  style?: React.CSSProperties
   /** Delay before the stagger starts (ms) */
   delay?: number
   /** Stagger interval between children (ms) */
@@ -45,6 +46,7 @@ const itemVariants = (y: number) => ({
 export function StaggerReveal({
   children,
   className,
+  style,
   delay   = 0,
   stagger = 60,
   y       = 32,
@@ -60,6 +62,7 @@ export function StaggerReveal({
     <MotionTag
       ref={ref}
       className={className}
+      style={style}
       variants={containerVariants(stagger, delay)}
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
