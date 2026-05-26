@@ -22,7 +22,9 @@
       "Bash(node -e ' *)",
       "Bash(node -e *)",
       "Bash(winget install *)",
-      "Bash(pdftotext \"11th July, 2025.pdf\" -)"
+      "Bash(pdftotext \"11th July, 2025.pdf\" -)",
+      "Bash(ls \"C:\\\\Users\\\\DELL\\\\Downloads\" | head -50)",
+      "Read(//c/Users/DELL/Downloads/**)"
     ]
   }
 }

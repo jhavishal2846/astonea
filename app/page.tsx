@@ -12,6 +12,15 @@ export default function HomePage() {
   return (
     <>
       <ScrollHero />
+
+      <div
+        aria-hidden="true"
+        className="h-6 w-full sm:h-8"
+        style={{
+          background: 'linear-gradient(to bottom, #05060f 0%, var(--color-bg) 100%)',
+        }}
+      />
+
       <HomeContent />
     </>
   )

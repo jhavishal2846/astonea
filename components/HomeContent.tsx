@@ -1,321 +1,329 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { motion, useInView, useMotionValue, animate } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+import { animate, motion, useInView, useMotionValue } from 'framer-motion'
 
 const E = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
-/* ─── Animated number ──────────────────────────────────────────────────────── */
+const IMAGES = {
+  digitalChip: '/hero/hero-capsule-chip.png',
+  digitalPlatform: '/hero/hero-capsules-bg.png',
+  capsuleTray: '/hero/manufacturing-1.jpg',
+  redCapsules: '/hero/manufacturing-2.jpg',
+  scientist: '/hero/lab-scientist.jpg',
+  vaccinePack: '/hero/vaccine-packaging.jpg',
+}
+
+const proofStats = [
+  { value: 2000, suffix: '+', label: 'Client Brands', detail: 'Across pharma, wellness, and personal care.' },
+  { value: 1500, suffix: '+', label: 'Product Approvals', detail: 'Formulations cleared for commercial launch.' },
+  { value: 7, suffix: '+', label: 'Years of Excellence', detail: 'Manufacturing since 2017 in Chandigarh.' },
+  { value: 'Pan-India', label: 'Market Reach', detail: 'Distributor and export-ready operations.' },
+]
+
+const capabilityCards = [
+  {
+    title: 'Pharma tablets and capsules',
+    kicker: 'Solid dosage',
+    desc: 'Conventional, coated, enteric, and extended-release dosage formats for dependable batch output.',
+    image: IMAGES.capsuleTray,
+    href: '/what-we-do',
+  },
+  {
+    title: 'Liquid and topical lines',
+    kicker: 'Formulation breadth',
+    desc: 'Syrups, suspensions, drops, creams, ointments, and gels with controlled stability and texture.',
+    image: IMAGES.redCapsules,
+    href: '/manufacturing-facility',
+  },
+  {
+    title: 'Cosmetics and personal care',
+    kicker: 'Brand-ready SKUs',
+    desc: 'Serums, face wash, lotions, hair care, and white-label launches built around your market position.',
+    image: IMAGES.scientist,
+    href: '/what-we-do',
+  },
+  {
+    title: 'Compliance and documentation',
+    kicker: 'Regulatory support',
+    desc: 'Dossiers, labels, export documentation, certificates, and release discipline handled end to end.',
+    image: IMAGES.vaccinePack,
+    href: '/certifications',
+  },
+]
+
+const processSteps = [
+  { title: 'Brief and formulation', detail: 'We shape the product spec, claims, ingredients, packaging route, and commercial target.' },
+  { title: 'Pilot and validation', detail: 'Trial batches, stability checks, quality controls, and documentation tighten the formula before scale.' },
+  { title: 'GMP manufacturing', detail: 'Controlled rooms, trained operators, and batch records keep production repeatable and audit-ready.' },
+  { title: 'Dispatch and support', detail: 'Finished goods move with the paperwork, batch traceability, and follow-through your team needs.' },
+]
+
+const investorFacts = [
+  { label: 'CIN', value: 'L24304CH2017PLC041482' },
+  { label: 'Listing', value: 'BSE and NSE' },
+  { label: 'Sector', value: 'Pharma and cosmetics' },
+]
 
 function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-  const val = useMotionValue(0)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const value = useMotionValue(0)
 
   useEffect(() => {
     if (!inView) return
-    const ctrl = animate(val, to, { duration: 1.9, ease: [0.16, 1, 0.3, 1] })
-    const unsub = val.on('change', (v) => {
-      if (ref.current) ref.current.textContent = Math.round(v).toLocaleString() + suffix
+    const controls = animate(value, to, { duration: 1.7, ease: E })
+    const unsubscribe = value.on('change', (latest) => {
+      if (ref.current) {
+        ref.current.textContent = `${Math.round(latest).toLocaleString()}${suffix}`
+      }
     })
-    return () => { ctrl.stop(); unsub() }
-  }, [inView, to, suffix, val])
+
+    return () => {
+      controls.stop()
+      unsubscribe()
+    }
+  }, [inView, suffix, to, value])
 
   return <span ref={ref}>0{suffix}</span>
 }
 
-/* ─── Infinite marquee ─────────────────────────────────────────────────────── */
-
-const BADGES = [
-  'WHO-GMP', 'ISO 9001:2015', 'AYUSH Approved', 'FSSAI Licensed',
-  'cGMP Compliant', 'EU-GMP Ready', 'COPP Holder', 'GMP Certified',
-]
-
-function Marquee() {
-  const items = [...BADGES, ...BADGES]
+function ArrowIcon() {
   return (
-    <div className="overflow-hidden" aria-hidden="true">
-      <motion.div
-        className="flex items-center gap-12"
-        style={{ width: 'max-content' }}
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: 26, ease: 'linear', repeat: Infinity }}
-      >
-        {items.map((b, i) => (
-          <span key={i} className="flex items-center gap-10 whitespace-nowrap">
-            <span
-              className="text-[11px] font-extrabold uppercase tracking-[0.22em]"
-              style={{ color: 'rgba(255,255,255,0.25)' }}
-            >
-              {b}
-            </span>
-            <span style={{ color: 'rgba(255,255,255,0.08)', fontSize: 8 }}>◆</span>
-          </span>
-        ))}
-      </motion.div>
+    <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+  return (
+    <p
+      className="mb-5 flex items-center gap-3 text-[11px] font-extrabold uppercase tracking-[0.28em]"
+      style={{ color: light ? 'rgba(255,255,255,0.54)' : 'var(--color-primary)' }}
+    >
+      <span
+        className="h-px w-8"
+        style={{ background: light ? 'rgba(98,209,255,0.65)' : 'var(--color-primary)' }}
+      />
+      {children}
+    </p>
+  )
+}
+
+function ImageFrame({
+  src,
+  alt,
+  className = '',
+  objectPosition = 'center',
+  sizes = '(min-width: 1024px) 45vw, 100vw',
+}: {
+  src: string
+  alt: string
+  className?: string
+  objectPosition?: string
+  sizes?: string
+}) {
+  return (
+    <div className={`relative overflow-hidden rounded-[8px] bg-slate-200 ${className}`}>
+      <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" style={{ objectPosition }} />
     </div>
   )
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/*  SECTION 1 — WHO WE ARE                                                    */
-/* ═══════════════════════════════════════════════════════════════════════════ */
-
-const stats = [
-  { to: 2000, suffix: '+', label: 'Client Brands',       sub: 'Pharma & cosmetics'   },
-  { to: 1500, suffix: '+', label: 'Product Approvals',    sub: 'Formulations cleared' },
-  { to: 7,    suffix: '+', label: 'Years of Excellence',  sub: 'Since 2017'           },
-]
-
-function AboutSection() {
+function ProofSection() {
   const ref = useRef<HTMLElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section ref={ref} className="py-28 lg:py-44" style={{ background: 'var(--color-bg)' }}>
+    <section
+      ref={ref}
+      className="relative overflow-hidden py-20 lg:py-28"
+      style={{
+        background:
+          'linear-gradient(180deg, var(--color-bg) 0%, #eef8ff 52%, var(--color-bg) 100%)',
+      }}
+    >
       <div className="container-wide">
-
-        {/* ── Headline grid ── */}
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-28 items-end">
-
+        <div className="grid items-center gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
           <motion.div
-            initial={{ opacity: 0, y: 52 }}
+            initial={{ opacity: 0, y: 36 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.95, ease: E }}
+            transition={{ duration: 0.85, ease: E }}
           >
-            <span
-              className="block text-[11px] font-extrabold uppercase tracking-[0.28em] mb-9"
-              style={{ color: 'var(--color-primary)' }}
-            >
-              Who We Are
-            </span>
+            <SectionLabel>Manufacturing Partner</SectionLabel>
             <h2
-              className="font-display font-bold leading-[1.02] tracking-tight"
-              style={{ fontSize: 'clamp(2.8rem, 5.2vw, 5.5rem)', color: 'var(--color-ink)' }}
+              className="font-display font-bold leading-[1.02] tracking-tight text-balance"
+              style={{ color: 'var(--color-ink)', fontSize: 'clamp(2.45rem, 5vw, 5.4rem)' }}
             >
-              India&apos;s most trusted<br />
-              <em style={{ fontStyle: 'italic', color: 'var(--color-primary)' }}>
-                third-party
-              </em><br />
-              manufacturer.
+              Built for brands that need science, speed, and steady supply.
             </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 52 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.95, delay: 0.18, ease: E }}
-            className="flex flex-col justify-end pb-1"
-          >
-            <p
-              className="text-lg leading-[1.85] mb-10"
-              style={{ color: 'var(--color-ink-muted)' }}
-            >
-              Astonea Labs Limited (CIN: L24304CH2017PLC041482) is a SEBI-listed,
-              GMP-compliant pharma and cosmetics contract manufacturer headquartered
-              in Chandigarh. Since 2017 we have served 2,000+ brands — from emerging
-              startups to established exporters — delivering formulation precision,
-              regulatory confidence, and supply-chain reliability.
+            <p className="mt-7 max-w-xl text-base leading-[1.85] sm:text-lg" style={{ color: 'var(--color-ink-muted)' }}>
+              Astonea Labs Limited is a SEBI-listed pharma and cosmetics manufacturer
+              serving founders, exporters, and established labels with GMP-led production
+              and practical launch support.
             </p>
-            <div className="flex flex-wrap gap-8">
-              {[
-                { label: 'Our Story',       href: '/about-us'        },
-                { label: 'Certifications',  href: '/certifications'  },
-              ].map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="group inline-flex items-center gap-2.5 text-sm font-bold"
-                  style={{ color: 'var(--color-primary)' }}
-                >
-                  {l.label}
-                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">
-                    →
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* ── Ruled divider ── */}
-        <div className="overflow-hidden my-20">
-          <motion.div
-            className="h-px w-full"
-            style={{ background: 'var(--color-border)', transformOrigin: 'left' }}
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.3, ease: E }}
-          />
-        </div>
-
-        {/* ── Stats ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-8">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 28 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.75, delay: 0.42 + i * 0.11, ease: E }}
-            >
-              <div
-                className="font-display font-bold tracking-tight leading-none mb-3"
-                style={{ fontSize: 'clamp(2.5rem, 4vw, 4.25rem)', color: 'var(--color-ink)' }}
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link
+                href="/about-us"
+                className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-6 text-sm font-bold text-white"
+                style={{ background: 'var(--color-primary)' }}
               >
-                <Counter to={s.to} suffix={s.suffix} />
-              </div>
-              <p className="text-sm font-bold mb-1" style={{ color: 'var(--color-ink)' }}>{s.label}</p>
-              <p className="text-xs" style={{ color: 'var(--color-ink-subtle)' }}>{s.sub}</p>
-            </motion.div>
-          ))}
-
-          {/* Pan-India — static */}
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.75, delay: 0.75, ease: E }}
-          >
-            <div
-              className="font-display font-bold tracking-tight leading-none mb-3"
-              style={{ fontSize: 'clamp(1.85rem, 3vw, 2.85rem)', color: 'var(--color-ink)' }}
-            >
-              Pan-India
+                Our Story
+                <ArrowIcon />
+              </Link>
+              <Link
+                href="/certifications"
+                className="inline-flex min-h-12 items-center justify-center rounded-full border px-6 text-sm font-semibold"
+                style={{ borderColor: 'var(--color-border-strong)', color: 'var(--color-ink-muted)', background: 'rgba(255,255,255,0.72)' }}
+              >
+                Certifications
+              </Link>
             </div>
-            <p className="text-sm font-bold mb-1" style={{ color: 'var(--color-ink)' }}>Exporter</p>
-            <p className="text-xs" style={{ color: 'var(--color-ink-subtle)' }}>&amp; international reach</p>
+          </motion.div>
+
+          <motion.div
+            className="grid min-h-[520px] grid-cols-[0.92fr_1fr] grid-rows-[1fr_0.86fr] gap-3"
+            initial={{ opacity: 0, x: 36 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.12, ease: E }}
+            aria-label="Astonea laboratory and product imagery"
+          >
+            <ImageFrame
+              src={IMAGES.scientist}
+              alt="Scientist recording lab notes beside testing equipment"
+              className="row-span-2"
+              objectPosition="center"
+              sizes="(min-width: 1024px) 34vw, 50vw"
+            />
+            <ImageFrame
+              src={IMAGES.capsuleTray}
+              alt="Capsule tray being prepared in a lab"
+              objectPosition="center"
+              sizes="(min-width: 1024px) 36vw, 50vw"
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <ImageFrame
+                src={IMAGES.redCapsules}
+                alt="Red capsules in blister packaging"
+                sizes="(min-width: 1024px) 18vw, 25vw"
+              />
+              <ImageFrame
+                src={IMAGES.vaccinePack}
+                alt="Sterile vials being arranged for packaging"
+                objectPosition="center 35%"
+                sizes="(min-width: 1024px) 18vw, 25vw"
+              />
+            </div>
           </motion.div>
         </div>
+
+        <motion.div
+          className="mt-16 grid overflow-hidden rounded-[8px] border md:grid-cols-4"
+          style={{ borderColor: 'var(--color-border)', background: 'var(--color-border)' }}
+          initial={{ opacity: 0, y: 28 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.85, delay: 0.22, ease: E }}
+        >
+          {proofStats.map((stat) => (
+            <div key={stat.label} className="min-h-[158px] p-6 sm:p-7" style={{ background: 'var(--color-surface)' }}>
+              <p
+                className="font-display font-bold leading-none tracking-tight"
+                style={{ color: 'var(--color-ink)', fontSize: typeof stat.value === 'number' ? 'clamp(2.35rem, 4vw, 4rem)' : 'clamp(2rem, 3vw, 3rem)' }}
+              >
+                {typeof stat.value === 'number' ? <Counter to={stat.value} suffix={stat.suffix} /> : stat.value}
+              </p>
+              <p className="mt-4 text-sm font-bold" style={{ color: 'var(--color-ink)' }}>
+                {stat.label}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
+                {stat.detail}
+              </p>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
-  )
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/*  SECTION 2 — CAPABILITIES                                                   */
-/* ═══════════════════════════════════════════════════════════════════════════ */
-
-const capabilities = [
-  { tag: 'Solid Dosage',   title: 'Pharma Tablets & Capsules', desc: 'Conventional, coated, enteric, and extended-release. All pharmacopoeia compliant.' },
-  { tag: 'Liquids',        title: 'Liquid Formulations',        desc: 'Syrups, suspensions, drops, and oral solutions manufactured under aseptic conditions.' },
-  { tag: 'Topical',        title: 'Creams & Ointments',         desc: 'Topical and dermal formulations with controlled texture, stability, and shelf life.' },
-  { tag: 'Cosmetics',      title: 'Cosmetics Manufacturing',     desc: 'Serums, face wash, lotions, hair care, and personal-care white-label production.' },
-  { tag: 'Nutraceuticals', title: 'Nutraceuticals & Ayush',     desc: 'AYUSH-approved herbal and wellness formulations for modern health brands.' },
-  { tag: 'Regulatory',     title: 'Regulatory Affairs',          desc: 'End-to-end dossier preparation, labeling compliance, and export documentation.' },
-]
-
-function CapabilityCard({ cap, i }: { cap: (typeof capabilities)[0]; i: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 32 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: i * 0.07, ease: E }}
-      className="group relative flex flex-col p-8 lg:p-10 cursor-default"
-      style={{ background: 'var(--color-slate-950)' }}
-    >
-      {/* Blue hover overlay */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{ background: 'rgba(0,114,206,0.07)', boxShadow: 'inset 1px 0 0 rgba(0,114,206,0.25)' }}
-      />
-
-      <span
-        className="block text-[10px] font-extrabold uppercase tracking-[0.24em] mb-6"
-        style={{ color: 'var(--color-primary-light)' }}
-      >
-        {cap.tag}
-      </span>
-      <h3
-        className="font-display text-xl font-semibold text-white leading-snug mb-4 flex-1"
-      >
-        {cap.title}
-      </h3>
-      <p className="text-sm leading-relaxed mb-7" style={{ color: 'rgba(255,255,255,0.36)' }}>
-        {cap.desc}
-      </p>
-      <div
-        className="text-xs font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1"
-        style={{ color: 'var(--color-primary-light)' }}
-      >
-        Learn more →
-      </div>
-    </motion.div>
   )
 }
 
 function CapabilitiesSection() {
-  const headRef = useRef<HTMLDivElement>(null)
-  const inView = useInView(headRef, { once: true, margin: '-80px' })
+  const ref = useRef<HTMLElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section style={{ background: 'var(--color-slate-950)' }} className="py-28 lg:py-44">
-      <div className="container-wide">
+    <section ref={ref} className="relative overflow-hidden py-24 lg:py-32" style={{ background: 'var(--color-slate-950)' }}>
+      <div
+        className="absolute inset-0 opacity-[0.14]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(98,209,255,0.28) 1px, transparent 1px), linear-gradient(90deg, rgba(98,209,255,0.28) 1px, transparent 1px)',
+          backgroundSize: '72px 72px',
+        }}
+        aria-hidden="true"
+      />
 
-        {/* ── Header ── */}
-        <div
-          ref={headRef}
-          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 mb-16"
-        >
+      <div className="container-wide relative z-10">
+        <div className="mb-14 grid gap-10 lg:grid-cols-[0.9fr_1fr] lg:items-end">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 34 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, ease: E }}
+            transition={{ duration: 0.85, ease: E }}
           >
-            <span
-              className="block text-[11px] font-extrabold uppercase tracking-[0.28em] mb-7"
-              style={{ color: 'var(--color-primary-light)' }}
-            >
-              Capabilities
-            </span>
+            <SectionLabel light>Capabilities</SectionLabel>
             <h2
-              className="font-display font-bold leading-[1.04] tracking-tight text-white"
-              style={{ fontSize: 'clamp(2.2rem, 4.2vw, 4.25rem)' }}
+              className="font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
+              style={{ fontSize: 'clamp(2.5rem, 5vw, 5.25rem)' }}
             >
-              End-to-end manufacturing —<br />
-              <em className="italic" style={{ color: 'var(--color-primary-light)' }}>
-                tailored to your brand.
-              </em>
+              One manufacturing floor. Many routes to market.
             </h2>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.7, delay: 0.35 }}
+          <motion.p
+            className="max-w-xl text-base leading-[1.8] lg:justify-self-end"
+            style={{ color: 'rgba(255,255,255,0.58)' }}
+            initial={{ opacity: 0, y: 26 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.12, ease: E }}
           >
-            <Link
-              href="/what-we-do"
-              className="group inline-flex items-center gap-2.5 text-sm font-semibold"
-              style={{ color: 'rgba(255,255,255,0.4)' }}
-            >
-              All Services
-              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-            </Link>
-          </motion.div>
+            From formulation through packaging and paperwork, the work stays connected:
+            facilities, lab discipline, product handling, and regulatory follow-through
+            all move in one rhythm.
+          </motion.p>
         </div>
 
-        {/* ── Marquee ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.9, delay: 0.2 }}
-          className="py-5 border-y mb-2"
-          style={{ borderColor: 'rgba(255,255,255,0.07)' }}
-        >
-          <Marquee />
-        </motion.div>
-
-        {/* ── Grid — gap-px with parent bg creates hair-line separators ── */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px"
-          style={{ background: 'rgba(255,255,255,0.06)' }}
-        >
-          {capabilities.map((cap, i) => (
-            <CapabilityCard key={cap.title} cap={cap} i={i} />
+        <div className="grid overflow-hidden rounded-[8px] border border-white/10 md:grid-cols-2 xl:grid-cols-4">
+          {capabilityCards.map((cap, index) => (
+            <motion.article
+              key={cap.title}
+              className="group flex min-h-[440px] flex-col border-white/10 bg-slate-950 md:border-r xl:last:border-r-0"
+              initial={{ opacity: 0, y: 34 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.72, delay: 0.16 + index * 0.08, ease: E }}
+            >
+              <div className="relative h-48 overflow-hidden">
+                <Image src={cap.image} alt="" fill sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/[0.12] to-transparent" />
+              </div>
+              <div className="flex flex-1 flex-col p-7">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.22em]" style={{ color: 'var(--color-primary-light)' }}>
+                  {cap.kicker}
+                </p>
+                <h3 className="mt-5 font-display text-2xl font-semibold leading-tight text-white">
+                  {cap.title}
+                </h3>
+                <p className="mt-4 flex-1 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {cap.desc}
+                </p>
+                <Link href={cap.href} className="group/link mt-7 inline-flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-primary-light)' }}>
+                  Learn More
+                  <svg className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+              </div>
+            </motion.article>
           ))}
         </div>
       </div>
@@ -323,109 +331,84 @@ function CapabilitiesSection() {
   )
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/*  SECTION 3 — INVESTOR RELATIONS                                             */
-/* ═══════════════════════════════════════════════════════════════════════════ */
-
-function IRSection() {
+function QualitySection() {
   const ref = useRef<HTMLElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section
-      ref={ref}
-      className="relative overflow-hidden py-28 lg:py-36"
-      style={{ background: 'var(--color-primary)' }}
-    >
-      {/* Decorative watermark */}
+    <section ref={ref} className="relative overflow-hidden py-24 lg:py-36" style={{ background: '#07101f' }}>
+      <Image
+        src={IMAGES.digitalPlatform}
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover opacity-[0.42]"
+        style={{ objectPosition: 'center' }}
+        aria-hidden="true"
+      />
       <div
-        className="absolute select-none pointer-events-none font-display font-bold leading-none text-white"
+        className="absolute inset-0"
         style={{
-          fontSize: 'clamp(7rem, 22vw, 20rem)',
-          opacity: 0.055,
-          right: '-5%',
-          top: '50%',
-          transform: 'translateY(-50%)',
+          background:
+            'linear-gradient(90deg, rgba(7,16,31,0.96) 0%, rgba(7,16,31,0.84) 46%, rgba(7,16,31,0.72) 100%)',
         }}
-      >
-        NSE
-      </div>
+        aria-hidden="true"
+      />
 
       <div className="container-wide relative z-10">
-        <div className="grid lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_340px] gap-14 lg:gap-20 items-center">
-
-          {/* Text */}
+        <div className="grid gap-14 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
           <motion.div
-            initial={{ opacity: 0, y: 44 }}
+            initial={{ opacity: 0, y: 36 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, ease: E }}
+            transition={{ duration: 0.85, ease: E }}
           >
-            <span
-              className="block text-[11px] font-extrabold uppercase tracking-[0.28em] mb-7"
-              style={{ color: 'rgba(255,255,255,0.42)' }}
-            >
-              Investor Relations
-            </span>
+            <SectionLabel light>Quality System</SectionLabel>
             <h2
-              className="font-display font-bold leading-[1.04] text-white mb-7"
-              style={{ fontSize: 'clamp(2.2rem, 4.2vw, 4.5rem)' }}
+              className="font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
+              style={{ fontSize: 'clamp(2.4rem, 5vw, 5.1rem)' }}
             >
-              SEBI-listed on<br />
-              BSE &amp; NSE.<br />
-              <span style={{ opacity: 0.7 }}>Transparent by design.</span>
+              Digital ambition with GMP discipline underneath.
             </h2>
-            <p
-              className="text-sm leading-relaxed mb-10 max-w-md"
-              style={{ color: 'rgba(255,255,255,0.48)' }}
-            >
-              CIN: L24304CH2017PLC041482. Access financial results, annual reports,
-              SEBI disclosures, and corporate governance frameworks in one place.
+            <p className="mt-6 max-w-xl text-base leading-[1.85]" style={{ color: 'rgba(255,255,255,0.62)' }}>
+              Clean-room proof meets forward-looking biotech systems, helping each product
+              move from idea to validated output with control.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/financial-results"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-sm font-bold transition-colors hover:bg-slate-50"
-                style={{ color: 'var(--color-primary)' }}
-              >
-                Financial Results
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </Link>
-              <Link
-                href="/annual-reports"
-                className="inline-flex items-center px-6 py-3 rounded-full border border-white/25 text-white/70 text-sm font-medium transition-colors hover:border-white/55 hover:text-white"
-              >
-                Annual Reports
-              </Link>
+            <div className="mt-9 grid max-w-md grid-cols-2 gap-3">
+              {['WHO-GMP', 'ISO 9001:2015', 'AYUSH', 'FSSAI'].map((badge) => (
+                <div key={badge} className="rounded-[8px] border border-white/10 px-4 py-3 text-sm font-bold text-white" style={{ background: 'rgba(255,255,255,0.07)' }}>
+                  {badge}
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          {/* Key fact tiles */}
           <motion.div
-            initial={{ opacity: 0, x: 36 }}
+            className="overflow-hidden rounded-[8px] border border-white/[0.12]"
+            style={{ background: 'rgba(5,6,15,0.46)' }}
+            initial={{ opacity: 0, x: 34 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.2, ease: E }}
-            className="grid grid-cols-2 gap-3"
+            transition={{ duration: 0.9, delay: 0.15, ease: E }}
           >
-            {[
-              { label: 'Listed Since', value: '2021' },
-              { label: 'Exchanges',    value: 'BSE · NSE' },
-              { label: 'Sector',       value: 'Pharma & Cosmetics' },
-              { label: 'Incorporated', value: 'Chandigarh, IN' },
-            ].map((f) => (
-              <div
-                key={f.label}
-                className="p-5 rounded-xl"
-                style={{ background: 'rgba(255,255,255,0.11)' }}
-              >
-                <p
-                  className="text-[9px] font-extrabold uppercase tracking-[0.22em] mb-2"
-                  style={{ color: 'rgba(255,255,255,0.38)' }}
-                >
-                  {f.label}
-                </p>
-                <p className="text-sm font-bold text-white leading-snug">{f.value}</p>
-              </div>
-            ))}
+            <div className="relative h-64 sm:h-80">
+              <Image src={IMAGES.digitalChip} alt="Digital capsule over connected circuit paths" fill sizes="(min-width: 1024px) 52vw, 100vw" className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/[0.86] to-transparent" />
+            </div>
+
+            <div className="grid gap-px bg-white/10 md:grid-cols-2">
+              {processSteps.map((step, index) => (
+                <div key={step.title} className="p-6" style={{ background: 'rgba(5,6,15,0.72)' }}>
+                  <p className="font-mono text-xs font-bold" style={{ color: 'var(--color-accent)' }}>
+                    0{index + 1}
+                  </p>
+                  <h3 className="mt-4 font-display text-xl font-semibold leading-tight text-white">
+                    {step.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.52)' }}>
+                    {step.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>
@@ -433,225 +416,138 @@ function IRSection() {
   )
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/*  SECTION 4 — MILESTONES                                                     */
-/* ═══════════════════════════════════════════════════════════════════════════ */
-
-const milestones = [
-  { year: '2017', title: 'Incorporation',   detail: 'Founded in Chandigarh under CIN L24304CH2017PLC041482 — a focused pharma & cosmetics manufacturer.' },
-  { year: '2019', title: 'GMP Certified',   detail: 'Achieved WHO-GMP certification and surpassed 500 product approvals, cementing formulation credibility.' },
-  { year: '2021', title: 'Exchange Listed', detail: 'Dual-listed on BSE & NSE; expanded the portfolio into the high-growth cosmetics segment.' },
-  { year: '2024', title: 'Pan-India Scale', detail: 'Crossed 2,000 active client brands and achieved Pan-India exporter status with international reach.' },
-]
-
-function MilestoneRow({ m, i }: { m: (typeof milestones)[0]; i: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-40px' })
+function InvestorSection() {
+  const ref = useRef<HTMLElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.75, delay: i * 0.1, ease: E }}
-      className="group grid grid-cols-[96px_1fr] lg:grid-cols-[160px_auto_1fr] gap-x-6 lg:gap-x-12 items-start py-9 border-b"
-      style={{ borderColor: 'var(--color-border)' }}
-    >
-      {/* Year */}
-      <span
-        className="font-mono text-3xl lg:text-4xl font-bold tabular-nums pt-0.5 transition-colors duration-500"
-        style={{ color: 'var(--color-ink-subtle)' }}
-      >
-        {m.year}
-      </span>
-
-      {/* Title — hidden on mobile, visible lg */}
-      <span
-        className="hidden lg:block text-xs font-extrabold uppercase tracking-[0.2em] pt-2.5 whitespace-nowrap"
-        style={{ color: 'var(--color-ink-subtle)', minWidth: '9rem' }}
-      >
-        {m.title}
-      </span>
-
-      {/* Detail */}
-      <p className="text-base lg:text-lg leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
-        <span className="lg:hidden font-bold mr-2" style={{ color: 'var(--color-ink)' }}>{m.title} —</span>
-        {m.detail}
-      </p>
-    </motion.div>
-  )
-}
-
-function MilestonesSection() {
-  const headRef = useRef<HTMLDivElement>(null)
-  const inView = useInView(headRef, { once: true, margin: '-80px' })
-
-  return (
-    <section className="py-28 lg:py-44" style={{ background: 'var(--color-bg)' }}>
+    <section ref={ref} className="py-20 lg:py-28" style={{ background: 'var(--color-primary)' }}>
       <div className="container-wide">
-
-        {/* ── Header ── */}
-        <div ref={headRef} className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-4">
+        <div className="grid gap-12 lg:grid-cols-[1fr_0.92fr] lg:items-center">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 32 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, ease: E }}
+            transition={{ duration: 0.85, ease: E }}
           >
-            <span
-              className="block text-[11px] font-extrabold uppercase tracking-[0.28em] mb-7"
-              style={{ color: 'var(--color-primary)' }}
-            >
-              Our Journey
-            </span>
+            <p className="mb-5 text-[11px] font-extrabold uppercase tracking-[0.28em]" style={{ color: 'rgba(255,255,255,0.62)' }}>
+              Investor Relations
+            </p>
             <h2
-              className="font-display font-bold leading-[1.04] tracking-tight"
-              style={{ fontSize: 'clamp(2.5rem, 4.2vw, 4.25rem)', color: 'var(--color-ink)' }}
+              className="font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
+              style={{ fontSize: 'clamp(2.4rem, 5vw, 5rem)' }}
             >
-              Eight years of<br />deliberate growth.
+              Listed, documented, and easy to evaluate.
             </h2>
+            <p className="mt-6 max-w-2xl text-base leading-[1.8]" style={{ color: 'rgba(255,255,255,0.72)' }}>
+              Financial results, annual reports, SEBI disclosures, and governance documents
+              stay accessible for shareholders and market watchers.
+            </p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.7, delay: 0.32 }}
+            className="overflow-hidden rounded-[8px] border border-white/[0.16]"
+            style={{ background: 'rgba(255,255,255,0.12)' }}
+            initial={{ opacity: 0, x: 32 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.85, delay: 0.12, ease: E }}
           >
-            <Link
-              href="/key-milestone"
-              className="group inline-flex items-center gap-2 text-sm font-bold"
-              style={{ color: 'var(--color-primary)' }}
-            >
-              Full Timeline
-              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-            </Link>
+            <div className="grid gap-px bg-white/[0.12] sm:grid-cols-3">
+              {investorFacts.map((fact) => (
+                <div key={fact.label} className="p-5" style={{ background: 'rgba(0,80,145,0.35)' }}>
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.24em]" style={{ color: 'rgba(255,255,255,0.54)' }}>
+                    {fact.label}
+                  </p>
+                  <p className="mt-3 text-sm font-bold leading-snug text-white">{fact.value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3 p-5">
+              <Link href="/financial-results" className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold" style={{ color: 'var(--color-primary)' }}>
+                Financial Results
+                <ArrowIcon />
+              </Link>
+              <Link href="/annual-reports" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/[0.28] px-5 text-sm font-semibold text-white/[0.78] hover:text-white">
+                Annual Reports
+              </Link>
+              <Link href="/sebi-lodr-regulation-46-disclosures" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/[0.28] px-5 text-sm font-semibold text-white/[0.78] hover:text-white">
+                SEBI Disclosures
+              </Link>
+            </div>
           </motion.div>
         </div>
-
-        {/* Top rule */}
-        <div className="overflow-hidden mb-0">
-          <motion.div
-            className="h-px w-full"
-            style={{ background: 'var(--color-border)', transformOrigin: 'left' }}
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.4, delay: 0.2, ease: E }}
-          />
-        </div>
-
-        {milestones.map((m, i) => (
-          <MilestoneRow key={m.year} m={m} i={i} />
-        ))}
       </div>
     </section>
   )
 }
-
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/*  SECTION 5 — FINAL CTA                                                      */
-/* ═══════════════════════════════════════════════════════════════════════════ */
 
 function CTASection() {
   const ref = useRef<HTMLElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-100px' })
 
   return (
-    <section
-      ref={ref}
-      className="relative overflow-hidden py-40 lg:py-56"
-      style={{ background: 'var(--color-slate-950)' }}
-    >
-      {/* Radial glow — centred slightly low */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 65% 50% at 50% 68%, rgba(0,114,206,0.14) 0%, transparent 70%)',
-        }}
+    <section ref={ref} className="relative overflow-hidden py-24 lg:py-36" style={{ background: 'var(--color-slate-950)' }}>
+      <Image
+        src={IMAGES.vaccinePack}
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover opacity-[0.34]"
+        style={{ objectPosition: 'center 35%' }}
+        aria-hidden="true"
       />
-
-      {/* Top rule */}
-      <div className="overflow-hidden absolute top-0 inset-x-0">
-        <motion.div
-          className="h-px w-full"
-          style={{ background: 'rgba(255,255,255,0.07)', transformOrigin: 'center' }}
-          initial={{ scaleX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.8, ease: E }}
-        />
-      </div>
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(5,6,15,0.96), rgba(5,6,15,0.78))' }} aria-hidden="true" />
 
       <div className="container-wide relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 52 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.95, ease: E }}
+        <motion.div
+          className="max-w-4xl"
+          initial={{ opacity: 0, y: 36 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.85, ease: E }}
+        >
+          <p className="mb-6 text-[11px] font-extrabold uppercase tracking-[0.28em]" style={{ color: 'var(--color-accent)' }}>
+            Start With Astonea
+          </p>
+          <h2
+            className="font-display font-bold leading-[1.01] tracking-tight text-white text-balance"
+            style={{ fontSize: 'clamp(3rem, 7vw, 7.2rem)' }}
           >
-            <span
-              className="block text-[11px] font-extrabold uppercase tracking-[0.3em] mb-10"
-              style={{ color: 'rgba(255,255,255,0.2)' }}
+            Your formulation deserves a sharper manufacturing partner.
+          </h2>
+          <p className="mt-7 max-w-2xl text-base leading-[1.85] sm:text-lg" style={{ color: 'rgba(255,255,255,0.62)' }}>
+            Share the product you want to build, the market you want to enter, and the
+            timeline you are working toward. We will help shape the route from
+            formulation to dispatch.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link
+              href="/contact-us"
+              className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-7 text-sm font-bold"
+              style={{ background: 'var(--color-accent)', color: 'var(--color-slate-950)' }}
             >
-              Let&apos;s Build Together
-            </span>
-
-            <h2
-              className="font-display font-bold leading-[1.02] tracking-tight text-white"
-              style={{ fontSize: 'clamp(3rem, 9vw, 8rem)' }}
+              Start a Conversation
+              <ArrowIcon />
+            </Link>
+            <Link
+              href="/manufacturing-facility"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border px-7 text-sm font-semibold"
+              style={{ borderColor: 'rgba(255,255,255,0.24)', color: 'rgba(255,255,255,0.78)' }}
             >
-              Your formulation.<br />
-              <em
-                className="italic"
-                style={{ color: 'var(--color-accent)' }}
-              >
-                Our expertise.
-              </em>
-            </h2>
-
-            <p
-              className="mt-8 text-lg leading-relaxed mx-auto"
-              style={{ color: 'rgba(255,255,255,0.36)', maxWidth: '42ch' }}
-            >
-              Whether you&apos;re a brand owner seeking contract manufacturing
-              or an investor exploring a SEBI-listed pharma company — we&apos;re ready to talk.
-            </p>
-
-            <div className="mt-14 flex flex-col sm:flex-row justify-center gap-4">
-              <Link
-                href="/contact-us"
-                className="group inline-flex items-center justify-center gap-3 px-9 py-4 rounded-full text-sm font-bold transition-all active:scale-95"
-                style={{ background: 'var(--color-accent)', color: 'var(--color-slate-950)' }}
-              >
-                Start a Conversation
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">
-                  →
-                </span>
-              </Link>
-              <Link
-                href="/investor-insights"
-                className="inline-flex items-center justify-center px-9 py-4 rounded-full border text-sm font-medium transition-colors hover:border-white/35 hover:text-white/85"
-                style={{ borderColor: 'rgba(255,255,255,0.14)', color: 'rgba(255,255,255,0.45)' }}
-              >
-                Investor Insights
-              </Link>
-            </div>
-          </motion.div>
-        </div>
+              View Facility
+            </Link>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
 }
-
-/* ═══════════════════════════════════════════════════════════════════════════ */
-/*  Root export                                                                */
-/* ═══════════════════════════════════════════════════════════════════════════ */
 
 export default function HomeContent() {
   return (
     <>
-      <AboutSection />
+      <ProofSection />
       <CapabilitiesSection />
-      <IRSection />
-      <MilestonesSection />
+      <QualitySection />
+      <InvestorSection />
       <CTASection />
     </>
   )
