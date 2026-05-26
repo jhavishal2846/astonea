@@ -310,21 +310,35 @@ export default function Navbar() {
   const [open, setOpen] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled,   setScrolled]   = useState(false)
+  const [hidden,     setHidden]     = useState(false)
+  const lastScrollY = useRef(0)
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  /* Scroll-based solid/glass transition.
-     Large screens (≥1024px) show the 600vh scroll animation — stay transparent
-     until the animation section ends (~5× viewport height).
-     Small screens show a static hero (~100svh) — go solid just after it. */
+  /* Go solid past a small scroll offset, and hide when scrolling down /
+     show when scrolling up. Always shown near the top, when any menu
+     is open, or while the user is interacting with the bar. */
   useEffect(() => {
-    const getThreshold = () => {
-      if (pathname !== '/') return 64
-      return window.innerWidth >= 1024
-        ? window.innerHeight * 5
-        : window.innerHeight * 0.9
-    }
+    const SOLID_THRESHOLD = pathname !== '/' ? 64 : 80
+    const HIDE_THRESHOLD = 120
+    const DELTA = 6
 
-    const check = () => setScrolled(window.scrollY > getThreshold())
+    const check = () => {
+      const y = window.scrollY
+      setScrolled(y > SOLID_THRESHOLD)
+
+      const diff = y - lastScrollY.current
+      if (Math.abs(diff) > DELTA) {
+        if (y < HIDE_THRESHOLD) {
+          setHidden(false)
+        } else if (diff > 0) {
+          setHidden(true)
+        } else {
+          setHidden(false)
+        }
+        lastScrollY.current = y
+      }
+    }
+    lastScrollY.current = window.scrollY
     check()
     window.addEventListener('scroll', check, { passive: true })
     window.addEventListener('resize', check)
@@ -333,6 +347,11 @@ export default function Navbar() {
       window.removeEventListener('resize', check)
     }
   }, [pathname])
+
+  /* Force-show the bar whenever a menu is open so it can never auto-hide
+     out from under the user mid-interaction. */
+  const isMenuOpen = open !== null || mobileOpen
+  const effectiveHidden = hidden && !isMenuOpen
 
   /* Close mega-menu on route change */
   useEffect(() => {
@@ -361,8 +380,11 @@ export default function Navbar() {
       <motion.header
         className="fixed top-0 left-0 right-0 z-30"
         initial={{ y: -8, opacity: 0 }}
-        animate={{ y: 0,  opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        animate={{
+          y: effectiveHidden ? '-110%' : 0,
+          opacity: 1,
+        }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.div
           animate={{

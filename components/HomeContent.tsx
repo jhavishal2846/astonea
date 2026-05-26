@@ -2,8 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
-import { animate, motion, useInView, useMotionValue } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { animate, motion, useInView, useMotionValue, useScroll, useTransform } from 'framer-motion'
+import type { MotionValue } from 'framer-motion'
 
 const E = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
@@ -14,6 +15,14 @@ const IMAGES = {
   redCapsules: '/hero/manufacturing-2.jpg',
   scientist: '/hero/lab-scientist.jpg',
   vaccinePack: '/hero/vaccine-packaging.jpg',
+  // New editorial pexels imagery
+  capsulesBottles: '/hero/lab-capsules-bottles.jpg',
+  blueCrystals: '/hero/lab-blue-crystals.jpg',
+  redAmpoules: '/hero/lab-red-ampoules.jpg',
+  syringeTeal: '/hero/lab-syringe-teal.jpg',
+  vialsBrown: '/hero/lab-vials-brown.jpg',
+  scientistMicroscope: '/hero/lab-scientist-microscope.jpg',
+  ampoulesTray: '/hero/lab-ampoules-tray.jpg',
 }
 
 const proofStats = [
@@ -28,30 +37,85 @@ const capabilityCards = [
     title: 'Pharma tablets and capsules',
     kicker: 'Solid dosage',
     desc: 'Conventional, coated, enteric, and extended-release dosage formats for dependable batch output.',
-    image: IMAGES.capsuleTray,
+    image: IMAGES.capsulesBottles,
     href: '/what-we-do',
   },
   {
     title: 'Liquid and topical lines',
     kicker: 'Formulation breadth',
     desc: 'Syrups, suspensions, drops, creams, ointments, and gels with controlled stability and texture.',
-    image: IMAGES.redCapsules,
+    image: IMAGES.blueCrystals,
     href: '/manufacturing-facility',
   },
   {
     title: 'Cosmetics and personal care',
     kicker: 'Brand-ready SKUs',
     desc: 'Serums, face wash, lotions, hair care, and white-label launches built around your market position.',
-    image: IMAGES.scientist,
+    image: IMAGES.scientistMicroscope,
     href: '/what-we-do',
   },
   {
     title: 'Compliance and documentation',
     kicker: 'Regulatory support',
     desc: 'Dossiers, labels, export documentation, certificates, and release discipline handled end to end.',
-    image: IMAGES.vaccinePack,
+    image: IMAGES.ampoulesTray,
     href: '/certifications',
   },
+]
+
+const industries = [
+  {
+    name: 'Pharmaceuticals',
+    desc: 'Tablets, capsules, syrups, dry syrups, and topicals across acute and chronic categories.',
+    image: IMAGES.capsulesBottles,
+    accent: '#62D1FF',
+  },
+  {
+    name: 'Nutraceuticals',
+    desc: 'Vitamins, minerals, protein, and functional supplements built for retail and DTC launches.',
+    image: IMAGES.blueCrystals,
+    accent: '#7BE0B5',
+  },
+  {
+    name: 'Cosmetics',
+    desc: 'Serums, lotions, creams, face wash, and hair care formulated for sensorial brand experience.',
+    image: IMAGES.ampoulesTray,
+    accent: '#FFB36B',
+  },
+  {
+    name: 'Ayurveda & Herbal',
+    desc: 'AYUSH-licensed botanicals, classical formulations, and modern phyto-pharma launches.',
+    image: IMAGES.redAmpoules,
+    accent: '#E07A7A',
+  },
+  {
+    name: 'Veterinary',
+    desc: 'Animal health tablets, oral suspensions, and feed-grade premixes manufactured to GMP norms.',
+    image: IMAGES.vialsBrown,
+    accent: '#C09064',
+  },
+  {
+    name: 'OTC & Wellness',
+    desc: 'Pain relief, digestives, immunity boosters, and lifestyle SKUs ready for distribution at scale.',
+    image: IMAGES.syringeTeal,
+    accent: '#62D1FF',
+  },
+]
+
+const labGalleryImages = [
+  { src: IMAGES.scientistMicroscope, alt: 'Scientist examining a sample at the microscope', caption: 'Analytical bench, QC release' },
+  { src: IMAGES.blueCrystals,        alt: 'Hands measuring blue crystalline material',        caption: 'Raw material assay' },
+  { src: IMAGES.capsulesBottles,     alt: 'Two apothecary jars filled with capsules and tablets', caption: 'Finished dosage check' },
+  { src: IMAGES.ampoulesTray,        alt: 'Glass ampoules arranged beside a stainless tray',   caption: 'Sterile fill line' },
+  { src: IMAGES.redAmpoules,         alt: 'Ruby red glass ampoules in studio light',           caption: 'Liquid injectables' },
+  { src: IMAGES.vialsBrown,          alt: 'Amber vials and syringe on a warm backdrop',        caption: 'Stability sampling' },
+]
+
+const fadeBackdrops = [
+  { src: IMAGES.scientistMicroscope, label: 'Analytical Lab',  kicker: 'Chapter 01' },
+  { src: IMAGES.blueCrystals,        label: 'Raw Material QC', kicker: 'Chapter 02' },
+  { src: IMAGES.ampoulesTray,        label: 'Sterile Fill',    kicker: 'Chapter 03' },
+  { src: IMAGES.capsulesBottles,     label: 'Finished Goods',  kicker: 'Chapter 04' },
 ]
 
 const processSteps = [
@@ -331,6 +395,359 @@ function CapabilitiesSection() {
   )
 }
 
+function IndustriesSection() {
+  const ref = useRef<HTMLElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const [active, setActive] = useState(0)
+
+  return (
+    <section
+      ref={ref}
+      className="relative overflow-hidden py-24 lg:py-32"
+      style={{ background: 'var(--color-bg)' }}
+    >
+      <div className="container-wide">
+        <div className="mb-14 grid gap-10 lg:grid-cols-[0.95fr_1fr] lg:items-end">
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.85, ease: E }}
+          >
+            <SectionLabel>Industries We Serve</SectionLabel>
+            <h2
+              className="font-display font-bold leading-[1.02] tracking-tight text-balance"
+              style={{ color: 'var(--color-ink)', fontSize: 'clamp(2.4rem, 4.8vw, 5rem)' }}
+            >
+              One floor, six product worlds.
+            </h2>
+          </motion.div>
+          <motion.p
+            className="max-w-xl text-base leading-[1.8] lg:justify-self-end"
+            style={{ color: 'var(--color-ink-muted)' }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.12, ease: E }}
+          >
+            Pharma, nutraceutical, cosmetic, and wellness brands share the same
+            GMP-graded production floor — separated by process, joined by the same
+            discipline around batch records, release, and traceability.
+          </motion.p>
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-stretch">
+          <motion.div
+            className="relative overflow-hidden rounded-md border"
+            style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}
+            initial={{ opacity: 0, x: -28 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.18, ease: E }}
+          >
+            <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-auto lg:h-full">
+              {industries.map((ind, i) => (
+                <motion.div
+                  key={ind.name}
+                  className="absolute inset-0"
+                  initial={false}
+                  animate={{ opacity: active === i ? 1 : 0 }}
+                  transition={{ duration: 0.55, ease: E }}
+                  aria-hidden={active !== i}
+                >
+                  <Image src={ind.image} alt={ind.name} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(5,6,15,0.05) 0%, rgba(5,6,15,0.78) 100%)' }} />
+                  <div className="absolute inset-x-0 bottom-0 p-7 lg:p-10">
+                    <div className="flex items-center gap-3">
+                      <span className="h-px w-10" style={{ background: ind.accent }} />
+                      <p className="text-[11px] font-extrabold uppercase tracking-[0.28em]" style={{ color: ind.accent }}>
+                        Sector 0{i + 1}
+                      </p>
+                    </div>
+                    <h3 className="mt-4 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
+                      {ind.name}
+                    </h3>
+                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/[0.78]">
+                      {ind.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.ul
+            className="grid gap-2"
+            initial={{ opacity: 0, x: 28 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.24, ease: E }}
+          >
+            {industries.map((ind, i) => {
+              const isActive = active === i
+              return (
+                <li key={ind.name}>
+                  <button
+                    type="button"
+                    onMouseEnter={() => setActive(i)}
+                    onFocus={() => setActive(i)}
+                    onClick={() => setActive(i)}
+                    className="group relative flex w-full items-center justify-between gap-6 rounded-md border px-6 py-5 text-left transition-colors duration-300"
+                    style={{
+                      borderColor: isActive ? ind.accent : 'var(--color-border)',
+                      background: isActive ? 'rgba(98,209,255,0.06)' : 'var(--color-surface)',
+                    }}
+                    aria-pressed={isActive}
+                  >
+                    <div className="flex items-center gap-5">
+                      <span
+                        className="font-mono text-xs font-bold transition-colors"
+                        style={{ color: isActive ? ind.accent : 'var(--color-ink-subtle)' }}
+                      >
+                        0{i + 1}
+                      </span>
+                      <div>
+                        <p
+                          className="font-display text-xl font-semibold leading-tight transition-colors sm:text-2xl"
+                          style={{ color: isActive ? 'var(--color-ink)' : 'var(--color-ink-muted)' }}
+                        >
+                          {ind.name}
+                        </p>
+                        <p
+                          className="mt-1 max-w-md text-sm leading-relaxed transition-opacity"
+                          style={{ color: 'var(--color-ink-muted)', opacity: isActive ? 1 : 0.7 }}
+                        >
+                          {ind.desc}
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      className="hidden h-px shrink-0 transition-all sm:block"
+                      style={{
+                        width: isActive ? 48 : 24,
+                        background: isActive ? ind.accent : 'var(--color-border-strong)',
+                      }}
+                    />
+                  </button>
+                </li>
+              )
+            })}
+          </motion.ul>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function FadeBackdrop({
+  slide,
+  progress,
+  index,
+  total,
+}: {
+  slide: (typeof fadeBackdrops)[number]
+  progress: MotionValue<number>
+  index: number
+  total: number
+}) {
+  const start = index / total
+  const mid = (index + 0.5) / total
+  const end = (index + 1) / total
+  const opacity = useTransform(
+    progress,
+    [Math.max(0, start - 0.05), mid, Math.min(1, end + 0.05)],
+    [index === 0 ? 1 : 0, 1, index === total - 1 ? 1 : 0],
+  )
+  const scale = useTransform(progress, [start, end], [1.08, 1])
+
+  return (
+    <motion.div className="absolute inset-0" style={{ opacity }} aria-hidden="true">
+      <motion.div className="absolute inset-0" style={{ scale }}>
+        <Image src={slide.src} alt="" fill priority={index === 0} sizes="100vw" className="object-cover" />
+      </motion.div>
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(5,6,15,0.55) 0%, rgba(5,6,15,0.32) 38%, rgba(5,6,15,0.78) 100%)',
+        }}
+      />
+    </motion.div>
+  )
+}
+
+function FadeChapterText({
+  slide,
+  progress,
+  index,
+  total,
+}: {
+  slide: (typeof fadeBackdrops)[number]
+  progress: MotionValue<number>
+  index: number
+  total: number
+}) {
+  const start = index / total
+  const mid = (index + 0.5) / total
+  const end = (index + 1) / total
+  const opacity = useTransform(
+    progress,
+    [Math.max(0, start - 0.02), mid, Math.min(1, end + 0.02)],
+    [0, 1, 0],
+  )
+  const y = useTransform(progress, [start, mid, end], [40, 0, -40])
+
+  return (
+    <motion.div className="absolute" style={{ opacity, y }}>
+      <p className="text-[11px] font-mono font-extrabold uppercase tracking-[0.32em] text-cyan-200/80">
+        {slide.kicker}
+      </p>
+      <h3
+        className="mt-4 font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
+        style={{ fontSize: 'clamp(2.5rem, 5.2vw, 5.25rem)' }}
+      >
+        {slide.label}
+      </h3>
+    </motion.div>
+  )
+}
+
+function FadeProgressBar({
+  progress,
+  index,
+  total,
+}: {
+  progress: MotionValue<number>
+  index: number
+  total: number
+}) {
+  const start = index / total
+  const end = (index + 1) / total
+  const opacity = useTransform(progress, [start, (start + end) / 2, end], [0.25, 1, 0.25])
+  return <motion.span className="h-px w-12 bg-white" style={{ opacity }} />
+}
+
+function BackgroundFadeSection() {
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+
+  const total = fadeBackdrops.length
+
+  return (
+    <section
+      ref={ref}
+      className="relative"
+      style={{ height: `${total * 100}svh`, background: '#05060f' }}
+      aria-label="Astonea production journey"
+    >
+      <div className="sticky top-0 h-svh w-full overflow-hidden">
+        {fadeBackdrops.map((slide, i) => (
+          <FadeBackdrop key={slide.src} slide={slide} progress={scrollYProgress} index={i} total={total} />
+        ))}
+
+        <div className="absolute inset-0 z-10 flex items-end pb-20 lg:pb-28">
+          <div className="container-wide w-full">
+            <div className="relative h-44 max-w-2xl sm:h-52">
+              {fadeBackdrops.map((slide, i) => (
+                <FadeChapterText
+                  key={slide.label}
+                  slide={slide}
+                  progress={scrollYProgress}
+                  index={i}
+                  total={total}
+                />
+              ))}
+            </div>
+
+            <div className="mt-2 flex items-center gap-2">
+              {fadeBackdrops.map((slide, i) => (
+                <FadeProgressBar key={slide.label} progress={scrollYProgress} index={i} total={total} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function LabGallerySection() {
+  const ref = useRef<HTMLElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-120px' })
+
+  return (
+    <section
+      ref={ref}
+      className="relative overflow-hidden py-24 lg:py-32"
+      style={{ background: 'var(--color-bg)' }}
+    >
+      <div className="container-wide">
+        <div className="mb-14 grid gap-10 lg:grid-cols-[0.95fr_1fr] lg:items-end">
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.85, ease: E }}
+          >
+            <SectionLabel>Inside the Lab</SectionLabel>
+            <h2
+              className="font-display font-bold leading-[1.02] tracking-tight text-balance"
+              style={{ color: 'var(--color-ink)', fontSize: 'clamp(2.4rem, 4.8vw, 5rem)' }}
+            >
+              Where every batch earns its release.
+            </h2>
+          </motion.div>
+          <motion.p
+            className="max-w-xl text-base leading-[1.8] lg:justify-self-end"
+            style={{ color: 'var(--color-ink-muted)' }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.12, ease: E }}
+          >
+            Walking through the floor — from raw-material assay to sterile fill,
+            sampling, and finished-goods checks. Quality isn&apos;t a stamp at the end,
+            it&apos;s the discipline you can see at every station.
+          </motion.p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-12 lg:gap-5">
+          {labGalleryImages.map((img, i) => {
+            const layout = [
+              'col-span-2 lg:col-span-7 aspect-[16/11]',
+              'col-span-2 lg:col-span-5 aspect-[5/6]',
+              'col-span-1 lg:col-span-4 aspect-[4/5]',
+              'col-span-1 lg:col-span-4 aspect-[4/5]',
+              'col-span-2 lg:col-span-4 aspect-[4/5]',
+              'col-span-2 lg:col-span-12 aspect-[16/7]',
+            ][i] ?? 'col-span-2 lg:col-span-4 aspect-[4/5]'
+
+            return (
+              <motion.figure
+                key={img.src}
+                className={`group relative overflow-hidden rounded-md ${layout}`}
+                style={{ background: 'var(--color-border)' }}
+                initial={{ opacity: 0, y: 28, scale: 0.98 }}
+                animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                transition={{ duration: 0.7, delay: 0.1 + i * 0.07, ease: E }}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/70 via-transparent to-transparent opacity-90" />
+                <figcaption className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                  <p className="text-sm font-semibold text-white">{img.caption}</p>
+                </figcaption>
+              </motion.figure>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function QualitySection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
@@ -451,13 +868,19 @@ function InvestorSection() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.85, delay: 0.12, ease: E }}
           >
-            <div className="grid gap-px bg-white/[0.12] sm:grid-cols-3">
+            <div className="grid gap-px bg-white/[0.12]">
               {investorFacts.map((fact) => (
-                <div key={fact.label} className="p-5" style={{ background: 'rgba(0,80,145,0.35)' }}>
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.24em]" style={{ color: 'rgba(255,255,255,0.54)' }}>
+                <div
+                  key={fact.label}
+                  className="flex items-baseline justify-between gap-5 p-5 sm:p-6"
+                  style={{ background: 'rgba(0,80,145,0.35)' }}
+                >
+                  <p className="shrink-0 text-[10px] font-extrabold uppercase tracking-[0.24em]" style={{ color: 'rgba(255,255,255,0.54)' }}>
                     {fact.label}
                   </p>
-                  <p className="mt-3 text-sm font-bold leading-snug text-white">{fact.value}</p>
+                  <p className="text-right text-sm font-bold leading-snug text-white break-all sm:text-base">
+                    {fact.value}
+                  </p>
                 </div>
               ))}
             </div>
@@ -487,19 +910,26 @@ function CTASection() {
   return (
     <section ref={ref} className="relative overflow-hidden py-24 lg:py-36" style={{ background: 'var(--color-slate-950)' }}>
       <Image
-        src={IMAGES.vaccinePack}
+        src={IMAGES.scientistMicroscope}
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.34]"
-        style={{ objectPosition: 'center 35%' }}
+        className="object-cover opacity-60"
+        style={{ objectPosition: 'center 30%' }}
         aria-hidden="true"
       />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(5,6,15,0.96), rgba(5,6,15,0.78))' }} aria-hidden="true" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(5,6,15,0.9) 0%, rgba(5,6,15,0.7) 38%, rgba(5,6,15,0.35) 75%, rgba(5,6,15,0.55) 100%)',
+        }}
+        aria-hidden="true"
+      />
 
       <div className="container-wide relative z-10">
         <motion.div
-          className="max-w-4xl"
+          className="max-w-3xl"
           initial={{ opacity: 0, y: 36 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.85, ease: E }}
@@ -508,8 +938,8 @@ function CTASection() {
             Start With Astonea
           </p>
           <h2
-            className="font-display font-bold leading-[1.01] tracking-tight text-white text-balance"
-            style={{ fontSize: 'clamp(3rem, 7vw, 7.2rem)' }}
+            className="font-display font-bold leading-[1.04] tracking-tight text-white text-balance"
+            style={{ fontSize: 'clamp(2.4rem, 4.8vw, 4.75rem)' }}
           >
             Your formulation deserves a sharper manufacturing partner.
           </h2>
@@ -546,6 +976,9 @@ export default function HomeContent() {
     <>
       <ProofSection />
       <CapabilitiesSection />
+      <IndustriesSection />
+      <BackgroundFadeSection />
+      <LabGallerySection />
       <QualitySection />
       <InvestorSection />
       <CTASection />

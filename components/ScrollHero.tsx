@@ -10,19 +10,19 @@ const heroImages = [
   {
     src: '/hero/hero-capsule-chip.png',
     alt: 'Digital capsule over a circuit board',
-    className: 'top-[13%] right-[7%] w-[min(32vw,430px)] aspect-[16/10]',
+    className: 'top-[14%] right-[4%] w-[min(24vw,340px)] aspect-[16/10]',
     delay: 0.1,
   },
   {
     src: '/hero/hero-capsules-bg.png',
     alt: 'Multiple DNA capsules floating over a digital platform',
-    className: 'top-[39%] right-[3%] w-[min(27vw,350px)] aspect-[4/3]',
+    className: 'top-[46%] right-[2%] w-[min(20vw,280px)] aspect-[4/3]',
     delay: 0.24,
   },
   {
     src: '/hero/lab-scientist.jpg',
     alt: 'Scientist recording lab notes beside testing equipment',
-    className: 'bottom-[11%] right-[20%] w-[min(19vw,230px)] aspect-[4/5]',
+    className: 'bottom-[14%] right-[18%] w-[min(15vw,195px)] aspect-[4/5]',
     delay: 0.38,
   },
 ]
@@ -39,7 +39,7 @@ export default function ScrollHero() {
   return (
     <section
       className="relative isolate w-full overflow-hidden"
-      style={{ height: 'clamp(620px, 92svh, 860px)', background: '#05060f' }}
+      style={{ minHeight: 'clamp(640px, 88svh, 820px)', background: '#05060f' }}
       aria-label="Astonea Labs home hero"
     >
       <Image
@@ -88,9 +88,9 @@ export default function ScrollHero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-20 flex h-full items-center">
+      <div className="relative z-20 flex min-h-[inherit] items-center pt-28 pb-32 lg:pt-32 lg:pb-36">
         <div className="container-wide w-full">
-          <div className="max-w-3xl pt-20">
+          <div className="max-w-4xl">
             <motion.p
               className="mb-5 flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.3em] text-cyan-200/[0.75]"
               initial={{ opacity: 0, y: 18 }}
@@ -102,8 +102,8 @@ export default function ScrollHero() {
             </motion.p>
 
             <motion.h1
-              className="font-display font-bold leading-[0.98] tracking-tight text-white text-balance"
-              style={{ fontSize: 'clamp(3.35rem, 7.2vw, 7.8rem)' }}
+              className="font-display font-bold leading-[1.04] tracking-tight text-white text-balance"
+              style={{ fontSize: 'clamp(2.5rem, 5.1vw, 5.25rem)' }}
               initial={{ opacity: 0, y: 34 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.08, ease: E }}
@@ -112,7 +112,7 @@ export default function ScrollHero() {
             </motion.h1>
 
             <motion.p
-              className="mt-6 max-w-2xl text-base leading-relaxed text-slate-200/[0.78] sm:text-lg"
+              className="mt-7 max-w-2xl text-base leading-relaxed text-slate-200/[0.78] sm:text-lg"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.85, delay: 0.2, ease: E }}
@@ -122,7 +122,7 @@ export default function ScrollHero() {
             </motion.p>
 
             <motion.div
-              className="mt-9 flex flex-wrap gap-3"
+              className="mt-10 flex flex-wrap gap-3"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.32, ease: E }}
