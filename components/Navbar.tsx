@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import AstoneaLogo from '@/components/AstoneaLogo'
 
 /* ─── Nav data ────────────────────────────────────────────────────────────── */
 
@@ -209,9 +210,8 @@ function MobileDrawer({
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-              <Link href="/" onClick={onClose}>
-                <span className="font-display font-bold text-lg text-ink">ASTONEA</span>
-                <span className="block text-xs text-ink-subtle tracking-wider -mt-0.5">LABS LIMITED</span>
+              <Link href="/" onClick={onClose} className="flex items-center">
+                <AstoneaLogo className="h-9 w-auto" />
               </Link>
               <button
                 onClick={onClose}
@@ -390,11 +390,11 @@ export default function Navbar() {
           animate={{
             backgroundColor: scrolled
               ? 'rgba(255,255,255,0.95)'
-              : 'rgba(255,255,255,0.0)',
-            backdropFilter: scrolled ? 'blur(16px)' : 'blur(0px)',
+              : 'rgba(255,255,255,0.88)',
+            backdropFilter: 'blur(16px)',
             borderBottomColor: scrolled
               ? 'rgba(226,232,240,0.8)'
-              : 'rgba(226,232,240,0)',
+              : 'rgba(226,232,240,0.4)',
           }}
           transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           className="border-b"
@@ -403,21 +403,15 @@ export default function Navbar() {
             <div className="flex items-center justify-between h-16 lg:h-[72px]">
 
               {/* Logo */}
-              <Link href="/" className="flex-shrink-0 group outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm">
-                <span
-                  className={`font-display font-bold text-lg tracking-tight transition-colors duration-200 ${
-                    !scrolled ? 'text-white' : 'text-ink'
-                  } group-hover:text-primary`}
-                >
-                  ASTONEA
-                </span>
-                <span
-                  className={`block text-[10px] tracking-[0.22em] uppercase -mt-0.5 transition-colors duration-200 ${
-                    !scrolled ? 'text-white/60' : 'text-ink-subtle'
-                  }`}
-                >
-                  LABS LIMITED
-                </span>
+              <Link
+                href="/"
+                aria-label="Astonea Labs — home"
+                className="flex-shrink-0 flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm"
+              >
+                <AstoneaLogo
+                  className="h-10 lg:h-12 w-auto"
+                  priority
+                />
               </Link>
 
               {/* Desktop nav */}
@@ -433,11 +427,7 @@ export default function Navbar() {
                       <button
                         aria-expanded={open === item.label}
                         aria-haspopup="true"
-                        className={`flex items-center gap-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm transition-colors duration-150 ${
-                          !scrolled
-                            ? 'text-white/80 hover:text-white'
-                            : 'text-ink/80 hover:text-ink'
-                        }`}
+                        className="flex items-center gap-1 text-sm font-medium text-ink/80 hover:text-ink outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm transition-colors duration-150"
                       >
                         {item.label}
                         <motion.svg
@@ -480,7 +470,7 @@ export default function Navbar() {
                 aria-expanded={mobileOpen}
               >
                 <svg
-                  className={`w-5 h-5 transition-colors duration-200 ${!scrolled ? 'text-white' : 'text-ink'}`}
+                  className="w-5 h-5 text-ink"
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
