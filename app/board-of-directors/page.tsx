@@ -68,10 +68,16 @@ const directors = [
 ]
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
-  Executive:    { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
-  'Non-Executive': { bg: 'rgba(232,169,0,0.1)', text: 'var(--color-accent-dark)' },
-  Independent:  { bg: 'rgba(16,185,129,0.1)', text: '#059669' },
+  Executive:       { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
+  'Non-Executive': { bg: 'rgba(232,169,0,0.12)', text: '#8A6000' },
+  Independent:     { bg: 'rgba(16,185,129,0.1)', text: '#059669' },
 }
+
+const composition = [
+  { label: 'Executive Directors', count: '5', color: 'var(--color-primary)' },
+  { label: 'Non-Executive Director', count: '1', color: '#8A6000' },
+  { label: 'Independent Directors', count: '3', color: '#059669' },
+]
 
 export default function BoardOfDirectorsPage() {
   return (
@@ -86,15 +92,11 @@ export default function BoardOfDirectorsPage() {
       {/* Board composition summary */}
       <section className="py-16" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
-          <div className="grid sm:grid-cols-3 gap-6 max-w-2xl">
-            {[
-              { label: 'Executive Directors', count: '5', color: 'var(--color-primary)' },
-              { label: 'Non-Executive Director', count: '1', color: 'var(--color-accent-dark)' },
-              { label: 'Independent Directors', count: '3', color: '#059669' },
-            ].map((item) => (
-              <div key={item.label} className="text-center p-6 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="grid sm:grid-cols-3 gap-px max-w-2xl" style={{ background: 'var(--color-border)' }}>
+            {composition.map((item) => (
+              <div key={item.label} className="text-center p-8" style={{ background: 'var(--color-bg)' }}>
                 <span className="font-display text-4xl font-bold" style={{ color: item.color }}>{item.count}</span>
-                <p className="mt-1 text-xs font-medium" style={{ color: 'var(--color-ink-muted)' }}>{item.label}</p>
+                <p className="mt-2 text-xs font-medium" style={{ color: 'var(--color-ink-muted)' }}>{item.label}</p>
               </div>
             ))}
           </div>

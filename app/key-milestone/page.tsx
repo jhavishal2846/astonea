@@ -65,6 +65,13 @@ const milestones = [
   },
 ]
 
+const stats = [
+  { value: '2017', label: 'Year Founded' },
+  { value: '2,000+', label: 'Client Brands' },
+  { value: '1,500+', label: 'Product Approvals' },
+  { value: 'BSE & NSE', label: 'Listed On' },
+]
+
 export default function KeyMilestonePage() {
   return (
     <div className="flex-1 flex flex-col">
@@ -76,23 +83,24 @@ export default function KeyMilestonePage() {
       />
 
       {/* Stats strip */}
-      <section className="py-16" style={{ background: 'var(--color-surface)' }}>
+      <div style={{ background: 'var(--color-primary)' }}>
         <div className="container-wide">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { value: '2017', label: 'Year Founded' },
-              { value: '2,000+', label: 'Client Brands' },
-              { value: '1,500+', label: 'Product Approvals' },
-              { value: 'BSE & NSE', label: 'Listed On' },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="font-display text-4xl font-bold" style={{ color: 'var(--color-primary)' }}>{s.value}</div>
-                <div className="mt-1 text-sm" style={{ color: 'var(--color-ink-muted)' }}>{s.label}</div>
+          <div className="grid grid-cols-2 lg:grid-cols-4">
+            {stats.map((s, i) => (
+              <div
+                key={s.label}
+                className={[
+                  'py-8 px-6 text-center',
+                  i < stats.length - 1 ? 'border-r border-white/20' : '',
+                ].join(' ')}
+              >
+                <p className="font-display text-3xl font-bold text-white mb-1">{s.value}</p>
+                <p className="text-xs font-medium uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.72)' }}>{s.label}</p>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Timeline */}
       <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
@@ -118,11 +126,12 @@ export default function KeyMilestonePage() {
 
                     {/* Events */}
                     <div className={`lg:w-1/2 sm:pl-10 lg:pl-10 ${i % 2 !== 0 ? 'lg:pl-0 lg:pr-10' : ''}`}>
-                      <div className="space-y-3">
+                      <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
                         {m.events.map((e) => (
-                          <div key={e} className="flex items-start gap-3 p-4 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                            <div className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style={{ background: 'var(--color-primary)' }} />
-                            <span className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{e}</span>
+                          <div key={e} className="flex items-start gap-4 p-5" style={{ background: 'var(--color-surface)' }}>
+                            <div className="pl-3 border-l-2" style={{ borderColor: 'var(--color-primary-light)' }}>
+                              <span className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{e}</span>
+                            </div>
                           </div>
                         ))}
                       </div>

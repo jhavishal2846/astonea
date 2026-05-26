@@ -14,7 +14,17 @@
       "PowerShell(curl.exe --version | Select-Object -First 2)",
       "PowerShell(Get-Content *)",
       "PowerShell(curl.exe -Z --parallel-max 5 -K \"$env:TEMP\\\\curl-frames-ascii.txt\" 2>&1 | Select-Object -First 10)",
-      "WebFetch(domain:prnt.sc)"
+      "WebFetch(domain:prnt.sc)",
+      "Bash(python -c ' *)",
+      "PowerShell(Get-Command *)",
+      "Bash(node -e \"require\\('pdf-parse'\\)\")",
+      "Bash(npm install *)",
+      "Bash(node -e ' *)",
+      "Bash(node -e *)",
+      "Bash(winget install *)",
+      "Bash(pdftotext \"11th July, 2025.pdf\" -)",
+      "Bash(ls \"C:\\\\Users\\\\DELL\\\\Downloads\" | head -50)",
+      "Read(//c/Users/DELL/Downloads/**)"
     ]
   }
 }

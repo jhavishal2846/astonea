@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
-import { Reveal, StaggerReveal } from '@/components/StaggerReveal'
+import { Reveal } from '@/components/StaggerReveal'
 
 export const metadata: Metadata = {
   title: 'Leadership Panel',
@@ -132,7 +132,7 @@ export default function LeadershipPanelPage() {
       </section>
 
       {/* KMP */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-slate-50)' }}>
+      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>Key Managerial Personnel</p>

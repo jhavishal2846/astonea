@@ -6,26 +6,32 @@ import { Reveal } from '@/components/StaggerReveal'
 
 const whyJoin = [
   {
+    num: '01',
     title: 'State-of-the-Art Facility',
     desc: 'Work in a modern GMP-compliant manufacturing environment with advanced production systems and industry-leading equipment.',
   },
   {
+    num: '02',
     title: 'Stringent Quality Standards',
     desc: 'Be part of a culture where WHO-GMP, ISO, and cGMP compliance is not just policy — it is embedded in how we operate every single day.',
   },
   {
+    num: '03',
     title: 'Diverse Product Range',
     desc: 'Engage with a broad portfolio spanning antibiotics, antidiabetics, cardiovascular drugs, cosmetics, and nutraceuticals.',
   },
   {
+    num: '04',
     title: 'Career Development',
     desc: 'Growth opportunities across manufacturing, R&D, quality assurance, regulatory affairs, marketing, supply chain, and corporate functions.',
   },
   {
+    num: '05',
     title: 'Collaborative Culture',
     desc: 'A collaborative, inclusive environment that encourages teamwork, innovation, and continuous professional improvement.',
   },
   {
+    num: '06',
     title: 'Global Exposure',
     desc: 'Involvement in domestic and international operations, USFDA compliance, and global supply chain dynamics.',
   },
@@ -35,6 +41,15 @@ const departments = [
   'Manufacturing & Production', 'Quality Assurance', 'Research & Development',
   'Drug Regulatory Affairs', 'Marketing & Sales', 'Supply Chain & Procurement',
   'Finance & Accounts', 'Human Resources', 'Corporate Affairs',
+]
+
+const candidateTraits = [
+  'Passionate about pharmaceuticals, cosmetics, manufacturing, quality control, and regulatory compliance',
+  'Eager to learn and innovate in a structured, process-driven environment',
+  'Committed to ethical standards and quality excellence',
+  'Adaptable to dynamic industrial and regulatory settings',
+  'Open to continuous professional development and growth',
+  'Fresh graduates and experienced professionals are both welcome',
 ]
 
 export default function CareerPage() {
@@ -70,11 +85,14 @@ export default function CareerPage() {
               A place where talent, dedication, and innovation are rewarded
             </h2>
           </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: 'var(--color-border)' }}>
             {whyJoin.map((w, i) => (
               <Reveal key={w.title} delay={i * 60}>
-                <div className="p-8 rounded-2xl border h-full" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  <h3 className="font-display text-lg font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>{w.title}</h3>
+                <div className="flex flex-col gap-3 p-8 h-full" style={{ background: 'var(--color-surface)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                    {w.num}
+                  </span>
+                  <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>{w.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{w.desc}</p>
                 </div>
               </Reveal>
@@ -92,23 +110,15 @@ export default function CareerPage() {
                 <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--color-primary-light)' }}>
                   Who We Are Looking For
                 </p>
-                <h2 className="font-display text-3xl lg:text-4xl font-bold text-white leading-snug mb-6 text-balance">
+                <h2 className="font-display text-3xl lg:text-4xl font-bold text-white leading-snug mb-8 text-balance">
                   Passionate, ethical, and driven by excellence
                 </h2>
-                <div className="space-y-3">
-                  {[
-                    'Passionate about pharmaceuticals, cosmetics, manufacturing, quality control, and regulatory compliance',
-                    'Eager to learn and innovate in a structured, process-driven environment',
-                    'Committed to ethical standards and quality excellence',
-                    'Adaptable to dynamic industrial and regulatory settings',
-                    'Open to continuous professional development and growth',
-                    'Fresh graduates and experienced professionals are both welcome',
-                  ].map((t) => (
-                    <div key={t} className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                      <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ color: 'var(--color-primary-light)' }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                      </svg>
-                      <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{t}</span>
+                <div className="space-y-px" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                  {candidateTraits.map((t) => (
+                    <div key={t} className="px-6 py-4" style={{ background: 'var(--color-slate-950)' }}>
+                      <div className="pl-4 border-l-2" style={{ borderColor: 'var(--color-primary-light)' }}>
+                        <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)' }}>{t}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -122,7 +132,7 @@ export default function CareerPage() {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {departments.map((d) => (
-                    <span key={d} className="px-3 py-2 rounded-full text-xs font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)' }}>
+                    <span key={d} className="px-3 py-2 rounded-full text-xs font-medium border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.78)' }}>
                       {d}
                     </span>
                   ))}
@@ -156,13 +166,9 @@ export default function CareerPage() {
 
             <Reveal delay={80}>
               {submitted ? (
-                <div className="p-10 rounded-2xl border text-center" style={{ borderColor: 'var(--color-border)' }}>
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(16,185,129,0.1)' }}>
-                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: '#10B981' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                  </div>
-                  <h3 className="font-display text-xl font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>Application Submitted</h3>
+                <div className="p-10 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
+                  <p className="font-mono text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--color-primary)' }}>APPLICATION SUBMITTED</p>
+                  <h3 className="font-display text-xl font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>We've received your application.</h3>
                   <p className="text-sm" style={{ color: 'var(--color-ink-muted)' }}>
                     Thank you for your interest. Our HR team will review your application and reach out shortly.
                   </p>

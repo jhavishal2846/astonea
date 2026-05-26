@@ -31,33 +31,31 @@ export default function SubsidiariesPage() {
 
           <div className="max-w-2xl">
             <Reveal>
-              <div className="p-10 rounded-3xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+              <div className="p-10 rounded-3xl border" style={{ background: 'var(--color-slate-950)', borderColor: 'rgba(255,255,255,0.08)' }}>
                 <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
-                      Wholly Owned Subsidiary
-                    </span>
-                  </div>
-                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-ink-subtle)' }}>USA</span>
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
+                    Wholly Owned Subsidiary
+                  </span>
+                  <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.55)' }}>USA</span>
                 </div>
 
-                <h3 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--color-ink)' }}>Astonea LLC</h3>
-                <p className="text-sm font-medium mb-5" style={{ color: 'var(--color-primary)' }}>
+                <h3 className="font-display text-2xl font-bold mb-2 text-white">Astonea LLC</h3>
+                <p className="text-sm font-medium mb-5" style={{ color: 'var(--color-primary-light)' }}>
                   Wholly Owned Subsidiary — United States of America
                 </p>
 
-                <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--color-ink-muted)' }}>
+                <p className="text-base leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.78)' }}>
                   Astonea LLC is the wholly owned US subsidiary (WOS) of Astonea Labs Limited, incorporated to support
                   the company's international expansion, distribution, and market development efforts in North America.
                   The establishment of this entity is a significant step in Astonea's vision to become a global
                   pharmaceutical and cosmetic brand.
                 </p>
 
-                <div className="pt-5 border-t" style={{ borderColor: 'var(--color-border)' }}>
-                  <p className="text-xs" style={{ color: 'var(--color-ink-subtle)' }}>
+                <div className="pt-5 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>
                     Parent Company CIN: L24304CH2017PLC041482 — Astonea Labs Limited, Chandigarh, India.
                     For incorporation documents, refer to{' '}
-                    <Link href="/sebi-lodr-regulation-30-disclosures" className="hover:underline font-medium" style={{ color: 'var(--color-primary)' }}>
+                    <Link href="/sebi-lodr-regulation-30-disclosures" className="hover:underline font-medium" style={{ color: 'var(--color-primary-light)' }}>
                       SEBI LODR Reg. 30 Disclosures
                     </Link>.
                   </p>

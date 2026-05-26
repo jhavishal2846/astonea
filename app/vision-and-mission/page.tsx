@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 }
 
 const values = [
-  { title: 'Global Ambition', desc: 'We pursue international markets through both our own brand portfolio and as a preferred supplier to global partners.' },
-  { title: 'Sustainability', desc: 'Every brand we build and every partnership we form is designed for long-term, sustainable impact.' },
-  { title: 'Scientific Excellence', desc: 'Our portfolio is backed by rigorous R&D, GMP compliance, and formulation expertise spanning pharma and cosmetics.' },
-  { title: 'Consumer Impact', desc: 'We connect with global consumers through products that genuinely improve wellbeing and inspire confidence.' },
-  { title: 'Integrity', desc: 'Transparent governance, regulatory compliance, and ethical manufacturing are non-negotiable at Astonea.' },
-  { title: 'Innovation', desc: 'We continuously invest in technology-enabled manufacturing and best-researched product portfolios.' },
+  { num: '01', title: 'Global Ambition', desc: 'We pursue international markets through both our own brand portfolio and as a preferred supplier to global partners.' },
+  { num: '02', title: 'Sustainability', desc: 'Every brand we build and every partnership we form is designed for long-term, sustainable impact.' },
+  { num: '03', title: 'Scientific Excellence', desc: 'Our portfolio is backed by rigorous R&D, GMP compliance, and formulation expertise spanning pharma and cosmetics.' },
+  { num: '04', title: 'Consumer Impact', desc: 'We connect with global consumers through products that genuinely improve wellbeing and inspire confidence.' },
+  { num: '05', title: 'Integrity', desc: 'Transparent governance, regulatory compliance, and ethical manufacturing are non-negotiable at Astonea.' },
+  { num: '06', title: 'Innovation', desc: 'We continuously invest in technology-enabled manufacturing and best-researched product portfolios.' },
 ]
 
 export default function VisionAndMissionPage() {
@@ -29,7 +29,7 @@ export default function VisionAndMissionPage() {
       {/* Mission & Vision */}
       <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
             <Reveal>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--color-primary)' }}>
@@ -47,13 +47,13 @@ export default function VisionAndMissionPage() {
 
             <Reveal delay={100}>
               <div className="p-10 rounded-3xl" style={{ background: 'var(--color-primary)' }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'rgba(255,255,255,0.72)' }}>
                   Our Vision
                 </p>
                 <blockquote className="font-display text-xl lg:text-2xl font-semibold leading-snug text-white">
                   "To build sustainable brands that have global reach and make a lasting impact on people's life."
                 </blockquote>
-                <p className="mt-5 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                <p className="mt-5 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)' }}>
                   To connect with global masses with our best-researched portfolio of products — delivering both wellbeing
                   and beauty to consumers around the world.
                 </p>
@@ -64,10 +64,10 @@ export default function VisionAndMissionPage() {
       </section>
 
       {/* Tagline band */}
-      <section className="py-20" style={{ background: 'var(--color-slate-950)' }}>
+      <section className="py-24" style={{ background: 'var(--color-slate-950)' }}>
         <div className="container-wide text-center">
           <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: 'rgba(255,255,255,0.55)' }}>
               Our Promise
             </p>
             <h2 className="font-display text-4xl lg:text-5xl font-bold text-white text-balance max-w-2xl mx-auto leading-tight">
@@ -89,11 +89,14 @@ export default function VisionAndMissionPage() {
               The principles behind our purpose
             </h2>
           </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: 'var(--color-border)' }}>
             {values.map((v, i) => (
               <Reveal key={v.title} delay={i * 60}>
-                <div className="p-8 rounded-2xl border h-full" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-                  <h3 className="font-display text-lg font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>{v.title}</h3>
+                <div className="flex flex-col gap-4 p-8 h-full" style={{ background: 'var(--color-bg)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                    {v.num}
+                  </span>
+                  <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>{v.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{v.desc}</p>
                 </div>
               </Reveal>

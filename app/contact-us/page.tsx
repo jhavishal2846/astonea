@@ -8,17 +8,14 @@ const offices = [
   {
     label: 'Registered Office',
     address: 'SCO 321-322, Basement, Sector 35B\nChandigarh — 160022',
-    icon: '🏛',
   },
   {
     label: 'Corporate Office',
     address: 'Plot No. 63, Industrial Area Phase-II\nPanchkula, Haryana — 134113',
-    icon: '🏢',
   },
   {
     label: 'Manufacturing Facility',
     address: 'Vill. Haripur, Tehsil Raipur Rani\nDist. Panchkula, Haryana — 134204',
-    icon: '🏭',
   },
 ]
 
@@ -63,11 +60,13 @@ export default function ContactUsPage() {
             </h2>
           </Reveal>
 
-          <div className="grid sm:grid-cols-3 gap-6 mb-16">
+          <div className="grid sm:grid-cols-3 gap-px mb-16" style={{ background: 'var(--color-border)' }}>
             {offices.map((o, i) => (
               <Reveal key={o.label} delay={i * 80}>
-                <div className="p-8 rounded-2xl border h-full" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  <div className="text-3xl mb-4">{o.icon}</div>
+                <div className="p-8 h-full" style={{ background: 'var(--color-surface)' }}>
+                  <p className="font-mono text-xs font-bold tracking-widest mb-6" style={{ color: 'var(--color-primary-light)' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </p>
                   <h3 className="font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>{o.label}</h3>
                   <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--color-ink-muted)' }}>{o.address}</p>
                 </div>
@@ -120,7 +119,7 @@ export default function ContactUsPage() {
                 <h2 className="font-display text-3xl lg:text-4xl font-bold text-white leading-snug mb-5 text-balance">
                   Send us a message
                 </h2>
-                <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
                   Whether you're a brand owner looking for a manufacturing partner, an investor with questions,
                   or a professional exploring export opportunities — fill in the form and our team will get
                   back to you within one business day.
@@ -130,15 +129,11 @@ export default function ContactUsPage() {
 
             <Reveal delay={100}>
               {submitted ? (
-                <div className="p-10 rounded-2xl border text-center" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style={{ background: 'rgba(16,185,129,0.15)' }}>
-                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: '#10B981' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                  </div>
-                  <h3 className="font-display text-xl font-semibold text-white mb-3">Message Received</h3>
-                  <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                    Thank you for reaching out. Our team will contact you within one business day.
+                <div className="p-10 rounded-2xl border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
+                  <p className="font-mono text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--color-primary-light)' }}>MESSAGE RECEIVED</p>
+                  <h3 className="font-display text-xl font-semibold text-white mb-3">Thank you for reaching out.</h3>
+                  <p className="text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
+                    Our team will contact you within one business day.
                   </p>
                 </div>
               ) : (
@@ -151,7 +146,7 @@ export default function ContactUsPage() {
                     { name: 'city', label: 'City', type: 'text', required: false },
                   ].map((field) => (
                     <div key={field.name}>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                      <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.72)' }}>
                         {field.label}{field.required && ' *'}
                       </label>
                       <input
@@ -170,7 +165,7 @@ export default function ContactUsPage() {
                     </div>
                   ))}
                   <div>
-                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.72)' }}>
                       Message *
                     </label>
                     <textarea

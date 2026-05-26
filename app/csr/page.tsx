@@ -9,19 +9,19 @@ export const metadata: Metadata = {
 
 const focusAreas = [
   {
+    num: '01',
     title: 'Ecological Preservation',
     desc: 'Promoting eco-conscious manufacturing practices, reducing industrial waste, and supporting environmental stewardship in the communities where we operate.',
-    icon: '🌱',
   },
   {
+    num: '02',
     title: 'Social Empowerment',
     desc: 'Initiatives that uplift individuals through education, skill development, and access to healthcare — creating lasting socioeconomic change.',
-    icon: '🤝',
   },
   {
+    num: '03',
     title: 'Community Advancement',
     desc: 'Direct investment in the welfare and development of communities surrounding our manufacturing and operational footprint in Haryana and Chandigarh.',
-    icon: '🏘',
   },
 ]
 
@@ -73,7 +73,7 @@ export default function CSRPage() {
                 <p className="font-display text-2xl font-semibold italic text-white leading-snug mb-6">
                   "Sowing responsibility today, reaping a brighter world tomorrow."
                 </p>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
                   — Astonea Labs CSR Philosophy
                 </p>
               </div>
@@ -93,12 +93,14 @@ export default function CSRPage() {
               Three pillars of our CSR commitment
             </h2>
           </Reveal>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-3 gap-px" style={{ background: 'var(--color-border)' }}>
             {focusAreas.map((f, i) => (
               <Reveal key={f.title} delay={i * 80}>
-                <div className="p-10 rounded-2xl border h-full text-center" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-                  <div className="text-4xl mb-5">{f.icon}</div>
-                  <h3 className="font-display text-xl font-semibold mb-4" style={{ color: 'var(--color-ink)' }}>{f.title}</h3>
+                <div className="flex flex-col gap-4 p-10 h-full" style={{ background: 'var(--color-bg)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                    {f.num}
+                  </span>
+                  <h3 className="font-display text-xl font-semibold" style={{ color: 'var(--color-ink)' }}>{f.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{f.desc}</p>
                 </div>
               </Reveal>
@@ -119,14 +121,14 @@ export default function CSRPage() {
                 How we hold ourselves accountable
               </h2>
             </Reveal>
-            <div className="space-y-4">
+            <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
               {principles.map((p, i) => (
                 <Reveal key={i} delay={i * 60}>
-                  <div className="flex items-start gap-4 p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
+                  <div className="flex items-start gap-5 p-6" style={{ background: 'var(--color-surface)' }}>
                     <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold font-mono" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
                       {i + 1}
                     </div>
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{p}</p>
+                    <p className="text-sm leading-relaxed pt-0.5" style={{ color: 'var(--color-ink-muted)' }}>{p}</p>
                   </div>
                 </Reveal>
               ))}

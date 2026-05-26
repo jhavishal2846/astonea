@@ -84,13 +84,10 @@ export default function CertificationsPage() {
             {certifications.map((c, i) => (
               <Reveal key={c.label} delay={i * 60}>
                 <div className="flex flex-col p-8 rounded-2xl border h-full" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  <div className="flex items-center justify-between mb-5">
+                  <div className="mb-5">
                     <span className="font-mono text-xs font-bold px-3 py-1.5 rounded-lg" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
                       {c.label}
                     </span>
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: 'var(--color-success)' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                    </svg>
                   </div>
                   <h3 className="font-display text-base font-semibold mb-2" style={{ color: 'var(--color-ink)' }}>{c.fullName}</h3>
                   <p className="text-sm leading-relaxed flex-1 mb-4" style={{ color: 'var(--color-ink-muted)' }}>{c.desc}</p>
@@ -116,7 +113,7 @@ export default function CertificationsPage() {
                 <h2 className="font-display text-3xl lg:text-4xl font-bold text-white leading-snug mb-6 text-balance">
                   Multi-tier QMS — zero compromise
                 </h2>
-                <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
                   Our quality management system spans the entire production lifecycle — from raw material qualification
                   to finished-goods testing and post-market surveillance — ensuring every batch meets its specifications
                   before release.
@@ -125,13 +122,12 @@ export default function CertificationsPage() {
             </Reveal>
 
             <Reveal delay={100}>
-              <div className="space-y-3">
+              <div className="space-y-px" style={{ background: 'rgba(255,255,255,0.08)' }}>
                 {qualityPractices.map((p) => (
-                  <div key={p} className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
-                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ color: 'var(--color-primary-light)' }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                    </svg>
-                    <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{p}</span>
+                  <div key={p} className="px-6 py-4" style={{ background: 'var(--color-slate-950)' }}>
+                    <div className="pl-4 border-l-2" style={{ borderColor: 'var(--color-primary-light)' }}>
+                      <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)' }}>{p}</span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -154,9 +150,14 @@ export default function CertificationsPage() {
             </div>
           </Reveal>
           <Reveal delay={80}>
-            <Link href="/contact-us" className="inline-flex items-center px-6 py-3 rounded-full text-white text-sm font-bold transition-colors hover:opacity-90" style={{ background: 'var(--color-primary)' }}>
-              Contact Our QA Team
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <a href="/pdf/UPDATED CERTIFICATES PDF.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+                Download Certificates
+              </a>
+              <Link href="/contact-us" className="inline-flex items-center px-6 py-3 rounded-full text-white text-sm font-bold transition-colors hover:opacity-90" style={{ background: 'var(--color-primary)' }}>
+                Contact Our QA Team
+              </Link>
+            </div>
           </Reveal>
         </div>
       </section>
