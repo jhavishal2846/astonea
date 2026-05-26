@@ -157,7 +157,7 @@ export default function FinancialResultsPage() {
             <Reveal>
               <div className="p-5 rounded-xl border" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
                 <p className="text-xs leading-relaxed" style={{ color: 'var(--color-ink-subtle)' }}>
-                  <strong style={{ color: 'var(--color-ink-muted)' }}>Disclaimer:</strong> The financial results listed above are submitted to BSE and NSE as per SEBI LODR Regulations. For the latest filings, please also refer to the BSE India and NSE India portals using CIN L24304CH2017PLC041482.
+                  <strong style={{ color: 'var(--color-ink-muted)' }}>Disclaimer:</strong> The financial results listed above are submitted to BSE as per SEBI LODR Regulations. For the latest filings, please also refer to the BSE India portals using CIN L24304CH2017PLC041482.
                 </p>
               </div>
             </Reveal>

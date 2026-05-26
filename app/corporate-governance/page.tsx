@@ -52,7 +52,7 @@ const governanceDocs = [
 
 const governanceFacts = [
   { label: 'Board Strength', value: '9 Directors', note: '3 Independent · 1 Non-Executive · 5 Executive' },
-  { label: 'Listed On', value: 'BSE & NSE', note: 'Bombay Stock Exchange & National Stock Exchange' },
+  { label: 'Listed On', value: 'BSE', note: 'Bombay Stock Exchange & National Stock Exchange' },
   { label: 'Compliance Framework', value: 'SEBI LODR', note: 'Listing Obligations & Disclosure Requirements' },
   { label: 'Statutory Auditor', value: 'Independent CA Firm', note: 'Appointed by shareholders at AGM' },
 ]
@@ -83,7 +83,7 @@ export default function CorporateGovernancePage() {
                   Transparent by design
                 </h2>
                 <p className="text-base leading-relaxed mb-5" style={{ color: 'var(--color-ink-muted)' }}>
-                  As a SEBI-listed company on BSE and NSE, Astonea Labs Limited (CIN: L24304CH2017PLC041482) is
+                  As a SEBI-listed company on BSE, Astonea Labs Limited (CIN: L24304CH2017PLC041482) is
                   committed to the highest standards of corporate governance — ensuring transparency, accountability,
                   and protection of shareholder interests at every level.
                 </p>

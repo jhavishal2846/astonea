@@ -53,7 +53,7 @@ const quickLinks = [
 
 const keyFacts = [
   { label: 'CIN', value: 'L24304CH2017PLC041482' },
-  { label: 'Listed On', value: 'BSE & NSE' },
+  { label: 'Listed On', value: 'BSE' },
   { label: 'Incorporation', value: '2017 · Chandigarh' },
   { label: 'Sector', value: 'Pharmaceuticals & Cosmetics' },
   { label: 'Registered Office', value: 'SCO 321-322, Sector 35B, Chandigarh 160022' },

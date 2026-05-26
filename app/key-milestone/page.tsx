@@ -4,7 +4,7 @@ import { Reveal } from '@/components/StaggerReveal'
 
 export const metadata: Metadata = {
   title: 'Key Milestones',
-  description: 'Astonea Labs\' journey from incorporation in 2017 to becoming a SEBI-listed, pan-India manufacturer.',
+  description: 'Astonea Labs\' journey from incorporation in 2017 to its 2025 BSE SME listing as a pan-India manufacturer.',
 }
 
 const milestones = [
@@ -19,20 +19,19 @@ const milestones = [
   },
   {
     year: '2019',
-    title: 'Quality & Scale',
+    title: 'Identity & Scale',
     events: [
+      'Company renamed from AHU Laboratories Private Limited to Astonea Labs Private Limited (14 February 2019)',
       'WHO-GMP certification achieved at the manufacturing facility',
-      '500+ product approvals reached across pharmaceutical categories',
       'Manufacturing facility at Haripur, Panchkula established and operationalised',
     ],
   },
   {
     year: '2021',
-    title: 'Capital Markets',
+    title: 'Portfolio Expansion',
     events: [
-      'Listed on BSE (Bombay Stock Exchange) and NSE (National Stock Exchange)',
       'Expanded product portfolio into the cosmetics manufacturing segment',
-      'Mrs. Pooja Singh joined as Director — Drug Regulatory Affairs',
+      '500+ product approvals reached across pharmaceutical categories',
     ],
   },
   {
@@ -51,16 +50,27 @@ const milestones = [
       'Own consumer brand "Glow Up" launched on Amazon and Tata 1MG',
       '"Regero" brand portfolio established',
       'USFDA audit completed for OTC (Over-the-Counter) products',
+      'Mr. Pardeep Singh joined the Board as Executive Director (9 October 2023)',
     ],
   },
   {
     year: '2024',
-    title: 'Consolidated Growth',
+    title: 'Pre-IPO Consolidation',
     events: [
-      '2,000+ active client brands served across pharma and cosmetics',
-      'Pan-India exporter status achieved',
-      '1,500+ product approvals cleared and maintained',
+      'Converted from a private limited company to a public limited company — renamed Astonea Labs Limited (2 January 2024)',
+      'Mrs. Pooja Singh joined the Board as Director — Drug Regulatory Affairs (14 March 2024)',
       'Astonea LLC incorporated as a Wholly Owned Subsidiary in the USA',
+      'Draft Red Herring Prospectus (DRHP) filed with SEBI (16 August 2024)',
+    ],
+  },
+  {
+    year: '2025',
+    title: 'Capital Markets',
+    events: [
+      'Initial Public Offering opened 27 May 2025 and closed 29 May 2025',
+      'Equity shares listed on BSE SME platform (3 June 2025)',
+      '2,000+ active client brands and 1,500+ product approvals across pharma and cosmetics',
+      'Pan-India distribution and export-ready operations',
     ],
   },
 ]
@@ -69,7 +79,7 @@ const stats = [
   { value: '2017', label: 'Year Founded' },
   { value: '2,000+', label: 'Client Brands' },
   { value: '1,500+', label: 'Product Approvals' },
-  { value: 'BSE & NSE', label: 'Listed On' },
+  { value: 'BSE SME', label: 'Listed On (Jun 2025)' },
 ]
 
 export default function KeyMilestonePage() {
@@ -78,7 +88,7 @@ export default function KeyMilestonePage() {
       <PageHeader
         eyebrow="Our Journey"
         title="Key Milestones"
-        description="Eight years of deliberate, disciplined growth — from a Chandigarh startup to a SEBI-listed, pan-India manufacturer."
+        description="From a Chandigarh startup in 2017 to a BSE SME–listed, pan-India manufacturer in 2025."
         breadcrumb={[{ label: 'Key Milestones', href: '/key-milestone' }]}
       />
 

@@ -127,7 +127,7 @@ const processSteps = [
 
 const investorFacts = [
   { label: 'CIN', value: 'L24304CH2017PLC041482' },
-  { label: 'Listing', value: 'BSE and NSE' },
+  { label: 'Listing', value: 'BSE' },
   { label: 'Sector', value: 'Pharma and cosmetics' },
 ]
 

@@ -24,7 +24,7 @@ const boardMembers = [
     name: 'Mrs. Pooja Singh',
     title: 'Director — Drug Regulatory Affairs',
     quals: 'B. Pharma · Rajeev Gandhi College of Pharmacy',
-    bio: 'Over 8 years in Quality Assurance and Drug Regulatory Affairs. Joined Astonea Labs in 2021 and now leads the Drug Regulatory Affairs department, ensuring rigorous compliance with regulatory standards.',
+    bio: 'Over 8 years in Quality Assurance and Drug Regulatory Affairs. Joined the Astonea Labs Board on 14 March 2024 and now leads the Drug Regulatory Affairs department, ensuring rigorous compliance with regulatory standards.',
   },
   {
     name: 'Dr. Vikrant Narwal',
