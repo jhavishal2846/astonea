@@ -86,7 +86,7 @@ export default function ScrollHero() {
         animate={reduceMotion ? undefined : { backgroundPosition: ['0px 0px', '54px 54px'] }}
         transition={reduceMotion ? undefined : { duration: 18, repeat: Infinity, ease: 'linear' }}
         aria-hidden="true"
-      />
+      /> 
 
       <div className="relative z-20 flex min-h-[inherit] items-center pt-28 pb-32 lg:pt-32 lg:pb-36">
         <div className="container-wide w-full">
