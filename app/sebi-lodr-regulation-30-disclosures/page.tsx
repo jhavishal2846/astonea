@@ -70,7 +70,7 @@ export default function Regulation30Page() {
       <PageHeader
         eyebrow="SEBI Disclosures"
         title="SEBI LODR Regulation 30 Disclosures"
-        description="Event-based material disclosures filed with BSE and NSE under Regulation 30 of the SEBI Listing Obligations and Disclosure Requirements Regulations, 2015."
+        description="Event-based material disclosures filed with BSE under Regulation 30 of the SEBI Listing Obligations and Disclosure Requirements Regulations, 2015."
         breadcrumb={[
           { label: 'Investors', href: '/investor-insights' },
           { label: 'SEBI Reg. 30', href: '/sebi-lodr-regulation-30-disclosures' },

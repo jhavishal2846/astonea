@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 const listingDetails = [
   { label: 'Company Name', value: 'Astonea Labs Limited' },
   { label: 'CIN', value: 'L24304CH2017PLC041482' },
-  { label: 'Listed On', value: 'BSE (Bombay Stock Exchange) & NSE (National Stock Exchange)' },
-  { label: 'Year of Listing', value: '2021' },
+  { label: 'Listed On', value: 'BSE SME (Bombay Stock Exchange)' },
+  { label: 'Date of Listing', value: '3 June 2025' },
   { label: 'Sector', value: 'Pharmaceuticals & Cosmetics Manufacturing' },
   { label: 'Registered Office', value: 'SCO 321-322, Basement, Sector 35B, Chandigarh — 160022' },
   { label: 'Compliance Officer', value: 'Mr. Ankit Kapoor, Company Secretary' },
@@ -25,7 +25,7 @@ const documents = [
   { title: 'Prospectus', desc: 'Final Prospectus dated May 30, 2025 — the definitive offer document for the IPO.', href: '/pdf/Prospectus.pdf' },
   { title: 'Share Allotment Details', desc: 'Details of shares allotted to various categories of investors during the public offering.' },
   { title: 'Basis of Allotment', desc: 'Basis of allotment of equity shares as determined by the Registrar to the Issue.' },
-  { title: 'Listing Agreement', desc: 'Equity listing agreement executed with BSE and NSE at the time of listing of equity shares.' },
+  { title: 'Listing Agreement', desc: 'Equity listing agreement executed with BSE at the time of listing of equity shares.' },
   { title: 'Post-Issue Capital Structure', desc: 'Details of the company\'s share capital as at the time of listing and subsequently.' },
   { title: 'Registrar & Share Transfer Agent', desc: 'Details of the Registrar and Share Transfer Agent appointed for the IPO and ongoing shareholder services.' },
 ]
@@ -36,7 +36,7 @@ export default function PublicOfferingPage() {
       <PageHeader
         eyebrow="Investor Relations"
         title="Public Offering"
-        description="Astonea Labs Limited is a publicly listed company on BSE and NSE — listed in 2021 under CIN L24304CH2017PLC041482."
+        description="Astonea Labs Limited is a publicly listed company on BSE SME — listed on 3 June 2025 under CIN L24304CH2017PLC041482."
         breadcrumb={[
           { label: 'Investors', href: '/investor-insights' },
           { label: 'Public Offering', href: '/public-offering' },
@@ -53,13 +53,13 @@ export default function PublicOfferingPage() {
                   Listing Overview
                 </p>
                 <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-6 text-balance" style={{ color: 'var(--color-ink)' }}>
-                  SEBI-listed on BSE & NSE since 2021
+                  SEBI-listed on BSE SME since June 2025
                 </h2>
                 <p className="text-base leading-relaxed mb-5" style={{ color: 'var(--color-ink-muted)' }}>
-                  Astonea Labs Limited became a publicly listed company in 2021, listed on both the Bombay Stock
-                  Exchange (BSE) and the National Stock Exchange (NSE) of India. The listing represented a significant
-                  milestone in the company's growth journey, enabling access to public capital markets and enhancing
-                  governance transparency.
+                  Astonea Labs Limited became a publicly listed company in 2025 — the IPO opened on 27 May 2025,
+                  closed on 29 May 2025, and equity shares were listed on the BSE SME platform on 3 June 2025.
+                  The listing represented a significant milestone in the company's growth journey, enabling
+                  access to public capital markets and enhancing governance transparency.
                 </p>
                 <p className="text-base leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
                   The company is committed to maintaining full compliance with SEBI Listing Obligations and Disclosure

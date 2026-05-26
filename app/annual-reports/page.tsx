@@ -29,7 +29,7 @@ const reports = [
   {
     year: '2021–22',
     title: 'Annual Report FY 2021–2022',
-    desc: 'Annual report covering the company\'s first full year as a listed entity on BSE and NSE.',
+    desc: 'Annual report covering the company\'s first full year as a listed entity on BSE.',
     href: '/pdf/Annual Report FY 2021-22.pdf',
   },
   {
@@ -103,7 +103,7 @@ export default function AnnualReportsPage() {
           <Reveal delay={200}>
             <div className="mt-10 p-5 rounded-xl border max-w-3xl" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--color-ink-subtle)' }}>
-                Annual Reports are filed with BSE and NSE in accordance with SEBI LODR Regulations.
+                Annual Reports are filed with BSE in accordance with SEBI LODR Regulations.
                 CIN: L24304CH2017PLC041482 — Astonea Labs Limited, Chandigarh, India.
                 For the most current filings, refer to the exchange portals or contact{' '}
                 <a href="mailto:cs@astonea.org" style={{ color: 'var(--color-primary)' }}>cs@astonea.org</a>.

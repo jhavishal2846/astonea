@@ -28,7 +28,7 @@ const directors = [
     designation: 'Director',
     category: 'Executive',
     qualifications: 'B. Pharma, Rajeev Gandhi College of Pharmacy',
-    bio: 'Over 8 years of experience in Quality Assurance and Drug Regulatory Affairs. Joined Astonea Labs in 2021 and currently leads the Drug Regulatory Affairs department, ensuring rigorous compliance with all regulatory standards.',
+    bio: 'Over 8 years of experience in Quality Assurance and Drug Regulatory Affairs. Joined the Astonea Labs Board on 14 March 2024 and currently leads the Drug Regulatory Affairs department, ensuring rigorous compliance with all regulatory standards.',
   },
   {
     name: 'Dr. Vikrant Narwal',
@@ -138,7 +138,7 @@ export default function BoardOfDirectorsPage() {
                 <Link href="/corporate-governance" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
                   Corporate Governance
                 </Link>{' '}
-                section or the company's filings on the BSE/NSE platforms.
+                section or the company's filings on the BSE platforms.
               </p>
             </div>
           </Reveal>
