@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PageTransition from '@/components/PageTransition'
+import HideOnAdmin from '@/components/HideOnAdmin'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
 
@@ -79,13 +80,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-bg text-ink font-sans">
-        <Navbar />
+        <HideOnAdmin>
+          <Navbar />
+        </HideOnAdmin>
         <PageTransition>
           <main id="main-content" className="flex-1 flex flex-col" tabIndex={-1}>
             {children}
           </main>
         </PageTransition>
-        <Footer />
+        <HideOnAdmin>
+          <Footer />
+        </HideOnAdmin>
       </body>
     </html>
   )

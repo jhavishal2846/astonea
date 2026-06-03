@@ -1,0 +1,64 @@
+import 'server-only'
+import { and, asc, desc, eq } from 'drizzle-orm'
+import { db } from '@/lib/db'
+import { documents, groupCompanies, type DocumentCategory, type DocumentRow, type GroupCompany } from '@/lib/db/schema'
+
+/**
+ * Fetch published documents in a category, ordered by displayOrder then title.
+ */
+export async function listPublishedByCategory(category: DocumentCategory): Promise<DocumentRow[]> {
+  return db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.category, category), eq(documents.isPublished, true)))
+    .orderBy(asc(documents.displayOrder), asc(documents.title))
+}
+
+/**
+ * Fetch reg30 events, sorted by event_date desc when present, else displayOrder.
+ */
+export async function listReg30Events(): Promise<DocumentRow[]> {
+  return db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.category, 'reg30'), eq(documents.isPublished, true)))
+    .orderBy(desc(documents.eventDate), asc(documents.displayOrder))
+}
+
+export type GroupedDocs = Record<string, DocumentRow[]>
+
+export function groupBySubcategory(rows: DocumentRow[]): GroupedDocs {
+  const out: GroupedDocs = {}
+  for (const r of rows) {
+    const key = r.subcategory ?? '__none__'
+    if (!out[key]) out[key] = []
+    out[key].push(r)
+  }
+  return out
+}
+
+export async function listGroupCompanies(): Promise<GroupCompany[]> {
+  return db.select().from(groupCompanies).orderBy(asc(groupCompanies.displayOrder), asc(groupCompanies.name))
+}
+
+export type CompanyWithDocs = GroupCompany & { docs: DocumentRow[] }
+
+/**
+ * Fetch all group companies along with their published subsidiary financial documents.
+ */
+export async function listGroupCompaniesWithFinancials(): Promise<CompanyWithDocs[]> {
+  const companies = await listGroupCompanies()
+  const subDocs = await db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.category, 'subsidiary_financial'), eq(documents.isPublished, true)))
+    .orderBy(asc(documents.displayOrder))
+
+  const byEntity = new Map<string, DocumentRow[]>()
+  for (const d of subDocs) {
+    if (!d.entityId) continue
+    if (!byEntity.has(d.entityId)) byEntity.set(d.entityId, [])
+    byEntity.get(d.entityId)!.push(d)
+  }
+  return companies.map((c) => ({ ...c, docs: byEntity.get(c.id) ?? [] }))
+}

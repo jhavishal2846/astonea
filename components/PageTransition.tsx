@@ -17,6 +17,11 @@ const variants = {
 export default function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname()
 
+  // Admin has its own UX; skip the public-site fade transition.
+  if (pathname?.startsWith('/admin')) {
+    return <>{children}</>
+  }
+
   return (
     <AnimatePresence mode="wait">
       <motion.div

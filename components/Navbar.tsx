@@ -55,6 +55,12 @@ const navItems: NavItem[] = [
           { label: 'Certifications',          href: '/certifications',           desc: 'Quality credentials' },
         ],
       },
+      {
+        heading: 'Catalog',
+        links: [
+          { label: 'Products',                href: '/products',                desc: 'Full product catalog' },
+        ],
+      },
     ],
   },
   {
@@ -103,20 +109,28 @@ const navItems: NavItem[] = [
 
 /* ─── Sub-components ─────────────────────────────────────────────────────── */
 
-function NavLinkItem({ href, label, active }: { href: string; label: string; active: boolean }) {
+function NavLinkItem({ href, label, active, transparent }: { href: string; label: string; active: boolean; transparent?: boolean }) {
   return (
     <Link href={href} className="relative group px-1 py-0.5 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm">
-      <span className={`transition-colors duration-150 ${active ? 'text-primary' : 'text-ink/80 group-hover:text-ink'}`}>
+      <span
+        className={`transition-colors duration-150 ${
+          active
+            ? 'text-primary'
+            : transparent
+            ? 'text-white/85 group-hover:text-white'
+            : 'text-ink/80 group-hover:text-ink'
+        }`}
+      >
         {label}
       </span>
       {/* Animated underline */}
       <motion.span
-        className="absolute -bottom-px left-0 right-0 h-px bg-primary origin-left"
+        className={`absolute -bottom-px left-0 right-0 h-px origin-left ${transparent ? 'bg-white' : 'bg-primary'}`}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: active ? 1 : 0 }}
         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       />
-      <span className="absolute -bottom-px left-0 right-0 h-px bg-primary/40 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
+      <span className={`absolute -bottom-px left-0 right-0 h-px origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ${transparent ? 'bg-white/60' : 'bg-primary/40'}`} />
     </Link>
   )
 }
@@ -353,6 +367,10 @@ export default function Navbar() {
   const isMenuOpen = open !== null || mobileOpen
   const effectiveHidden = hidden && !isMenuOpen
 
+  /* Transparent over the home-page hero so the video isn't clipped by the nav.
+     Goes solid the moment user scrolls or opens a menu. */
+  const transparent = pathname === '/' && !scrolled && !isMenuOpen
+
   /* Close mega-menu on route change */
   useEffect(() => {
     setOpen(null)
@@ -388,11 +406,15 @@ export default function Navbar() {
       >
         <motion.div
           animate={{
-            backgroundColor: scrolled
+            backgroundColor: transparent
+              ? 'rgba(255,255,255,0)'
+              : scrolled
               ? 'rgba(255,255,255,0.95)'
               : 'rgba(255,255,255,0.88)',
-            backdropFilter: 'blur(16px)',
-            borderBottomColor: scrolled
+            backdropFilter: transparent ? 'blur(0px)' : 'blur(16px)',
+            borderBottomColor: transparent
+              ? 'rgba(255,255,255,0)'
+              : scrolled
               ? 'rgba(226,232,240,0.8)'
               : 'rgba(226,232,240,0.4)',
           }}
@@ -427,7 +449,9 @@ export default function Navbar() {
                       <button
                         aria-expanded={open === item.label}
                         aria-haspopup="true"
-                        className="flex items-center gap-1 text-sm font-medium text-ink/80 hover:text-ink outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm transition-colors duration-150"
+                        className={`flex items-center gap-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm transition-colors duration-150 ${
+                          transparent ? 'text-white/85 hover:text-white' : 'text-ink/80 hover:text-ink'
+                        }`}
                       >
                         {item.label}
                         <motion.svg
@@ -447,6 +471,7 @@ export default function Navbar() {
                       href={item.href!}
                       label={item.label}
                       active={pathname === item.href}
+                      transparent={transparent}
                     />
                   )
                 )}
@@ -464,13 +489,15 @@ export default function Navbar() {
 
               {/* Mobile hamburger */}
               <button
-                className="lg:hidden p-2.5 rounded-lg hover:bg-black/5 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+                className={`lg:hidden p-2.5 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${
+                  transparent ? 'hover:bg-white/10' : 'hover:bg-black/5'
+                }`}
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open navigation"
                 aria-expanded={mobileOpen}
               >
                 <svg
-                  className="w-5 h-5 text-ink"
+                  className={`w-5 h-5 ${transparent ? 'text-white' : 'text-ink'}`}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
