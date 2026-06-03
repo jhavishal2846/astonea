@@ -80,7 +80,7 @@ function HeroCTA({
     </Magnetic>
   )
 }
-
+ 
 function ArrowIcon() {
   return (
     <svg
