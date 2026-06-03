@@ -3,14 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRef } from 'react'
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'framer-motion'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import Magnetic from './Magnetic'
 
 const E = [0.16, 1, 0.3, 1] as const
 
@@ -52,7 +46,7 @@ function SplitHeadline({ text }: { text: string }) {
   )
 }
 
-function MagneticLink({
+function HeroCTA({
   href,
   children,
   variant,
@@ -61,26 +55,6 @@ function MagneticLink({
   children: React.ReactNode
   variant: 'primary' | 'ghost'
 }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const reduce = useReducedMotion()
-  const mx = useMotionValue(0)
-  const my = useMotionValue(0)
-  const sx = useSpring(mx, { stiffness: 180, damping: 18, mass: 0.35 })
-  const sy = useSpring(my, { stiffness: 180, damping: 18, mass: 0.35 })
-
-  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
-    if (reduce || !ref.current) return
-    const r = ref.current.getBoundingClientRect()
-    const dx = e.clientX - (r.left + r.width / 2)
-    const dy = e.clientY - (r.top + r.height / 2)
-    mx.set(dx * 0.22)
-    my.set(dy * 0.22)
-  }
-  function reset() {
-    mx.set(0)
-    my.set(0)
-  }
-
   const className =
     variant === 'primary'
       ? 'group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-7 text-sm font-bold text-white'
@@ -99,18 +73,11 @@ function MagneticLink({
         }
 
   return (
-    <motion.div
-      ref={ref}
-      style={{ x: sx, y: sy }}
-      onMouseMove={handleMove}
-      onMouseLeave={reset}
-      onBlur={reset}
-      className="inline-block"
-    >
+    <Magnetic>
       <Link href={href} className={className} style={style}>
         {children}
       </Link>
-    </motion.div>
+    </Magnetic>
   )
 }
 
@@ -249,13 +216,13 @@ export default function ScrollHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.92, ease: E }}
           >
-            <MagneticLink href="/what-we-do" variant="primary">
+            <HeroCTA href="/what-we-do" variant="primary">
               Explore Capabilities
               <ArrowIcon />
-            </MagneticLink>
-            <MagneticLink href="/contact-us" variant="ghost">
+            </HeroCTA>
+            <HeroCTA href="/contact-us" variant="ghost">
               Enquire Now
-            </MagneticLink>
+            </HeroCTA>
           </motion.div>
 
           {/* divider + tag strip */}
