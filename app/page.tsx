@@ -5,7 +5,7 @@ import HomeContent from '@/components/HomeContent'
 export const metadata: Metadata = {
   title: 'Astonea Labs Limited — Pharma & Cosmetics Third-Party Manufacturer',
   description:
-    'Partnering with you for quality manufacturing and development. 2000+ clients, 1500+ product approvals. SEBI-listed pharma and cosmetics manufacturer — Chandigarh, India.',
+    'Partnering with you for quality manufacturing and development. 2000+ clients, 1500+ product approvals. BSE-SME pharma and cosmetics manufacturer — Chandigarh, India.',
 }
 
 export default function HomePage() {

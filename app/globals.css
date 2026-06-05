@@ -185,6 +185,30 @@ body {
   .container-wide { padding-inline: 3rem; }
 }
 
+/* ─── Leadership cards ───────────────────────────────────────────────────── */
+
+.leadership-card {
+  border-color: var(--color-border);
+  box-shadow: 0 1px 2px 0 rgb(10 10 20 / 0.03);
+  transition:
+    border-color 280ms var(--ease-out-expo),
+    box-shadow 280ms var(--ease-out-expo);
+}
+
+.leadership-card__name {
+  transition: color 220ms var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  .leadership-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 18px 38px -22px rgb(0 114 206 / 0.32);
+  }
+  .leadership-card:hover .leadership-card__name {
+    color: var(--color-primary);
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

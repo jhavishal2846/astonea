@@ -2,51 +2,16 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { listPublishedByCategory } from '@/lib/cms/queries'
 
 export const metadata: Metadata = {
   title: 'Certifications',
   description: 'Astonea Labs\' quality certifications and regulatory approvals — WHO-GMP, ISO, AYUSH, FSSAI and more.',
 }
 
-const certifications = [
-  {
-    label: 'WHO-GMP',
-    fullName: 'World Health Organization — Good Manufacturing Practices',
-    desc: 'Our core manufacturing certification ensuring products meet international quality benchmarks set by the World Health Organization for pharmaceutical production.',
-    scope: 'All pharmaceutical manufacturing lines',
-  },
-  {
-    label: 'ISO 9001:2015',
-    fullName: 'International Organization for Standardization — Quality Management',
-    desc: 'ISO-certified quality management systems covering planning, production, quality control, and continuous improvement across all operations.',
-    scope: 'Organisation-wide quality management',
-  },
-  {
-    label: 'cGMP',
-    fullName: 'Current Good Manufacturing Practice',
-    desc: 'Compliance with current GMP regulations as prescribed by Indian regulatory authorities, ensuring all manufacturing processes meet updated national standards.',
-    scope: 'All pharmaceutical formulations',
-  },
-  {
-    label: 'AYUSH Approved',
-    fullName: 'Ministry of AYUSH — Manufacturing Approval',
-    desc: 'Licensed to manufacture Ayurvedic, Unani, Siddha, and Homeopathic (AYUSH) formulations under the Ministry of AYUSH regulations.',
-    scope: 'Herbal & nutraceutical lines',
-  },
-  {
-    label: 'FSSAI',
-    fullName: 'Food Safety and Standards Authority of India',
-    desc: 'FSSAI licensing for food supplement and nutraceutical product manufacturing, ensuring compliance with Indian food safety standards.',
-    scope: 'Food supplements & nutraceuticals',
-  },
-  {
-    label: 'USFDA OTC',
-    fullName: 'US Food and Drug Administration — OTC Audit',
-    desc: 'USFDA audit completed for Over-the-Counter (OTC) product manufacturing, supporting export readiness for the North American market.',
-    scope: 'OTC product lines',
-  },
-]
+export const dynamic = 'force-dynamic'
 
+// Quality practices remain a static list (no per-row CMS need yet).
 const qualityPractices = [
   'In-process quality checks at every manufacturing stage',
   'Finished-goods testing before batch release',
@@ -58,7 +23,11 @@ const qualityPractices = [
   'Robust documentation and batch traceability systems',
 ]
 
-export default function CertificationsPage() {
+export default async function CertificationsPage() {
+  const certifications = await listPublishedByCategory('certification')
+  // Use the first cert with a fileUrl as the global download CTA.
+  const downloadHref = certifications.find((c) => c.fileUrl)?.fileUrl ?? null
+
   return (
     <div className="flex-1 flex flex-col">
       <PageHeader
@@ -82,18 +51,22 @@ export default function CertificationsPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {certifications.map((c, i) => (
-              <Reveal key={c.label} delay={i * 60}>
+              <Reveal key={c.id} delay={i * 60}>
                 <div className="flex flex-col p-8 rounded-2xl border h-full" style={{ background: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                  <div className="mb-5">
-                    <span className="font-mono text-xs font-bold px-3 py-1.5 rounded-lg" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
-                      {c.label}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-base font-semibold mb-2" style={{ color: 'var(--color-ink)' }}>{c.fullName}</h3>
-                  <p className="text-sm leading-relaxed flex-1 mb-4" style={{ color: 'var(--color-ink-muted)' }}>{c.desc}</p>
-                  <div className="pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
-                    <span className="text-xs font-medium" style={{ color: 'var(--color-ink-subtle)' }}>Scope: {c.scope}</span>
-                  </div>
+                  {c.subcategory && (
+                    <div className="mb-5">
+                      <span className="font-mono text-xs font-bold px-3 py-1.5 rounded-lg" style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}>
+                        {c.subcategory}
+                      </span>
+                    </div>
+                  )}
+                  <h3 className="font-display text-base font-semibold mb-2" style={{ color: 'var(--color-ink)' }}>{c.title}</h3>
+                  {c.description && <p className="text-sm leading-relaxed flex-1 mb-4" style={{ color: 'var(--color-ink-muted)' }}>{c.description}</p>}
+                  {c.period && (
+                    <div className="pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                      <span className="text-xs font-medium" style={{ color: 'var(--color-ink-subtle)' }}>Scope: {c.period}</span>
+                    </div>
+                  )}
                 </div>
               </Reveal>
             ))}
@@ -151,9 +124,11 @@ export default function CertificationsPage() {
           </Reveal>
           <Reveal delay={80}>
             <div className="flex flex-wrap gap-3">
-              <a href="/pdf/UPDATED CERTIFICATES PDF.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
-                Download Certificates
-              </a>
+              {downloadHref && (
+                <a href={downloadHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+                  Download Certificates
+                </a>
+              )}
               <Link href="/contact-us" className="inline-flex items-center px-6 py-3 rounded-full text-white text-sm font-bold transition-colors hover:opacity-90" style={{ background: 'var(--color-primary)' }}>
                 Contact Our QA Team
               </Link>

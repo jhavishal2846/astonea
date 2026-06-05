@@ -2,57 +2,29 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { listGroupCompaniesWithFinancials } from '@/lib/cms/queries'
+import type { DocumentRow, GroupCompany } from '@/lib/db/schema'
 
 export const metadata: Metadata = {
   title: 'Group Companies',
   description: 'The corporate family of Astonea Labs Limited — group entities and affiliated organisations.',
 }
 
-const companies = [
-  {
-    name: 'Astonea Labs Limited',
-    type: 'Parent Company',
-    cin: 'L24304CH2017PLC041482',
-    desc: 'The SEBI-listed parent entity and primary operating company — a pharmaceutical and cosmetic manufacturer headquartered in Chandigarh, India.',
-    tag: 'Listed',
-  },
-  {
-    name: 'Ascot Biolabs Private Limited',
-    type: 'Group Entity',
-    desc: 'Part of the Astonea group structure, operating within the pharmaceutical and biological sciences segment.',
-    tag: 'Private',
-  },
-  {
-    name: 'Shinto Organics Private Limited',
-    type: 'Group Entity',
-    desc: 'An operational entity within the group with activities in organics and chemical-related manufacturing.',
-    tag: 'Private',
-  },
-  {
-    name: 'Astonea One Private Limited',
-    type: 'Group Entity',
-    desc: 'A group company contributing to the diversified operational structure of the Astonea corporate family.',
-    tag: 'Private',
-  },
-  {
-    name: 'Astonea Limited',
-    type: 'Related Entity',
-    desc: 'A related company within the broader Astonea group ecosystem.',
-    tag: 'Private',
-  },
-  {
-    name: 'Chemist India Limited',
-    type: 'Group Entity',
-    desc: 'Part of the corporate structure, engaged in pharmaceutical and chemical sector operations.',
-    tag: 'Private',
-  },
-  {
-    name: 'Astonea Foundation',
-    type: 'Non-Profit Entity',
-    desc: 'The corporate social responsibility arm of the Astonea group — supporting ecological preservation, social empowerment, and community advancement.',
-    tag: 'Non-Profit',
-  },
-]
+export const dynamic = 'force-dynamic'
+
+const ENTITY_TYPE_TAG: Record<GroupCompany['entityType'], string> = {
+  parent:     'Listed',
+  subsidiary: 'Private',
+  associate:  'Private',
+  nonprofit:  'Non-Profit',
+}
+
+const ENTITY_TYPE_LABEL: Record<GroupCompany['entityType'], string> = {
+  parent:     'Parent Company',
+  subsidiary: 'Group Entity',
+  associate:  'Related Entity',
+  nonprofit:  'Non-Profit Entity',
+}
 
 const tagStyles: Record<string, { bg: string; text: string }> = {
   Listed:       { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
@@ -60,58 +32,9 @@ const tagStyles: Record<string, { bg: string; text: string }> = {
   'Non-Profit': { bg: 'rgba(16,185,129,0.1)',         text: '#059669' },
 }
 
-const groupFinancials: { company: string; docs: { label: string; period: string; href?: string }[] }[] = [
-  {
-    company: 'Ascot Biolabs Private Limited',
-    docs: [
-      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Ascot Biolabs - Financial Statements 24-25.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Ascot Biolabs - Financial Statements 23-24.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2022–2023' },
-    ],
-  },
-  {
-    company: 'Shinto Organics Private Limited',
-    docs: [
-      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/SHINTO ORGANIC PVT LTD B.S.  2024-25.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Shinto Organics - Financial Statements 23-24.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2022–2023', href: '/pdf/Shinto Organics - Financial Statements 22-23.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2021–2022', href: '/pdf/Shinto Organics - Financial Statements 21-22.pdf' },
-    ],
-  },
-  {
-    company: 'Astonea One Private Limited',
-    docs: [
-      { label: 'Balance Sheet', period: 'FY 2024–2025', href: '/pdf/ASTONEA ONE -BS 2024-25.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2023–2024' },
-      { label: 'Annual Financial Statements', period: 'FY 2022–2023' },
-    ],
-  },
-  {
-    company: 'Astonea Limited',
-    docs: [
-      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Astonea Limited - Financial Statements 24-25.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Astonea Limited-23-24.pdf' },
-      { label: 'Balance Sheet', period: 'FY 2022–2023', href: '/pdf/ASTONEA LIMITED BALANCE SHEET-22-23.pdf' },
-    ],
-  },
-  {
-    company: 'Chemist India Limited',
-    docs: [
-      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Chemist India Ltd - Financial Statements 24-25.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2023–2024', href: '/pdf/Chemist India Ltd - Financial Statements 23-24.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2022–2023', href: '/pdf/Chemist India Ltd - Financial Statements 22-23.pdf' },
-      { label: 'Annual Financial Statements', period: 'FY 2021–2022', href: '/pdf/Chemist India Ltd - Financial Statements 21-22.pdf' },
-    ],
-  },
-  {
-    company: 'Astonea Foundation',
-    docs: [
-      { label: 'Annual Financial Statements', period: 'FY 2024–2025', href: '/pdf/Astonea Foundation- Financial Statements 24-25.pdf' },
-    ],
-  },
-]
-
-function DocRow({ label, period, href }: { label: string; period: string; href?: string }) {
+function DocRow({ doc }: { doc: DocumentRow }) {
+  // Extract "Annual Financial Statements" from title that was seeded as "Annual Financial Statements — FY YYYY-YY"
+  const label = doc.title.includes(' — ') ? doc.title.split(' — ')[0] : doc.title
   return (
     <div className="flex items-center justify-between p-4 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-bg)' }}>
       <div className="flex items-center gap-3">
@@ -120,11 +43,11 @@ function DocRow({ label, period, href }: { label: string; period: string; href?:
         </div>
         <div>
           <p className="font-medium text-sm" style={{ color: 'var(--color-ink)' }}>{label}</p>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--color-ink-subtle)' }}>{period}</p>
+          {doc.period && <p className="text-xs mt-0.5" style={{ color: 'var(--color-ink-subtle)' }}>{doc.period}</p>}
         </div>
       </div>
-      {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
+      {doc.fileUrl ? (
+        <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
           PDF
         </a>
       ) : (
@@ -136,7 +59,13 @@ function DocRow({ label, period, href }: { label: string; period: string; href?:
   )
 }
 
-export default function GroupCompaniesPage() {
+export default async function GroupCompaniesPage() {
+  const companies = await listGroupCompaniesWithFinancials()
+  // Parent gets the company-grid hero card; its docs are surfaced on /annual-reports + /financial-results.
+  const parent = companies.find((c) => c.entityType === 'parent') ?? null
+  const others = companies.filter((c) => c.entityType !== 'parent')
+  const allForGrid = parent ? [parent, ...others] : others
+
   return (
     <div className="flex-1 flex flex-col">
       <PageHeader
@@ -159,33 +88,37 @@ export default function GroupCompaniesPage() {
           </Reveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {companies.map((c, i) => {
-              const tag = tagStyles[c.tag]
+            {allForGrid.map((c, i) => {
+              const tagName = ENTITY_TYPE_TAG[c.entityType]
+              const tag = tagStyles[tagName]
+              const isListed = tagName === 'Listed'
               return (
-                <Reveal key={c.name} delay={i * 60}>
+                <Reveal key={c.id} delay={i * 60}>
                   <div className="flex flex-col p-8 rounded-2xl border h-full" style={{
-                    background: c.tag === 'Listed' ? 'var(--color-slate-950)' : 'var(--color-surface)',
-                    borderColor: c.tag === 'Listed' ? 'rgba(255,255,255,0.08)' : 'var(--color-border)',
+                    background: isListed ? 'var(--color-slate-950)' : 'var(--color-surface)',
+                    borderColor: isListed ? 'rgba(255,255,255,0.08)' : 'var(--color-border)',
                   }}>
                     <div className="flex items-start justify-between mb-5">
                       <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: tag.bg, color: tag.text }}>
-                        {c.tag}
+                        {tagName}
                       </span>
                     </div>
-                    <h3 className="font-display text-lg font-semibold mb-2" style={{ color: c.tag === 'Listed' ? 'white' : 'var(--color-ink)' }}>
+                    <h3 className="font-display text-lg font-semibold mb-2" style={{ color: isListed ? 'white' : 'var(--color-ink)' }}>
                       {c.name}
                     </h3>
-                    <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: c.tag === 'Listed' ? 'var(--color-primary-light)' : 'var(--color-primary)' }}>
-                      {c.type}
+                    <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: isListed ? 'var(--color-primary-light)' : 'var(--color-primary)' }}>
+                      {ENTITY_TYPE_LABEL[c.entityType]}
                     </p>
                     {c.cin && (
-                      <p className="text-xs font-mono mb-3" style={{ color: c.tag === 'Listed' ? 'rgba(255,255,255,0.55)' : 'var(--color-ink-subtle)' }}>
+                      <p className="text-xs font-mono mb-3" style={{ color: isListed ? 'rgba(255,255,255,0.55)' : 'var(--color-ink-subtle)' }}>
                         CIN: {c.cin}
                       </p>
                     )}
-                    <p className="text-sm leading-relaxed flex-1" style={{ color: c.tag === 'Listed' ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-muted)' }}>
-                      {c.desc}
-                    </p>
+                    {c.description && (
+                      <p className="text-sm leading-relaxed flex-1" style={{ color: isListed ? 'rgba(255,255,255,0.78)' : 'var(--color-ink-muted)' }}>
+                        {c.description}
+                      </p>
+                    )}
                   </div>
                 </Reveal>
               )
@@ -218,20 +151,22 @@ export default function GroupCompaniesPage() {
           </Reveal>
 
           <div className="space-y-12 max-w-3xl">
-            {groupFinancials.map((group, gi) => (
-              <Reveal key={group.company} delay={gi * 60}>
-                <div>
-                  <h3 className="font-display text-lg font-semibold mb-3 pb-3 border-b" style={{ color: 'var(--color-ink)', borderColor: 'var(--color-border)' }}>
-                    {group.company}
-                  </h3>
-                  <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
-                    {group.docs.map((doc) => (
-                      <DocRow key={`${group.company}-${doc.period}`} {...doc} />
-                    ))}
+            {others
+              .filter((c) => c.docs.length > 0)
+              .map((group, gi) => (
+                <Reveal key={group.id} delay={gi * 60}>
+                  <div>
+                    <h3 className="font-display text-lg font-semibold mb-3 pb-3 border-b" style={{ color: 'var(--color-ink)', borderColor: 'var(--color-border)' }}>
+                      {group.name}
+                    </h3>
+                    <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
+                      {group.docs.map((doc) => (
+                        <DocRow key={doc.id} doc={doc} />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              ))}
           </div>
         </div>
       </section>

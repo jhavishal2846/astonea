@@ -9,15 +9,15 @@ export const metadata: Metadata = {
 }
 
 const trustMetrics = [
-  { value: '2,000+', label: 'Brands Served', sub: 'Pharma & cosmetics' },
-  { value: '1,500+', label: 'Product Approvals', sub: 'Formulations cleared' },
-  { value: '7+', label: 'Years of Excellence', sub: 'Founded 2017' },
+  { value: '3,200+', label: 'Brands Served', sub: 'Pharma & cosmetics' },
+  { value: '2,500+', label: 'Product Approvals', sub: 'Formulations cleared' },
+  { value: '9+', label: 'Years of Excellence', sub: 'Founded 2017' },
   { value: 'Pan-India', label: 'Export Reach', sub: '& international' },
 ]
 
 const certifications = [
   { code: 'GMP', label: 'Good Manufacturing Practice', desc: 'WHO-GMP compliant facility' },
-  { code: 'SEBI', label: 'Listed Company', desc: 'CIN: L24304CH2017PLC041482' },
+  { code: 'BSE-SME', label: 'Listed Company', desc: 'CIN: L24304CH2017PLC041482' },
   { code: 'ISO', label: 'Quality Systems', desc: 'Documented quality standards' },
   { code: 'FSSAI', label: 'Food Safety', desc: 'Nutraceuticals approved' },
 ]
@@ -63,7 +63,7 @@ const pathCards = [
   },
   {
     role: 'Investor',
-    desc: 'Explore our SEBI-listed disclosures, financial reports, and governance structure.',
+    desc: 'Explore our BSE-SME  disclosures, financial reports, and governance structure.',
     href: '/investor-relations',
     cta: 'Investor Relations',
   },
@@ -75,7 +75,7 @@ export default function AboutUsPage() {
       <PageHeader
         eyebrow="Our Company"
         title="Inspiring Trust in Healthcare, Elevating Beauty with Elegance"
-        description="Astonea Labs Limited is a GMP-certified, SEBI-listed pharmaceutical and cosmetic contract manufacturer headquartered in Chandigarh — delivering quality, regulatory confidence, and supply-chain reliability since 2017."
+        description="Astonea Labs Limited is a GMP-certified, BSE-SME listed pharmaceutical and cosmetic contract manufacturer headquartered in Chandigarh — delivering quality, regulatory confidence, and supply-chain reliability since 2017."
         breadcrumb={[{ label: 'About Us', href: '/about-us' }]}
       />
 
@@ -172,7 +172,7 @@ export default function AboutUsPage() {
                 Our Foundation
               </p>
               <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug tracking-tight text-balance" style={{ color: 'var(--color-ink)' }}>
-                GMP-compliant, SEBI-listed, and built for scale
+                GMP-compliant, BSE-SME , and built for scale
               </h2>
               <p className="text-base leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
                 Astonea Labs Limited is incorporated in Chandigarh with our manufacturing facility in Village
@@ -188,11 +188,11 @@ export default function AboutUsPage() {
 
             <StaggerReveal className="space-y-4">
               {[
-                { label: 'Incorporation', value: '2017 — Chandigarh, India' },
+                { label: 'Incorporation', value: '11-04-2017 — Chandigarh, India' },
                 { label: 'CIN', value: 'L24304CH2017PLC041482' },
                 { label: 'Facility', value: 'Village Haripur, Panchkula, Haryana' },
                 { label: 'Compliance', value: 'WHO-GMP Certified' },
-                { label: 'Market Status', value: 'SEBI-Listed Public Company' },
+                { label: 'Market Status', value: 'BSE-SME  Public Company' },
                 { label: 'Segments', value: 'Pharmaceutical & Cosmetics' },
               ].map((row) => (
                 <div
@@ -305,7 +305,7 @@ export default function AboutUsPage() {
                   organisational leadership.
                 </p>
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
-                  Under his direction, Astonea Labs became SEBI-listed and has expanded its client base across
+                  Under his direction, Astonea Labs became BSE-SME  and has expanded its client base across
                   India's most competitive pharmaceutical and cosmetic markets.
                 </p>
                 <Link
@@ -433,7 +433,7 @@ export default function AboutUsPage() {
                     'Flexible, client-centric production solutions',
                     'In-house R&D and formulation capabilities',
                     'Dual-sector expertise in pharma and cosmetics',
-                    'SEBI-listed with full governance transparency',
+                    'BSE-SME  with full governance transparency',
                     'Domestic and international export capabilities',
                   ].map((d) => (
                     <li key={d} className="flex items-start gap-3">

@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { animate, motion, useInView, useMotionValue, useScroll, useTransform } from 'framer-motion'
 import type { MotionValue } from 'framer-motion'
+import Magnetic from './Magnetic'
+import TiltCard from './TiltCard'
 
 const E = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
@@ -225,19 +227,21 @@ function ProofSection() {
               Built for brands that need science, speed, and steady supply.
             </h2>
             <p className="mt-7 max-w-xl text-base leading-[1.85] sm:text-lg" style={{ color: 'var(--color-ink-muted)' }}>
-              Astonea Labs Limited is a SEBI-listed pharma and cosmetics manufacturer
+              Astonea Labs Limited is a BSE-SME pharma and cosmetics manufacturer
               serving founders, exporters, and established labels with GMP-led production
               and practical launch support.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <Link
-                href="/about-us"
-                className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-6 text-sm font-bold text-white"
-                style={{ background: 'var(--color-primary)' }}
-              >
-                Our Story
-                <ArrowIcon />
-              </Link>
+              <Magnetic>
+                <Link
+                  href="/about-us"
+                  className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-6 text-sm font-bold text-white"
+                  style={{ background: 'var(--color-primary)' }}
+                >
+                  Our Story
+                  <ArrowIcon />
+                </Link>
+              </Magnetic>
               <Link
                 href="/certifications"
                 className="inline-flex min-h-12 items-center justify-center rounded-full border px-6 text-sm font-semibold"
@@ -359,35 +363,45 @@ function CapabilitiesSection() {
 
         <div className="grid overflow-hidden rounded-[8px] border border-white/10 md:grid-cols-2 xl:grid-cols-4">
           {capabilityCards.map((cap, index) => (
-            <motion.article
+            <motion.div
               key={cap.title}
-              className="group flex min-h-[440px] flex-col border-white/10 bg-slate-950 md:border-r xl:last:border-r-0"
+              className="border-white/10 bg-slate-950 md:border-r xl:last:border-r-0"
               initial={{ opacity: 0, y: 34 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.72, delay: 0.16 + index * 0.08, ease: E }}
             >
-              <div className="relative h-48 overflow-hidden">
-                <Image src={cap.image} alt="" fill sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/[0.12] to-transparent" />
-              </div>
-              <div className="flex flex-1 flex-col p-7">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.22em]" style={{ color: 'var(--color-primary-light)' }}>
-                  {cap.kicker}
-                </p>
-                <h3 className="mt-5 font-display text-2xl font-semibold leading-tight text-white">
-                  {cap.title}
-                </h3>
-                <p className="mt-4 flex-1 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  {cap.desc}
-                </p>
-                <Link href={cap.href} className="group/link mt-7 inline-flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-primary-light)' }}>
-                  Learn More
-                  <svg className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </Link>
-              </div>
-            </motion.article>
+              <TiltCard className="h-full" maxTilt={5}>
+                <article className="group flex h-full min-h-[440px] flex-col">
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={cap.image}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/[0.12] to-transparent" />
+                  </div>
+                  <div className="flex flex-1 flex-col p-7">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.22em]" style={{ color: 'var(--color-primary-light)' }}>
+                      {cap.kicker}
+                    </p>
+                    <h3 className="mt-5 font-display text-2xl font-semibold leading-tight text-white">
+                      {cap.title}
+                    </h3>
+                    <p className="mt-4 flex-1 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                      {cap.desc}
+                    </p>
+                    <Link href={cap.href} className="group/link mt-7 inline-flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-primary-light)' }}>
+                      Learn More
+                      <svg className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </Link>
+                  </div>
+                </article>
+              </TiltCard>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -733,11 +747,34 @@ function LabGallerySection() {
                   alt={img.alt}
                   fill
                   sizes="(min-width: 1024px) 45vw, 100vw"
-                  className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+                  className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/70 via-transparent to-transparent opacity-90" />
-                <figcaption className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                  <p className="text-sm font-semibold text-white">{img.caption}</p>
+                {/* base gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/10 to-transparent" />
+                {/* deepening overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                {/* index marker */}
+                <span
+                  className="absolute left-4 top-4 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-white/60 transition-colors duration-500 group-hover:text-cyan-300/90 sm:left-5 sm:top-5"
+                >
+                  {String(i + 1).padStart(2, '0')} / 06
+                </span>
+                {/* caption row */}
+                <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4 sm:p-5">
+                  <div className="overflow-hidden">
+                    <span className="block h-px w-8 origin-left bg-cyan-300/80 opacity-0 transition-all duration-500 group-hover:opacity-100" />
+                    <p className="mt-2 text-sm font-semibold text-white transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
+                      {img.caption}
+                    </p>
+                  </div>
+                  <span
+                    aria-hidden="true"
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/[0.08] text-white opacity-0 backdrop-blur-md transition-all duration-500 group-hover:opacity-100"
+                  >
+                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                      <path d="M7 17 17 7m0 0H8m9 0v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                 </figcaption>
               </motion.figure>
             )
@@ -885,10 +922,12 @@ function InvestorSection() {
               ))}
             </div>
             <div className="flex flex-wrap gap-3 p-5">
-              <Link href="/financial-results" className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold" style={{ color: 'var(--color-primary)' }}>
-                Financial Results
-                <ArrowIcon />
-              </Link>
+              <Magnetic>
+                <Link href="/financial-results" className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold" style={{ color: 'var(--color-primary)' }}>
+                  Financial Results
+                  <ArrowIcon />
+                </Link>
+              </Magnetic>
               <Link href="/annual-reports" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/[0.28] px-5 text-sm font-semibold text-white/[0.78] hover:text-white">
                 Annual Reports
               </Link>
@@ -949,14 +988,16 @@ function CTASection() {
             formulation to dispatch.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link
-              href="/contact-us"
-              className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-7 text-sm font-bold"
-              style={{ background: 'var(--color-accent)', color: 'var(--color-slate-950)' }}
-            >
-              Start a Conversation
-              <ArrowIcon />
-            </Link>
+            <Magnetic>
+              <Link
+                href="/contact-us"
+                className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-7 text-sm font-bold"
+                style={{ background: 'var(--color-accent)', color: 'var(--color-slate-950)' }}
+              >
+                Start a Conversation
+                <ArrowIcon />
+              </Link>
+            </Magnetic>
             <Link
               href="/manufacturing-facility"
               className="inline-flex min-h-12 items-center justify-center rounded-full border px-7 text-sm font-semibold"

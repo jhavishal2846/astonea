@@ -1,52 +1,24 @@
 import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { listPublishedByCategory } from '@/lib/cms/queries'
 
 export const metadata: Metadata = {
   title: 'Annual Reports',
   description: 'Astonea Labs Limited annual reports — full-year consolidated reports for shareholders and investors.',
 }
 
-const reports = [
-  {
-    year: '2024–25',
-    title: 'Annual Report FY 2024–2025',
-    desc: 'Consolidated annual report including audited financials, board report, and corporate governance disclosures for FY 2024-25.',
-    href: '/pdf/Annual Report for the FY 2024-25.pdf',
-  },
-  {
-    year: '2023–24',
-    title: 'Annual Report FY 2023–2024',
-    desc: 'Full-year annual report covering financial performance, CSR activities, and regulatory disclosures for FY 2023-24.',
-    href: '/pdf/Annual Report FY 2023-24.pdf',
-  },
-  {
-    year: '2022–23',
-    title: 'Annual Report FY 2022–2023',
-    desc: 'Annual report with audited financial statements, director\'s report, and shareholder information for FY 2022-23.',
-    href: '/pdf/Annual Report FY 2022-23.pdf',
-  },
-  {
-    year: '2021–22',
-    title: 'Annual Report FY 2021–2022',
-    desc: 'Annual report covering the company\'s first full year as a listed entity on BSE.',
-    href: '/pdf/Annual Report FY 2021-22.pdf',
-  },
-  {
-    year: '2020–21',
-    title: 'Annual Report FY 2020–2021',
-    desc: 'Annual report for FY 2020-21 with audited standalone financial statements and governance disclosures.',
-    href: '/pdf/Annual Report FY 2020-21.pdf',
-  },
-  {
-    year: '2019–20',
-    title: 'Annual Report FY 2019–2020',
-    desc: 'Annual report for FY 2019-20 with audited standalone financial statements and governance disclosures.',
-    href: '/pdf/Annual Report FY 2019-20.pdf',
-  },
-]
+export const dynamic = 'force-dynamic'
 
-export default function AnnualReportsPage() {
+function periodToYear(period: string | null): string {
+  if (!period) return ''
+  // "FY 2024–25" → "2024–25"
+  return period.replace(/^FY\s*/i, '')
+}
+
+export default async function AnnualReportsPage() {
+  const reports = await listPublishedByCategory('annual_report')
+
   return (
     <div className="flex-1 flex flex-col">
       <PageHeader
@@ -72,28 +44,34 @@ export default function AnnualReportsPage() {
 
           <div className="space-y-px max-w-3xl" style={{ background: 'var(--color-border)' }}>
             {reports.map((r, i) => (
-              <Reveal key={r.year} delay={i * 60}>
+              <Reveal key={r.id} delay={i * 60}>
                 <div className="flex items-start gap-6 p-6 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-surface)' }}>
                   <div className="flex-shrink-0 w-20 h-20 rounded-xl flex flex-col items-center justify-center" style={{ background: 'var(--color-primary-xlight)' }}>
                     <span className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>FY</span>
-                    <span className="font-display font-bold text-sm leading-tight text-center" style={{ color: 'var(--color-primary)' }}>{r.year}</span>
+                    <span className="font-display font-bold text-sm leading-tight text-center" style={{ color: 'var(--color-primary)' }}>{periodToYear(r.period)}</span>
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <h3 className="font-display text-lg font-semibold mb-2" style={{ color: 'var(--color-ink)' }}>{r.title}</h3>
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{r.desc}</p>
+                    {r.description && <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>{r.description}</p>}
                   </div>
 
                   <div className="flex-shrink-0 flex items-center">
-                    <a
-                      href={r.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50"
-                      style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
-                    >
-                      PDF
-                    </a>
+                    {r.fileUrl ? (
+                      <a
+                        href={r.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50"
+                        style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
+                      >
+                        PDF
+                      </a>
+                    ) : (
+                      <span className="text-xs font-medium px-3 py-1.5 rounded-full border cursor-default" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-muted)' }}>
+                        Soon
+                      </span>
+                    )}
                   </div>
                 </div>
               </Reveal>

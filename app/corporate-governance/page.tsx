@@ -83,7 +83,7 @@ export default function CorporateGovernancePage() {
                   Transparent by design
                 </h2>
                 <p className="text-base leading-relaxed mb-5" style={{ color: 'var(--color-ink-muted)' }}>
-                  As a SEBI-listed company on BSE, Astonea Labs Limited (CIN: L24304CH2017PLC041482) is
+                  As a BSE-SME company on BSE, Astonea Labs Limited (CIN: L24304CH2017PLC041482) is
                   committed to the highest standards of corporate governance — ensuring transparency, accountability,
                   and protection of shareholder interests at every level.
                 </p>
