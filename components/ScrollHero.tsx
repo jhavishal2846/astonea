@@ -8,7 +8,7 @@ import Magnetic from './Magnetic'
 
 const E = [0.16, 1, 0.3, 1] as const
 
-const HERO_TAGS = ['EST. 2017', 'BSE LISTED', 'WHO-GMP', 'ISO 9001:2015']
+const HERO_TAGS = ['EST. 2017', 'BSE-SME LISTED', 'WHO-GMP', 'ISO 9001:2015']
 
 const HEADLINE = 'Where serious pharma meets brand-launch speed.'
 
@@ -127,7 +127,7 @@ export default function ScrollHero() {
       aria-label="Astonea Labs home hero"
     >
       <h1 className="sr-only">
-        Astonea Labs — SEBI-listed pharma and cosmetics manufacturer for 2,000+ brands.
+        Astonea Labs — BSE-SME pharma and cosmetics manufacturer for 2,000+ brands.
       </h1>
 
       {/* Faint grid overlay (matches the dark Capabilities section downstream) */}
@@ -205,7 +205,7 @@ export default function ScrollHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.78, ease: E }}
           >
-            SEBI-listed manufacturer of tablets, capsules, syrups, topicals, and cosmetics —
+            BSE-SME manufacturer of tablets, capsules, syrups, topicals, and cosmetics —
             trusted by 2,000+ brands across pharma, nutra, and personal care.
           </motion.p>
 

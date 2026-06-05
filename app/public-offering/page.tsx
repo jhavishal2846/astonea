@@ -53,7 +53,7 @@ export default function PublicOfferingPage() {
                   Listing Overview
                 </p>
                 <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-6 text-balance" style={{ color: 'var(--color-ink)' }}>
-                  SEBI-listed on BSE SME since June 2025
+                  BSE-SME on BSE SME since June 2025
                 </h2>
                 <p className="text-base leading-relaxed mb-5" style={{ color: 'var(--color-ink-muted)' }}>
                   Astonea Labs Limited became a publicly listed company in 2025 — the IPO opened on 27 May 2025,

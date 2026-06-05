@@ -227,7 +227,7 @@ function ProofSection() {
               Built for brands that need science, speed, and steady supply.
             </h2>
             <p className="mt-7 max-w-xl text-base leading-[1.85] sm:text-lg" style={{ color: 'var(--color-ink-muted)' }}>
-              Astonea Labs Limited is a SEBI-listed pharma and cosmetics manufacturer
+              Astonea Labs Limited is a BSE-SME pharma and cosmetics manufacturer
               serving founders, exporters, and established labels with GMP-led production
               and practical launch support.
             </p>

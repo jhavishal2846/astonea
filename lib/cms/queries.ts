@@ -3,26 +3,49 @@ import { and, asc, desc, eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { documents, groupCompanies, type DocumentCategory, type DocumentRow, type GroupCompany } from '@/lib/db/schema'
 
+// Neon's serverless HTTP driver throws `fetch failed` while the free-tier
+// compute wakes from idle-suspend. Retry transient network errors only.
+async function withRetry<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {
+  let lastErr: unknown
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn()
+    } catch (e) {
+      lastErr = e
+      const msg = e instanceof Error ? e.message : String(e)
+      const cause = e instanceof Error && e.cause instanceof Error ? e.cause.message : ''
+      const transient = /fetch failed|ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|socket hang up/i.test(`${msg} ${cause}`)
+      if (!transient || i === attempts - 1) throw e
+      await new Promise((r) => setTimeout(r, 300 * (i + 1)))
+    }
+  }
+  throw lastErr
+}
+
 /**
  * Fetch published documents in a category, ordered by displayOrder then title.
  */
 export async function listPublishedByCategory(category: DocumentCategory): Promise<DocumentRow[]> {
-  return db
-    .select()
-    .from(documents)
-    .where(and(eq(documents.category, category), eq(documents.isPublished, true)))
-    .orderBy(asc(documents.displayOrder), asc(documents.title))
+  return withRetry(() =>
+    db
+      .select()
+      .from(documents)
+      .where(and(eq(documents.category, category), eq(documents.isPublished, true)))
+      .orderBy(asc(documents.displayOrder), asc(documents.title))
+  )
 }
 
 /**
  * Fetch reg30 events, sorted by event_date desc when present, else displayOrder.
  */
 export async function listReg30Events(): Promise<DocumentRow[]> {
-  return db
-    .select()
-    .from(documents)
-    .where(and(eq(documents.category, 'reg30'), eq(documents.isPublished, true)))
-    .orderBy(desc(documents.eventDate), asc(documents.displayOrder))
+  return withRetry(() =>
+    db
+      .select()
+      .from(documents)
+      .where(and(eq(documents.category, 'reg30'), eq(documents.isPublished, true)))
+      .orderBy(desc(documents.eventDate), asc(documents.displayOrder))
+  )
 }
 
 export type GroupedDocs = Record<string, DocumentRow[]>
@@ -38,7 +61,9 @@ export function groupBySubcategory(rows: DocumentRow[]): GroupedDocs {
 }
 
 export async function listGroupCompanies(): Promise<GroupCompany[]> {
-  return db.select().from(groupCompanies).orderBy(asc(groupCompanies.displayOrder), asc(groupCompanies.name))
+  return withRetry(() =>
+    db.select().from(groupCompanies).orderBy(asc(groupCompanies.displayOrder), asc(groupCompanies.name))
+  )
 }
 
 export type CompanyWithDocs = GroupCompany & { docs: DocumentRow[] }
@@ -48,11 +73,13 @@ export type CompanyWithDocs = GroupCompany & { docs: DocumentRow[] }
  */
 export async function listGroupCompaniesWithFinancials(): Promise<CompanyWithDocs[]> {
   const companies = await listGroupCompanies()
-  const subDocs = await db
-    .select()
-    .from(documents)
-    .where(and(eq(documents.category, 'subsidiary_financial'), eq(documents.isPublished, true)))
-    .orderBy(asc(documents.displayOrder))
+  const subDocs = await withRetry(() =>
+    db
+      .select()
+      .from(documents)
+      .where(and(eq(documents.category, 'subsidiary_financial'), eq(documents.isPublished, true)))
+      .orderBy(asc(documents.displayOrder))
+  )
 
   const byEntity = new Map<string, DocumentRow[]>()
   for (const d of subDocs) {

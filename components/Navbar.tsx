@@ -16,95 +16,68 @@ type NavItem =
 
 const navItems: NavItem[] = [
   {
-    label: 'About',
+    label: 'Our Company',
     mega: true,
     sections: [
       {
         heading: 'Company',
         links: [
-          { label: 'About Us',       href: '/about-us',          desc: 'Our story and values' },
-          { label: 'Vision & Mission', href: '/vision-and-mission', desc: 'Where we are headed' },
-          { label: 'Key Milestones', href: '/key-milestone',      desc: 'Growth since 2017' },
+          { label: 'About us',          href: '/about-us' },
+          { label: 'Vision and Mission', href: '/vision-and-mission' },
+          { label: 'Leadership Panel',   href: '/leadership-panel' },
+          { label: 'Key Milestone',     href: '/key-milestone' },
         ],
       },
-      {
-        heading: 'Leadership',
-        links: [
-          { label: 'Leadership Panel',     href: '/leadership-panel',    desc: 'Executive team' },
-          { label: 'Board of Directors',   href: '/board-of-directors',  desc: 'Governance board' },
-        ],
-      },
-      {
-        heading: 'Structure',
-        links: [
-          { label: 'Group Companies', href: '/group-companies', desc: 'Corporate family' },
-          { label: 'Subsidiaries',    href: '/subsidiaries',    desc: 'Sister entities' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Business',
-    mega: true,
-    sections: [
       {
         heading: 'Capabilities',
         links: [
-          { label: 'What We Do',              href: '/what-we-do',              desc: 'Services overview' },
-          { label: 'Manufacturing Facility',  href: '/manufacturing-facility',  desc: 'GMP-compliant plant' },
-          { label: 'Certifications',          href: '/certifications',           desc: 'Quality credentials' },
-        ],
-      },
-      {
-        heading: 'Catalog',
-        links: [
-          { label: 'Products',                href: '/products',                desc: 'Full product catalog' },
+          { label: 'What We do',             href: '/what-we-do' },
+          { label: 'Products',               href: '/products' },
+          { label: 'Manufacturing Facility', href: '/manufacturing-facility' },
+          { label: 'Certifications',         href: '/certifications' },
         ],
       },
     ],
   },
   {
-    label: 'Investors',
+    label: 'Investor Relations',
     mega: true,
     sections: [
       {
         heading: 'Disclosures',
         links: [
-          { label: 'SEBI LODR Reg. 46', href: '/sebi-lodr-regulation-46-disclosures', desc: 'Statutory filings' },
-          { label: 'SEBI LODR Reg. 30', href: '/sebi-lodr-regulation-30-disclosures', desc: 'Event-based disclosures' },
-          { label: 'Public Offering',   href: '/public-offering',                      desc: 'IPO / rights info' },
+          { label: 'SEBI LODR - Regulation 46 Disclosures', href: '/sebi-lodr-regulation-46-disclosures' },
+          { label: 'SEBI LODR - Regulation 30 Disclosures', href: '/sebi-lodr-regulation-30-disclosures' },
+          { label: 'Public Offering',                       href: '/public-offering' },
         ],
       },
       {
         heading: 'Reports',
         links: [
-          { label: 'Financial Results', href: '/financial-results', desc: 'Quarterly & annual' },
-          { label: 'Annual Reports',    href: '/annual-reports',    desc: 'Full-year reports' },
-          { label: 'Investor Insights', href: '/investor-insights', desc: 'Presentations' },
+          { label: 'Financial Insights', href: '/financial-results' },
+          { label: 'Investor Insights',  href: '/investor-insights' },
+          { label: 'Annual Reports',     href: '/annual-reports' },
         ],
       },
       {
         heading: 'Governance',
         links: [
-          { label: 'Corporate Governance',    href: '/corporate-governance',                   desc: 'Board & committees' },
-          { label: 'Governance Policies',     href: '/governance-policies-codes-and-frameworks', desc: 'Codes & frameworks' },
+          { label: 'Board of Directors',                    href: '/board-of-directors' },
+          { label: 'Corporate Governance',                  href: '/corporate-governance' },
+          { label: 'Governance Policies, Codes & Frameworks', href: '/governance-policies-codes-and-frameworks' },
         ],
       },
-    ],
-  },
-  {
-    label: 'Corporate',
-    mega: true,
-    sections: [
       {
-        heading: 'Responsibility',
+        heading: 'Structure',
         links: [
-          { label: 'CSR',    href: '/csr',    desc: 'Community initiatives' },
-          { label: 'Career', href: '/career', desc: 'Join our team' },
+          { label: 'Group Companies', href: '/group-companies' },
+          { label: 'Subsidiaries',    href: '/subsidiaries' },
         ],
       },
     ],
   },
+  { label: 'CSR',    href: '/csr' },
+  { label: 'Career', href: '/career' },
 ]
 
 /* ─── Sub-components ─────────────────────────────────────────────────────── */
@@ -149,9 +122,19 @@ function MegaMenu({
           initial={{ opacity: 0, y: -8, scale: 0.98 }}
           animate={{ opacity: 1, y: 0,  scale: 1,    transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
           exit={{    opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.14, ease: [0.7, 0, 0.84, 0] } }}
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-max min-w-[520px] max-w-[720px] rounded-xl border border-border bg-surface/95 backdrop-blur-md shadow-xl p-6 z-50"
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-max min-w-[520px] max-w-[920px] rounded-xl border border-border bg-surface/95 backdrop-blur-md shadow-xl p-6 z-50"
         >
-          <div className={`grid gap-8 ${sections.length === 1 ? 'grid-cols-1' : sections.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
+          <div
+            className={`grid gap-8 ${
+              sections.length === 1
+                ? 'grid-cols-1'
+                : sections.length === 2
+                ? 'grid-cols-2'
+                : sections.length === 3
+                ? 'grid-cols-3'
+                : 'grid-cols-4'
+            }`}
+          >
             {sections.map((section) => (
               <div key={section.heading}>
                 <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink-subtle">
@@ -162,14 +145,11 @@ function MegaMenu({
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="group flex flex-col px-2 py-1.5 rounded-lg hover:bg-primary-xlight transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="group flex items-center px-2 py-2 rounded-lg hover:bg-primary-xlight transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       >
                         <span className="text-sm font-medium text-ink group-hover:text-primary transition-colors duration-150">
                           {link.label}
                         </span>
-                        {link.desc && (
-                          <span className="text-xs text-ink-subtle">{link.desc}</span>
-                        )}
                       </Link>
                     </li>
                   ))}

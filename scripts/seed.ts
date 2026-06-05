@@ -49,7 +49,7 @@ const GROUP_COMPANIES = [
     entityType: 'parent' as const,
     cin: 'L24304CH2017PLC041482',
     description:
-      'The SEBI-listed parent entity and primary operating company — a pharmaceutical and cosmetic manufacturer headquartered in Chandigarh, India.',
+      'The BSE-SME parent entity and primary operating company — a pharmaceutical and cosmetic manufacturer headquartered in Chandigarh, India.',
   },
   {
     slug: 'ascot-biolabs',

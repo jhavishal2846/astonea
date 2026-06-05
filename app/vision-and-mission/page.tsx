@@ -26,12 +26,27 @@ export default function VisionAndMissionPage() {
         breadcrumb={[{ label: 'Vision & Mission', href: '/vision-and-mission' }]}
       />
 
-      {/* Mission & Vision */}
+      {/* Vision & Mission */}
       <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <Reveal>
-              <div>
+              <div className="p-10 rounded-3xl" style={{ background: 'var(--color-primary)' }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'rgba(255,255,255,0.72)' }}>
+                  Our Vision
+                </p>
+                <blockquote className="font-display text-2xl lg:text-3xl font-semibold leading-snug text-white text-balance">
+                  "To build sustainable brands that have global reach and make a lasting impact on people's life."
+                </blockquote>
+                <p className="mt-6 text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.82)' }}>
+                  To connect with global masses with our best-researched portfolio of products — delivering both wellbeing
+                  and beauty to consumers around the world.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <div className="lg:pt-2">
                 <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'var(--color-primary)' }}>
                   Our Mission
                 </p>
@@ -41,21 +56,6 @@ export default function VisionAndMissionPage() {
                 <p className="mt-6 text-base leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
                   We are building a globally recognized pharmaceutical and cosmetic enterprise — one that creates lasting
                   brand equity while remaining the partner of choice for contract manufacturing worldwide.
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={100}>
-              <div className="p-10 rounded-3xl" style={{ background: 'var(--color-primary)' }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                  Our Vision
-                </p>
-                <blockquote className="font-display text-xl lg:text-2xl font-semibold leading-snug text-white">
-                  "To build sustainable brands that have global reach and make a lasting impact on people's life."
-                </blockquote>
-                <p className="mt-5 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)' }}>
-                  To connect with global masses with our best-researched portfolio of products — delivering both wellbeing
-                  and beauty to consumers around the world.
                 </p>
               </div>
             </Reveal>
