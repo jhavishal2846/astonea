@@ -26,6 +26,7 @@ const navItems: NavItem[] = [
           { label: 'Vision and Mission', href: '/vision-and-mission' },
           { label: 'Leadership Panel',   href: '/leadership-panel' },
           { label: 'Key Milestone',     href: '/key-milestone' },
+          { label: 'Associate',   href: '/' },
         ],
       },
       {

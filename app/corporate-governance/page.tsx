@@ -42,12 +42,13 @@ const committees = [
 ]
 
 const governanceDocs = [
-  { num: '01', title: 'Corporate Documents', desc: 'Memorandum and Articles of Association, incorporation documents, and statutory registers.', href: '/governance-policies-codes-and-frameworks' },
-  { num: '02', title: 'Governance Policies', desc: 'Formal policies governing operations, related-party transactions, whistleblower mechanism, and more.', href: '/governance-policies-codes-and-frameworks' },
-  { num: '03', title: 'Codes of Conduct', desc: 'Code of conduct for Directors, Key Managerial Personnel, and Senior Management of the Company.', href: '/governance-policies-codes-and-frameworks' },
-  { num: '04', title: 'Secretarial Audit Report', desc: 'Annual secretarial audit report from a practicing Company Secretary as required under the Companies Act, 2013.', href: '/pdf/Secretarial Audit Report.pdf' },
-  { num: '05', title: 'Board Meeting Notices & Minutes', desc: 'Notices of Board meetings and committee meetings as disclosed under SEBI LODR Regulations.', href: '/sebi-lodr-regulation-46-disclosures' },
-  { num: '06', title: 'SEBI Disclosures', desc: 'Statutory disclosures under SEBI LODR Regulation 30 (event-based) and Regulation 46 (website disclosures).', href: '/sebi-lodr-regulation-46-disclosures' },
+  { num: '01', title: 'Corporate Documents',     desc: 'Memorandum and Articles of Association, incorporation documents, and statutory registers.', href: '/corporate-documents' },
+  { num: '02', title: 'Policies',                desc: 'Board-approved governance policies covering POSH, RPT, succession, board diversity and more.', href: '/policies' },
+  { num: '03', title: 'Codes',                   desc: 'Codes of conduct governing insider trading, fair disclosure and conduct of Board & Senior Management.', href: '/codes' },
+  { num: '04', title: 'Board of Directors',      desc: 'Composition of the Board — Executive, Non-Executive, and Independent Directors leading the Company.', href: '/board-of-directors' },
+  { num: '05', title: 'Committees of BOD',       desc: 'Board sub-committees overseeing audit, nomination, remuneration, stakeholder, CSR and risk functions.', href: '/pdf/14. Composition of Committees.pdf' },
+  { num: '06', title: 'Secretarial Audit Report', desc: 'Annual secretarial audit report from a practicing Company Secretary as required under the Companies Act, 2013.', href: '/pdf/Secretarial Audit Report.pdf' },
+  { num: '07', title: 'Board Meetings',          desc: 'Notices and outcomes of Board meetings as disclosed under SEBI LODR Regulations.', href: '/board-meetings' },
 ]
 
 const governanceFacts = [
