@@ -135,13 +135,26 @@ export default function CSRPage() {
             </div>
 
             <Reveal delay={200}>
-              <p className="mt-10 text-sm" style={{ color: 'var(--color-ink-subtle)' }}>
-                For full details on CSR spending, activities, and policy, refer to the CSR section in the company's
-                Annual Report, available at the{' '}
-                <a href="/annual-reports" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
-                  Annual Reports
-                </a>{' '}
-                page.
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <a
+                  href="/pdf/CSR Policy.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-xs font-semibold px-5 py-2.5 rounded-full transition-colors"
+                  style={{ background: 'var(--color-primary)', color: 'white' }}
+                >
+                  View CSR Policy
+                </a>
+                <a
+                  href="/annual-reports"
+                  className="inline-flex items-center text-xs font-semibold px-5 py-2.5 rounded-full border transition-colors hover:bg-blue-50"
+                  style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
+                >
+                  View Annual Reports
+                </a>
+              </div>
+              <p className="mt-5 text-sm" style={{ color: 'var(--color-ink-subtle)' }}>
+                For full details on CSR spending and activities, refer to the CSR section in the company's Annual Report.
               </p>
             </Reveal>
           </div>

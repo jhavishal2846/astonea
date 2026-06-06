@@ -20,14 +20,9 @@ const listingDetails = [
 ]
 
 const documents = [
-  { title: 'Draft Red Herring Prospectus (DRHP)', desc: 'Draft Red Herring Prospectus dated August 16, 2024 filed with SEBI prior to the IPO.', href: '/pdf/Draft Red Herring Prospectus (DRHP).pdf' },
-  { title: 'Red Herring Prospectus (RHP)', desc: 'Red Herring Prospectus dated May 15, 2025 filed with the Registrar of Companies.', href: '/pdf/Red Herring Prospectus(PDF).pdf' },
-  { title: 'Prospectus', desc: 'Final Prospectus dated May 30, 2025 — the definitive offer document for the IPO.', href: '/pdf/Prospectus.pdf' },
-  { title: 'Share Allotment Details', desc: 'Details of shares allotted to various categories of investors during the public offering.' },
-  { title: 'Basis of Allotment', desc: 'Basis of allotment of equity shares as determined by the Registrar to the Issue.' },
-  { title: 'Listing Agreement', desc: 'Equity listing agreement executed with BSE at the time of listing of equity shares.' },
-  { title: 'Post-Issue Capital Structure', desc: 'Details of the company\'s share capital as at the time of listing and subsequently.' },
-  { title: 'Registrar & Share Transfer Agent', desc: 'Details of the Registrar and Share Transfer Agent appointed for the IPO and ongoing shareholder services.' },
+  { title: 'Prospectus', desc: 'Final Prospectus dated May 30, 2025 — the definitive offer document for the IPO.', href: '/pdf/public-offering/Prospectus.pdf' },
+  { title: 'DRHP', desc: 'Draft Red Herring Prospectus dated August 16, 2024 filed with SEBI prior to the IPO.', href: '/pdf/public-offering/Draft Red Herring Prospectus (DRHP).pdf' },
+  { title: 'RHP', desc: 'Red Herring Prospectus dated May 15, 2025 filed with the Registrar of Companies.', href: '/pdf/public-offering/Red Herring Prospectus(PDF).pdf' },
 ]
 
 export default function PublicOfferingPage() {

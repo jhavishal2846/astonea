@@ -32,8 +32,11 @@ const tagStyles: Record<string, { bg: string; text: string }> = {
   'Non-Profit': { bg: 'rgba(16,185,129,0.1)',         text: '#059669' },
 }
 
+function financialsAnchorId(slug: string) {
+  return `financials-${slug}`
+}
+
 function DocRow({ doc }: { doc: DocumentRow }) {
-  // Extract "Annual Financial Statements" from title that was seeded as "Annual Financial Statements — FY YYYY-YY"
   const label = doc.title.includes(' — ') ? doc.title.split(' — ')[0] : doc.title
   return (
     <div className="flex items-center justify-between p-4 transition-colors hover:bg-blue-50/30" style={{ background: 'var(--color-bg)' }}>
@@ -46,14 +49,10 @@ function DocRow({ doc }: { doc: DocumentRow }) {
           {doc.period && <p className="text-xs mt-0.5" style={{ color: 'var(--color-ink-subtle)' }}>{doc.period}</p>}
         </div>
       </div>
-      {doc.fileUrl ? (
+      {doc.fileUrl && (
         <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:bg-blue-50" style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}>
           PDF
         </a>
-      ) : (
-        <span className="text-xs font-medium px-3 py-1.5 rounded-full border" style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-muted)' }}>
-          Soon
-        </span>
       )}
     </div>
   )
@@ -61,10 +60,16 @@ function DocRow({ doc }: { doc: DocumentRow }) {
 
 export default async function GroupCompaniesPage() {
   const companies = await listGroupCompaniesWithFinancials()
-  // Parent gets the company-grid hero card; its docs are surfaced on /annual-reports + /financial-results.
   const parent = companies.find((c) => c.entityType === 'parent') ?? null
   const others = companies.filter((c) => c.entityType !== 'parent')
   const allForGrid = parent ? [parent, ...others] : others
+
+  // Filter out docs without fileUrl ("Soon" items) — only show entities with at least one published PDF
+  const groupsWithFinancials = others
+    .map((c) => ({ ...c, availableDocs: c.docs.filter((d) => d.fileUrl) }))
+    .filter((c) => c.availableDocs.length > 0)
+
+  const hasFinancialsByCompanyId = new Set<string>(groupsWithFinancials.map((c) => c.id))
 
   return (
     <div className="flex-1 flex flex-col">
@@ -92,6 +97,10 @@ export default async function GroupCompaniesPage() {
               const tagName = ENTITY_TYPE_TAG[c.entityType]
               const tag = tagStyles[tagName]
               const isListed = tagName === 'Listed'
+              const isParent = c.entityType === 'parent'
+              const hasFinancials = isParent || hasFinancialsByCompanyId.has(c.id)
+              const financialsHref = isParent ? '/financial-results' : `#${financialsAnchorId(c.slug)}`
+
               return (
                 <Reveal key={c.id} delay={i * 60}>
                   <div className="flex flex-col p-8 rounded-2xl border h-full" style={{
@@ -119,6 +128,41 @@ export default async function GroupCompaniesPage() {
                         {c.description}
                       </p>
                     )}
+
+                    <div className="mt-6 pt-5 border-t" style={{ borderColor: isListed ? 'rgba(255,255,255,0.08)' : 'var(--color-border)' }}>
+                      {hasFinancials ? (
+                        isParent ? (
+                          <Link
+                            href={financialsHref}
+                            className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full transition-colors"
+                            style={{ background: 'var(--color-primary-light)', color: 'var(--color-slate-950)' }}
+                          >
+                            View Financials
+                            <span aria-hidden>→</span>
+                          </Link>
+                        ) : (
+                          <a
+                            href={financialsHref}
+                            className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border transition-colors hover:bg-blue-50"
+                            style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
+                          >
+                            View Financials
+                            <span aria-hidden>↓</span>
+                          </a>
+                        )
+                      ) : (
+                        <span
+                          className="inline-flex items-center gap-2 text-xs font-medium px-4 py-2 rounded-full border cursor-not-allowed"
+                          style={{
+                            borderColor: isListed ? 'rgba(255,255,255,0.12)' : 'var(--color-border)',
+                            color: isListed ? 'rgba(255,255,255,0.4)' : 'var(--color-ink-subtle)',
+                          }}
+                          title="No financials available yet"
+                        >
+                          Financials Unavailable
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </Reveal>
               )
@@ -128,48 +172,48 @@ export default async function GroupCompaniesPage() {
       </section>
 
       {/* Group financials */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
-        <div className="container-wide">
-          <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
-              Financial Documents
-            </p>
-            <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-4 text-balance" style={{ color: 'var(--color-ink)' }}>
-              Group company financials
-            </h2>
-            <p className="text-base mb-14 max-w-2xl" style={{ color: 'var(--color-ink-muted)' }}>
-              Annual financial statements for each entity within the Astonea group. For Astonea Labs Limited financials, refer to the{' '}
-              <Link href="/financial-results" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
-                Financial Results
-              </Link>{' '}
-              and{' '}
-              <Link href="/annual-reports" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
-                Annual Reports
-              </Link>{' '}
-              pages.
-            </p>
-          </Reveal>
+      {groupsWithFinancials.length > 0 ? (
+        <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+          <div className="container-wide">
+            <Reveal>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
+                Financial Documents
+              </p>
+              <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-4 text-balance" style={{ color: 'var(--color-ink)' }}>
+                Group company financials
+              </h2>
+              <p className="text-base mb-14 max-w-2xl" style={{ color: 'var(--color-ink-muted)' }}>
+                Annual financial statements for each entity within the Astonea group. For Astonea Labs Limited financials, refer to the{' '}
+                <Link href="/financial-results" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
+                  Financial Results
+                </Link>{' '}
+                and{' '}
+                <Link href="/annual-reports" className="font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
+                  Annual Reports
+                </Link>{' '}
+                pages.
+              </p>
+            </Reveal>
 
-          <div className="space-y-12 max-w-3xl">
-            {others
-              .filter((c) => c.docs.length > 0)
-              .map((group, gi) => (
+            <div className="space-y-12 max-w-3xl">
+              {groupsWithFinancials.map((group, gi) => (
                 <Reveal key={group.id} delay={gi * 60}>
-                  <div>
+                  <div id={financialsAnchorId(group.slug)} className="scroll-mt-32">
                     <h3 className="font-display text-lg font-semibold mb-3 pb-3 border-b" style={{ color: 'var(--color-ink)', borderColor: 'var(--color-border)' }}>
                       {group.name}
                     </h3>
                     <div className="space-y-px" style={{ background: 'var(--color-border)' }}>
-                      {group.docs.map((doc) => (
+                      {group.availableDocs.map((doc) => (
                         <DocRow key={doc.id} doc={doc} />
                       ))}
                     </div>
                   </div>
                 </Reveal>
               ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
     </div>
   )
 }
