@@ -51,10 +51,20 @@ export default function SubsidiariesPage() {
                   pharmaceutical and cosmetic brand.
                 </p>
 
+                <a
+                  href="/pdf/Incorporation of WOS- USA.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-xs font-semibold px-4 py-2.5 rounded-full mb-6 transition-colors"
+                  style={{ background: 'var(--color-primary-light)', color: 'var(--color-slate-950)' }}
+                >
+                  View Incorporation Document
+                </a>
+
                 <div className="pt-5 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
                   <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>
                     Parent Company CIN: L24304CH2017PLC041482 — Astonea Labs Limited, Chandigarh, India.
-                    For incorporation documents, refer to{' '}
+                    For other regulatory filings, refer to{' '}
                     <Link href="/sebi-lodr-regulation-30-disclosures" className="hover:underline font-medium" style={{ color: 'var(--color-primary-light)' }}>
                       SEBI LODR Reg. 30 Disclosures
                     </Link>.

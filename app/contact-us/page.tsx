@@ -119,11 +119,22 @@ export default function ContactUsPage() {
                 <h2 className="font-display text-3xl lg:text-4xl font-bold text-white leading-snug mb-5 text-balance">
                   Send us a message
                 </h2>
-                <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
+                <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.72)' }}>
                   Whether you're a brand owner looking for a manufacturing partner, an investor with questions,
                   or a professional exploring export opportunities — fill in the form and our team will get
                   back to you within one business day.
                 </p>
+
+                <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                  <iframe
+                    src="https://maps.google.com/maps?q=Astonea+Labs+Limited,+Haripur,+Haryana&ll=30.5483669,76.9880911&hl=en&z=16&output=embed"
+                    title="Astonea Labs Limited — Location on Google Maps"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="w-full h-80 block"
+                    style={{ border: 0, filter: 'grayscale(0.15) contrast(1.05)' }}
+                  />
+                </div>
               </div>
             </Reveal>
 

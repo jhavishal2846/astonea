@@ -48,7 +48,6 @@ const navItems: NavItem[] = [
         links: [
           { label: 'SEBI LODR - Regulation 46 Disclosures', href: '/sebi-lodr-regulation-46-disclosures' },
           { label: 'SEBI LODR - Regulation 30 Disclosures', href: '/sebi-lodr-regulation-30-disclosures' },
-          { label: 'Public Offering',                       href: '/public-offering' },
         ],
       },
       {
@@ -62,8 +61,8 @@ const navItems: NavItem[] = [
       {
         heading: 'Governance',
         links: [
-          { label: 'Board of Directors',                    href: '/board-of-directors' },
-          { label: 'Corporate Governance',                  href: '/corporate-governance' },
+          { label: 'Board of Directors', href: '/board-of-directors' },
+          { label: 'Corporate Governance',href: '/corporate-governance' },
           { label: 'Governance Policies, Codes & Frameworks', href: '/governance-policies-codes-and-frameworks' },
         ],
       },
@@ -72,6 +71,7 @@ const navItems: NavItem[] = [
         links: [
           { label: 'Group Companies', href: '/group-companies' },
           { label: 'Subsidiaries',    href: '/subsidiaries' },
+          { label: 'Public Offering', href: '/public-offering' },
         ],
       },
     ],

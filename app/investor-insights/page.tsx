@@ -10,44 +10,49 @@ export const metadata: Metadata = {
 
 const quickLinks = [
   {
-    title: 'Financial Results',
-    desc: 'Quarterly and annual audited financial statements from FY 2020-21 onwards.',
-    href: '/financial-results',
+    title: 'Meetings',
+    desc: 'Notices, intimations and outcomes of Board, Committee and General Meetings.',
+    href: '/meetings',
   },
   {
-    title: 'Annual Reports',
-    desc: 'Full-year consolidated annual reports with board reports and governance disclosures.',
-    href: '/annual-reports',
+    title: 'Shareholding Pattern',
+    desc: 'Quarterly shareholding pattern filings submitted under Regulation 31 of SEBI LODR.',
+    href: '/shareholding-pattern',
   },
   {
-    title: 'SEBI LODR Reg. 46',
-    desc: 'Statutory disclosures under Regulation 46 of the SEBI Listing Obligations regulations.',
-    href: '/sebi-lodr-regulation-46-disclosures',
+    title: 'Integrated Fillings',
+    desc: 'Integrated governance and financial filings submitted on a quarterly basis to BSE.',
+    href: '/integrated-filings',
   },
   {
-    title: 'SEBI LODR Reg. 30',
-    desc: 'Event-based disclosures and material information filings under Regulation 30.',
-    href: '/sebi-lodr-regulation-30-disclosures',
+    title: 'Corporate Announcement',
+    desc: 'Material events, intimations and corporate announcements filed with the exchange.',
+    href: '/corporate-announcements',
   },
   {
-    title: 'Corporate Governance',
-    desc: 'Board composition, committees, meeting schedules, and governance framework.',
-    href: '/corporate-governance',
+    title: 'Newspaper Publications',
+    desc: 'Statutory financial results and notices published in approved newspapers.',
+    href: '/newspaper-publications',
   },
   {
-    title: 'Governance Policies',
-    desc: "Codes of conduct, policies, and frameworks governing the company's operations.",
-    href: '/governance-policies-codes-and-frameworks',
+    title: 'Investor Grievances',
+    desc: 'SEBI SCORES-compliant grievance redressal mechanism for shareholders.',
+    href: '/investor-grievances',
   },
   {
-    title: 'Board of Directors',
-    desc: 'Profiles and details of the Board of Directors overseeing corporate governance.',
-    href: '/board-of-directors',
+    title: 'Registrars and Shares Transfer Agent',
+    desc: 'Contact details of the Registrar and Share Transfer Agent for share-related queries.',
+    href: '/registrar-share-transfer-agent',
   },
   {
-    title: 'Public Offering',
-    desc: 'Information relating to IPO, rights issues, and public capital market activities.',
-    href: '/public-offering',
+    title: 'Trading Window Closure',
+    desc: 'Intimations of trading window closure under SEBI (Prohibition of Insider Trading) Regulations.',
+    href: '/trading-window-closure',
+  },
+  {
+    title: 'Related Party Transactions',
+    desc: 'Half-yearly disclosures of related party transactions filed under Regulation 23.',
+    href: '/related-party-transactions',
   },
 ]
 

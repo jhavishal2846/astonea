@@ -44,9 +44,11 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://astonea.org'),
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    shortcut: '/icon.svg',
+    shortcut: '/favicon.ico',
+    apple: '/icon.svg',
   },
   openGraph: {
     type:        'website',
