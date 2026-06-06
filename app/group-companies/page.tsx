@@ -15,22 +15,24 @@ export const dynamic = 'force-dynamic'
 const ENTITY_TYPE_TAG: Record<GroupCompany['entityType'], string> = {
   parent:     'Listed',
   subsidiary: 'Private',
-  associate:  'Private',
-  nonprofit:  'Non-Profit',
+  associate:  'Public',
+  nonprofit:  'Sector 8 Company',
 }
 
 const ENTITY_TYPE_LABEL: Record<GroupCompany['entityType'], string> = {
   parent:     'Parent Company',
   subsidiary: 'Group Entity',
   associate:  'Related Entity',
-  nonprofit:  'Non-Profit Entity',
+  nonprofit:  'Sector 8 Company',
 }
 
 const tagStyles: Record<string, { bg: string; text: string }> = {
   Listed:       { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
   Private:      { bg: 'var(--color-slate-100)',       text: 'var(--color-slate-600)' },
-  'Non-Profit': { bg: 'rgba(16,185,129,0.1)',         text: '#059669' },
+  Public:       { bg: 'rgba(59,130,246,0.1)',         text: '#2563eb' },
+  'Sector 8 Company': { bg: 'rgba(16,185,129,0.1)',         text: '#059669' },
 }
+const DEFAULT_TAG_STYLE = { bg: 'var(--color-slate-100)', text: 'var(--color-slate-600)' }
 
 function financialsAnchorId(slug: string) {
   return `financials-${slug}`
@@ -95,7 +97,7 @@ export default async function GroupCompaniesPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {allForGrid.map((c, i) => {
               const tagName = ENTITY_TYPE_TAG[c.entityType]
-              const tag = tagStyles[tagName]
+              const tag = tagStyles[tagName] ?? DEFAULT_TAG_STYLE
               const isListed = tagName === 'Listed'
               const isParent = c.entityType === 'parent'
               const hasFinancials = isParent || hasFinancialsByCompanyId.has(c.id)
