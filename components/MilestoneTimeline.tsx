@@ -113,11 +113,11 @@ function parseStat(value: string) {
 }
 
 function StatValue({ value }: { value: string }) {
-  const parsed = parseStat(value)
   const ref = useRef<HTMLParagraphElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const reduce = useReducedMotion()
   const mv = useMotionValue(0)
+  const parsed = parseStat(value)
 
   useEffect(() => {
     if (!parsed || reduce || !inView) return

@@ -71,6 +71,7 @@ export const groupCompanies = pgTable('group_companies', {
   description: text('description'),
   entityType: entityTypeEnum('entity_type').notNull(),
   cin: text('cin'),
+  websiteUrl: text('website_url'),
   displayOrder: integer('display_order').notNull().default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),

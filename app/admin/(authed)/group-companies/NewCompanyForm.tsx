@@ -51,6 +51,9 @@ export default function NewCompanyForm({
       <Field label="CIN" htmlFor="new-cin" help="Corporate Identification Number (optional).">
         <input id="new-cin" name="cin" className={inputClass} />
       </Field>
+      <Field label="Website URL" htmlFor="new-website" help="Optional. Shown as a 'Visit website' button on the public card.">
+        <input id="new-website" name="websiteUrl" type="url" placeholder="https://example.com" className={inputClass} />
+      </Field>
       <Field label="Display order" htmlFor="new-order">
         <input id="new-order" name="displayOrder" type="number" min={0} defaultValue={0} className={inputClass} />
       </Field>

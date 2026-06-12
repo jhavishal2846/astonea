@@ -10,7 +10,7 @@ const E = [0.16, 1, 0.3, 1] as const
 
 const HERO_TAGS = ['EST. 2017', 'BSE-SME LISTED', 'WHO-GMP', 'ISO 9001:2015']
 
-const HEADLINE = 'Where serious pharma meets brand-launch speed.'
+const HEADLINE = 'Trusted Pharmaceutical Manufacturing for Brands Ready to Scale.'
 
 function SplitWord({ word, index, total }: { word: string; index: number; total: number }) {
   const reduce = useReducedMotion()
@@ -205,8 +205,7 @@ export default function ScrollHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.78, ease: E }}
           >
-            BSE-SME manufacturer of tablets, capsules, syrups, topicals, and cosmetics —
-            trusted by 2,000+ brands across pharma, nutra, and personal care.
+           WHO-GMP certified manufacturer of tablets, capsules, syrups, topical formulations, and cosmetics. Helping healthcare, nutraceutical, and personal care brands launch faster with consistent quality.
           </motion.p>
 
           {/* CTAs */}

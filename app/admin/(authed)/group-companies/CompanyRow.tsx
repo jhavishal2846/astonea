@@ -72,6 +72,16 @@ export default function CompanyRow({
             {row.cin && <> · CIN {row.cin}</>}
             <> · order {row.displayOrder}</>
           </div>
+          {row.websiteUrl && (
+            <a
+              href={row.websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1.5 inline-block text-xs text-primary hover:underline truncate max-w-full"
+            >
+              {row.websiteUrl}
+            </a>
+          )}
           {row.description && (
             <p className="mt-1.5 text-xs text-slate-600 line-clamp-2">{row.description}</p>
           )}
@@ -126,6 +136,9 @@ export default function CompanyRow({
       </Field>
       <Field label="CIN">
         <input name="cin" defaultValue={row.cin ?? ''} className={inputClass} />
+      </Field>
+      <Field label="Website URL">
+        <input name="websiteUrl" type="url" placeholder="https://example.com" defaultValue={row.websiteUrl ?? ''} className={inputClass} />
       </Field>
       <Field label="Display order">
         <input name="displayOrder" type="number" min={0} defaultValue={row.displayOrder} className={inputClass} />
