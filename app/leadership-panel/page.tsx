@@ -1,225 +1,114 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { AnimatedPersonRow, type Person } from './AnimatedPersonRow'
 
 export const metadata: Metadata = {
   title: 'Leadership Panel',
   description: 'Meet the executive team and senior management behind Astonea Labs Limited.',
 }
 
-type Person = {
-  name: string
-  title: string
-  bio: string
-  img?: string
-}
-
-const founder: Person = {
-  name: 'Mr. Ashish Gulati',
-  title: 'Founder & Managing Director',
-  bio: 'A visionary leader driving the company\'s evolution into a global hub for pharmaceutical and cosmetic manufacturing. Combines exceptional entrepreneurial insight with strong organizational acumen to spearhead strategic growth and innovation.',
-  img: '/leadership/ashish-gulati.webp',
-}
-
 const boardMembers: Person[] = [
   {
-    name: 'Dr. Vikrant Narwal',
-    title: 'Director — R&D & Nutraceuticals',
-    bio: 'Over 15 years in R&D and 9 years in direct sales and marketing. Has developed over 350 commercial products, blending scientific precision with market-driven product innovation in formulation science and functional nutrition.',
-    img: '/leadership/vikrant-narwal.webp',
+    name: 'Mr. Ashish Gulati',
+    title: 'Founder and Managing Director',
+    bio: "Ashish Gulati, Founder & Managing Director of Astonea Labs Limited, is a visionary leader driving the company's evolution into a global hub for pharmaceutical and cosmetic manufacturing. After completing his schooling at Hansraj Public School, he pursued Motorsport Engineering at Oxford Brookes University, United Kingdom. Combining exceptional entrepreneurial insight with strong organizational acumen, Mr. Gulati continues to spearhead strategic growth, innovation, and operational excellence across the organization.",
+    img: '/leadership/ashish-gulati.webp',
   },
   {
     name: 'Mrs. Pooja Singh',
-    title: 'Director — Drug Regulatory Affairs',
-    bio: 'Over 8 years in Quality Assurance and Drug Regulatory Affairs. Joined the Astonea Labs Board on 14 March 2024 and now leads the Drug Regulatory Affairs department, ensuring rigorous compliance with regulatory standards.',
+    title: 'Director',
+    bio: 'Pooja Singh, Director at Astonea Labs Ltd., hails from Uttar Pradesh and holds a B. Pharma degree from Rajeev Gandhi College of Pharmacy. With over 8 years of expertise in Quality Assurance and Drug Regulatory Affairs, she began her career at Medwell Healthcare before joining Astonea Labs in 2021. She now leads the Drug Regulatory Affairs (DRA) department, ensuring rigorous compliance with regulatory standards and maintaining the highest quality benchmarks across the organization.',
     img: '/leadership/pooja-singh.avif',
   },
   {
+    name: 'Dr Vikrant Narwal',
+    title: 'Director',
+    bio: 'A distinguished nutraceutical expert with 15+ years in R&D and 9 years in direct sales and marketing, Dr. Vikrant Narwal holds a Ph.D. from ICAR-NDRI. With over 350 commercial products developed, he is known for blending scientific precision with market insight to deliver innovative, high-impact nutraceutical solutions. His expertise spans formulation science, functional nutrition, and market-driven product innovation. He continues to play a key role in shaping advanced wellness solutions for the modern consumer.',
+    img: '/leadership/vikrant-narwal.webp',
+  },
+  {
     name: 'Mr. Pradeep Dalal',
-    title: 'Non-Executive Director',
-    bio: 'Brings extensive professional experience in finance with strong analytical skills, sound financial understanding, and a commitment to operational excellence.',
+    title: 'Director',
+    bio: "Mr. Pardeep Dalal holds a Bachelor's degree in Arts and has extensive professional experience in the field of finance. He has been appointed as an Additional Director at Astonea Labs Limited, bringing with him strong analytical skills, sound financial understanding, and a commitment to operational excellence. His expertise and leadership are expected to contribute significantly to the company's growth and strategic direction.",
     img: '/leadership/pradeep-dalal.avif',
   },
   {
     name: 'Mr. Arun Kumar Tripathi',
-    title: 'Director — Manufacturing & Operations',
-    bio: 'Over two decades in the pharmaceutical industry with expertise spanning manufacturing, quality assurance, regulatory compliance, and operations management.',
+    title: 'Director',
+    bio: 'With over two decades of experience in the pharmaceutical industry, brings strong expertise in manufacturing, quality assurance, regulatory compliance, and business operations. A B. Pharma graduate from 2002, he is also actively involved in product development, branding, and coordinating third-party manufacturing. His work reflects a passion for creating quality-focused healthcare solutions and a steady vision for sustainable growth in the pharma sector.',
     img: '/leadership/arun-kumar-tripathi.avif',
-  },
-  {
-    name: 'Ms. Salina Chalana',
-    title: 'Independent Director',
-    bio: 'A decade of experience as a practicing lawyer specializing in legal advocacy and advisory services. Contributes to the company\'s governance framework, fostering transparency and integrity.',
-    img: '/leadership/salina-chalana.avif',
   },
   {
     name: 'Mr. Karan Vir Bindra',
     title: 'Independent Director',
-    bio: 'Over 12 years in corporate governance and compliance. Brings deep expertise in company law, SEBI regulations, and corporate secretarial practice.',
+    bio: "Mr. Karan Vir Bindra brings a multifaceted background to his role as both a Practicing Company Secretary (CS) and an Independent Director. He holds a dual degree in Commerce and Law, having pursued a Bachelor of Commerce and Bachelor of Laws (BCom LLB) degree. With over 12 years of extensive experience, Mr. Bindra has established himself as a seasoned professional in the field of corporate governance and compliance. His role as an Independent Director at Astonea Labs Limited, underscores his commitment to ensuring ethical conduct and robust governance practices within the organization.",
     img: '/leadership/karan-vir-bindra.avif',
+  },
+  {
+    name: 'Ms. Salina Chalana',
+    title: 'Independent Director',
+    bio: "Ms. Salina Chalana brings a diverse background to her role as an Independent Director at Astonea Labs Limited, drawing from her experiences in the legal field. She holds a Bachelor of Arts and Bachelor of Laws (BA LLB) degree, reflecting her academic prowess in both humanities and law. With a decade of experience as a practicing lawyer, Ms. Chalana has honed her skills in legal advocacy and advisory services. As an Independent Director, her strategic counsel contributes to Astonea Labs's governance framework, fostering transparency and integrity within the organization.",
+    img: '/leadership/salina-chalana.avif',
   },
   {
     name: 'Mr. Akash Arora',
     title: 'Independent Director',
-    bio: 'Extensive banking and financial sector experience, including senior manager roles at HDFC Bank and Hero FinCorp. Brings deep financial acumen to the board.',
+    bio: "Mr. Akash Arora is an Independent Director in our Company. He holds a Bachelor of Commerce degree from S.D. College, Muzaffarnagar, which he completed in 2010. Additionally, he completed his Chartered Accountancy in March 2013. Mr. Arora's diverse background enriches his role as an Independent Director, drawing on his extensive experience in the banking and financial sectors. He worked as a senior manager at HDFC Bank Limited from January 11, 2016 to July 26, 2019, he also worked as senior associate credit - used car loan at Hero FinCorp from August 5, 2019 to January 10, 2020, making him a valuable asset to our team.",
     img: '/leadership/akash-arora.avif',
   },
 ]
 
 const kmp: Person[] = [
   {
-    name: 'Mr. Sumit Kumar',
-    title: 'Chief Financial Officer',
-    bio: 'Over 15 years in finance. Oversees financial strategy and ensures sustainable growth and robust financial health of the organisation.',
-    img: '/leadership/sumit-kumar.avif',
+    name: 'Mr. Ankit Kapoor',
+    title: 'Company Secretary and Compliance Officer',
+    bio: 'Mr. Ankit Kapoor is an Associate Member of the Institute of Company Secretaries of India (ICSI) and a graduate in Bachelor of Commerce (Hons.) with a specialization in Accounting & Finance. He is also a semi-qualified Chartered Accountant. He brings strong domain expertise in Corporate Laws, SEBI Regulations, Accounting, Finance, and a wide spectrum of corporate compliance and governance matters. He excels in navigating complex regulatory frameworks and driving organizational compliance with strategic, efficient, and solution oriented approaches.',
+    img: '/leadership/ankit-kapoor.avif',
   },
   {
-    name: 'Mr. Ankit Kapoor',
-    title: 'Company Secretary & Compliance Officer',
-    bio: 'Expertise in Corporate Laws, SEBI Regulations, Accounting, and Finance. Ensures full regulatory compliance across listing obligations and corporate secretarial functions.',
-    img: '/leadership/ankit-kapoor.avif',
+    name: 'Mr. Sumit Kumar',
+    title: 'Chief Financial Officer',
+    bio: "Mr. Sumit Kumar, Chief Financial Officer (CFO) at Astonea Labs Ltd., is a highly accomplished finance professional with an M.Com, MBA, and MA in Economics. Bringing over 15 years of experience, he oversees the company's financial strategy, ensuring sustainable growth, robust financial health, and strategic decision-making to drive long-term business success. His deep financial insight, coupled with a strategic vision, enables Astonea to navigate complex markets and achieve its growth objectives with confidence.",
+    img: '/leadership/sumit-kumar.avif',
   },
 ]
 
 const seniorManagement: Person[] = [
   {
-    name: 'Mr. Gaurav Kumar',
-    title: 'Vice President — Marketing',
-    bio: 'Manages marketing and sales strategy for the company\'s domestic brand portfolio, driving consumer reach and commercial growth.',
-    img: '/leadership/gaurav-kumar.avif',
-  },
-  {
     name: 'Mr. Mushtaque Ahmed',
     title: 'Plant Head',
-    bio: 'Ensures efficient, compliant, and high-quality production operations across all manufacturing lines at the Panchkula facility.',
+    bio: "Mr. Mushtaque Ahmed, Plant Head at Astonea labs ltd, holds a B. Pharma from Dr. A.P.J. Abdul Kalam Technical University and brings 20 years of manufacturing experience. His extensive expertise ensures efficient, safe, and compliant production processes, maintaining high-quality standards in Astonea's manufacturing operations.",
     img: '/leadership/mushtaque-ahmed.avif',
+  },
+  {
+    name: 'Mr. Gaurav Kumar',
+    title: 'VP Sales and Marketing',
+    bio: 'Mr. Gaurav Kumar is VP sales and marketing for Astonea Labs Limited for own domestic brands. Mr. Kumar is a Software Engineer and holds an MBA Degree in Marketing from BITM, Pune. His Scope of work includes managing Marketing and Sales segment of the Company.',
+    img: '/leadership/gaurav-kumar.avif',
   },
 ]
 
-function PortraitFrame({ img, name }: { img?: string; name: string }) {
-  const initial = name.split(' ').slice(-1)[0][0]
-  return (
-    <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl bg-slate-100">
-      {img ? (
-        <Image
-          src={img}
-          alt={`Portrait of ${name}`}
-          fill
-          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover object-center"
-        />
-      ) : (
-        <div
-          className="flex h-full w-full items-center justify-center font-display text-7xl font-bold"
-          style={{ background: 'var(--color-primary-xlight)', color: 'var(--color-primary)' }}
-          aria-label={`Portrait placeholder for ${name}`}
-        >
-          {initial}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function PersonCard({ person }: { person: Person }) {
-  return (
-    <article className="leadership-card flex h-full flex-col overflow-hidden rounded-2xl border bg-surface">
-      <PortraitFrame img={person.img} name={person.name} />
-      <div className="flex flex-1 flex-col p-6 sm:p-7">
-        <h3 className="leadership-card__name font-display text-lg font-semibold leading-snug" style={{ color: 'var(--color-ink)' }}>
-          {person.name}
-        </h3>
-        <p className="mt-1 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
-          {person.title}
-        </p>
-        <p className="mt-4 flex-1 text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
-          {person.bio}
-        </p>
-      </div>
-    </article>
-  )
-}
-
-function FounderCard({ person }: { person: Person }) {
-  return (
-    <article
-      className="group relative grid overflow-hidden rounded-3xl border bg-surface lg:grid-cols-[5fr_7fr]"
-      style={{ borderColor: 'var(--color-border)' }}
-    >
-      {/* Decorative accent stripe */}
-      <span
-        className="absolute left-0 right-0 top-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent 0%, var(--color-primary) 50%, transparent 100%)' }}
-        aria-hidden="true"
-      />
-      <span
-        className="absolute -top-24 -right-24 h-72 w-72 rounded-full opacity-40 blur-3xl"
-        style={{ background: 'radial-gradient(circle, var(--color-primary-xlight) 0%, transparent 70%)' }}
-        aria-hidden="true"
-      />
-
-      <div className="relative aspect-[4/5] w-full lg:aspect-auto lg:h-full">
-        {person.img && (
-          <Image
-            src={person.img}
-            alt={`Portrait of ${person.name}`}
-            fill
-            priority
-            sizes="(min-width: 1024px) 42vw, 100vw"
-            className="object-cover object-center"
-          />
-        )}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(10,10,20,0) 55%, rgba(10,10,20,0.55) 100%)',
-          }}
-        />
-      </div>
-
-      <div className="relative flex flex-col justify-center p-8 sm:p-10 lg:p-14">
-        <p className="flex items-center gap-3 font-mono text-[11px] font-bold uppercase tracking-[0.32em]" style={{ color: 'var(--color-primary)' }}>
-          <span className="h-px w-10" style={{ background: 'var(--color-primary)' }} />
-          Founder &amp; Managing Director
-        </p>
-        <h3
-          className="mt-5 font-display font-bold leading-[1.05] tracking-tight text-balance"
-          style={{ color: 'var(--color-ink)', fontSize: 'clamp(2rem, 3.4vw, 3.5rem)' }}
-        >
-          {person.name}
-        </h3>
-        <p className="mt-6 max-w-[52ch] text-base leading-[1.85]" style={{ color: 'var(--color-ink-muted)' }}>
-          {person.bio}
-        </p>
-        <div className="mt-8 flex items-center gap-6 border-t pt-6" style={{ borderColor: 'var(--color-border)' }}>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.26em]" style={{ color: 'var(--color-ink-subtle)' }}>
-            Astonea Labs Limited
-          </p>
-          <span className="h-1 w-1 rounded-full" style={{ background: 'var(--color-ink-subtle)' }} aria-hidden="true" />
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.26em]" style={{ color: 'var(--color-ink-subtle)' }}>
-            Chandigarh, India
-          </p>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function SectionHeader({ kicker, title }: { kicker: string; title: string }) {
+function SectionHeader({ title }: { title: string }) {
   return (
     <Reveal>
-      <p className="mb-3 text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-primary)' }}>
-        {kicker}
-      </p>
       <h2
-        className="font-display text-3xl font-bold leading-snug text-balance lg:text-4xl"
+        className="text-center font-display text-3xl font-bold leading-snug text-balance lg:text-4xl"
         style={{ color: 'var(--color-ink)' }}
       >
         {title}
       </h2>
     </Reveal>
+  )
+}
+
+function PeopleList({ people }: { people: Person[] }) {
+  return (
+    <div className="mx-auto max-w-5xl space-y-14 lg:space-y-20">
+      {people.map((p, i) => (
+        <AnimatedPersonRow key={p.name} person={p} reverse={i % 2 === 1} />
+      ))}
+    </div>
   )
 }
 
@@ -229,67 +118,37 @@ export default function LeadershipPanelPage() {
       <PageHeader
         eyebrow="People"
         title="Leadership Panel"
-        description="The experienced team of directors, executives, and managers driving Astonea Labs forward."
+        description="The experienced team of Directors, KMP's & SM driving Astonea Labs forward."
         breadcrumb={[{ label: 'Leadership Panel', href: '/leadership-panel' }]}
       />
 
-      {/* Founder feature */}
-      <section className="py-20 lg:py-28" style={{ background: 'var(--color-bg)' }}>
-        <div className="container-wide">
-          <div className="mb-12 lg:mb-14">
-            <SectionHeader kicker="Founder" title="The vision behind Astonea" />
-          </div>
-          <Reveal>
-            <FounderCard person={founder} />
-          </Reveal>
-        </div>
-      </section>
-
       {/* Board of Directors */}
-      <section className="py-20 lg:py-28" style={{ background: 'var(--color-surface)' }}>
-        <div className="container-wide">
-          <div className="mb-12 lg:mb-14">
-            <SectionHeader kicker="Board of Directors" title="Guiding the company with expertise and integrity" />
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {boardMembers.map((p, i) => (
-              <Reveal key={p.name} delay={i * 60}>
-                <PersonCard person={p} />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* KMP */}
       <section className="py-20 lg:py-28" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
-          <div className="mb-12 lg:mb-14">
-            <SectionHeader kicker="Key Managerial Personnel" title="Finance &amp; compliance" />
+          <div className="mb-14 lg:mb-20">
+            <SectionHeader title="Board of Directors" />
           </div>
-          <div className="grid max-w-4xl gap-6 sm:grid-cols-2">
-            {kmp.map((p, i) => (
-              <Reveal key={p.name} delay={i * 80}>
-                <PersonCard person={p} />
-              </Reveal>
-            ))}
-          </div>
+          <PeopleList people={boardMembers} />
         </div>
       </section>
 
-      {/* Senior Management */}
+      {/* Key Managerial Personnel */}
       <section className="py-20 lg:py-28" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
-          <div className="mb-12 lg:mb-14">
-            <SectionHeader kicker="Senior Management" title="Execution &amp; growth" />
+          <div className="mb-14 lg:mb-20">
+            <SectionHeader title="Key Managerial Personnel" />
           </div>
-          <div className="grid max-w-4xl gap-6 sm:grid-cols-2">
-            {seniorManagement.map((p, i) => (
-              <Reveal key={p.name} delay={i * 80}>
-                <PersonCard person={p} />
-              </Reveal>
-            ))}
+          <PeopleList people={kmp} />
+        </div>
+      </section>
+
+      {/* Senior Managerial Personnel */}
+      <section className="py-20 lg:py-28" style={{ background: 'var(--color-bg)' }}>
+        <div className="container-wide">
+          <div className="mb-14 lg:mb-20">
+            <SectionHeader title="Senior Managerial Personnel" />
           </div>
+          <PeopleList people={seniorManagement} />
         </div>
       </section>
     </div>

@@ -20,14 +20,14 @@ const directors = [
   },
   {
     name: 'Dr. Vikrant Narwal',
-    designation: 'Director — R&D & Nutraceuticals',
+    designation: 'Directo',
     category: 'Executive',
     image: '/leadership/vikrant-narwal.webp',
     bio: 'Over 15 years in R&D and 9 years in direct sales and marketing. Has developed over 350 commercial products. Expertise in formulation science, functional nutrition, and market-driven product innovation.',
   },
   {
     name: 'Mrs. Pooja Singh',
-    designation: 'Director — Drug Regulatory Affairs',
+    designation: 'Director',
     category: 'Executive',
     image: '/leadership/pooja-singh.avif',
     bio: 'Over 8 years of experience in Quality Assurance and Drug Regulatory Affairs. Joined the Astonea Labs Board on 14 March 2024 and currently leads the Drug Regulatory Affairs department, ensuring rigorous compliance with all regulatory standards.',
@@ -41,8 +41,8 @@ const directors = [
   },
   {
     name: 'Mr. Arun Kumar Tripathi',
-    designation: 'Director — Manufacturing & Operations',
-    category: 'Executive',
+   designation: 'Non-Executive Director',
+    category: 'Non-Executive',
     image: '/leadership/arun-kumar-tripathi.avif',
     bio: 'Over two decades of experience in the pharmaceutical industry with expertise spanning manufacturing, quality assurance, regulatory compliance, and operations management.',
   },

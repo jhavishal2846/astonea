@@ -134,7 +134,7 @@ export default function Regulation46Page() {
         </div>
       </section>
 
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="max-w-3xl space-y-12">
             {SECTIONS.map((section, ci) => (

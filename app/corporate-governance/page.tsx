@@ -72,7 +72,7 @@ export default function CorporateGovernancePage() {
       />
 
       {/* Governance commitment */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <Reveal>
@@ -111,7 +111,7 @@ export default function CorporateGovernancePage() {
       </section>
 
       {/* Board Committees */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
@@ -125,7 +125,7 @@ export default function CorporateGovernancePage() {
             {committees.map((c, i) => (
               <Reveal key={c.name} delay={i * 60}>
                 <div className="flex flex-col gap-3 p-8 h-full" style={{ background: 'var(--color-bg)' }}>
-                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-light)' }}>
                     {c.num}
                   </span>
                   <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>{c.name}</h3>
@@ -136,12 +136,36 @@ export default function CorporateGovernancePage() {
                 </div>
               </Reveal>
             ))}
+            <Reveal delay={committees.length * 60}>
+              <Link
+                href="/pdf/14. Composition of Committees.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col justify-between gap-3 p-8 h-full transition-colors hover:bg-blue-50/40"
+                style={{ background: 'var(--color-bg)' }}
+              >
+                <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-light)' }}>
+                  06
+                </span>
+                <div className="flex-1 flex flex-col gap-3">
+                  <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>
+                    Committee composition
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
+                    Full membership and chairperson details for all Board committees, as required under SEBI LODR.
+                  </p>
+                </div>
+                <p className="text-xs font-semibold pt-3 border-t inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all" style={{ color: 'var(--color-primary)', borderColor: 'var(--color-border)' }}>
+                  View PDF <span aria-hidden>→</span>
+                </p>
+              </Link>
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* Document links */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>

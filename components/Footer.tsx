@@ -106,7 +106,7 @@ export default function Footer() {
               Partnering with you for quality manufacturing and development. Innovative pharma and cosmetics solutions — excellence and reliability in every batch.
             </p>
             <address className="text-xs text-white/40 not-italic leading-relaxed">
-              SCO 321-322, Sector 35B<br />
+              SCO 321-322, Basement, Sector 35B<br />
               Chandigarh — 160022<br />
               India
             </address>

@@ -84,7 +84,7 @@ export default function WhatWeDoPage() {
       </div>
 
       {/* Services overview */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>Services</p>
@@ -96,7 +96,7 @@ export default function WhatWeDoPage() {
             {services.map((s, i) => (
               <Reveal key={s.title} delay={i * 50}>
                 <div className="flex flex-col gap-3 p-8 h-full" style={{ background: 'var(--color-surface)' }}>
-                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-light)' }}>
                     {s.num}
                   </span>
                   <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>{s.title}</h3>
@@ -109,7 +109,7 @@ export default function WhatWeDoPage() {
       </section>
 
       {/* Pharma */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-slate-950)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-slate-950)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary-light)' }}>Pharmaceutical</p>
@@ -135,7 +135,7 @@ export default function WhatWeDoPage() {
       </section>
 
       {/* Cosmetics */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <Reveal>
@@ -171,7 +171,7 @@ export default function WhatWeDoPage() {
       </section>
 
       {/* Own Brands */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>Brand Portfolio</p>

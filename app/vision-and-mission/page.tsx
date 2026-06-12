@@ -27,7 +27,7 @@ export default function VisionAndMissionPage() {
       />
 
       {/* Vision & Mission */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <Reveal>
@@ -79,7 +79,7 @@ export default function VisionAndMissionPage() {
       </section>
 
       {/* Core Values */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
@@ -93,7 +93,7 @@ export default function VisionAndMissionPage() {
             {values.map((v, i) => (
               <Reveal key={v.title} delay={i * 60}>
                 <div className="flex flex-col gap-4 p-8 h-full" style={{ background: 'var(--color-bg)' }}>
-                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-light)' }}>
                     {v.num}
                   </span>
                   <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>{v.title}</h3>
