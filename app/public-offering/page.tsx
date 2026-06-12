@@ -39,7 +39,7 @@ export default function PublicOfferingPage() {
       />
 
       {/* Listing overview */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <Reveal>
@@ -77,7 +77,7 @@ export default function PublicOfferingPage() {
       </section>
 
       {/* Documents */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>

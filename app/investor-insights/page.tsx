@@ -61,7 +61,7 @@ const keyFacts = [
   { label: 'Listed On', value: 'BSE' },
   { label: 'Incorporation', value: '2017 · Chandigarh' },
   { label: 'Sector', value: 'Pharmaceuticals & Cosmetics' },
-  { label: 'Registered Office', value: 'SCO 321-322, Sector 35B, Chandigarh 160022' },
+  { label: 'Registered Office', value: 'SCO 321-322, Basement, Sector 35B, Chandigarh — 160022' },
   { label: 'Investor Contact', value: 'cs@astonea.org' },
 ]
 
@@ -97,7 +97,7 @@ export default function InvestorInsightsPage() {
       </section>
 
       {/* Quick links */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>

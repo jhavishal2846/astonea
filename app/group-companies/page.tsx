@@ -16,21 +16,14 @@ const ENTITY_TYPE_TAG: Record<GroupCompany['entityType'], string> = {
   parent:     'Listed',
   subsidiary: 'Private',
   associate:  'Public',
-  nonprofit:  'Sector 8 Company',
-}
-
-const ENTITY_TYPE_LABEL: Record<GroupCompany['entityType'], string> = {
-  parent:     'Parent Company',
-  subsidiary: 'Group Entity',
-  associate:  'Related Entity',
-  nonprofit:  'Sector 8 Company',
+  nonprofit:  'Section 8 Company',
 }
 
 const tagStyles: Record<string, { bg: string; text: string }> = {
   Listed:       { bg: 'var(--color-primary-xlight)', text: 'var(--color-primary)' },
   Private:      { bg: 'var(--color-slate-100)',       text: 'var(--color-slate-600)' },
   Public:       { bg: 'rgba(59,130,246,0.1)',         text: '#2563eb' },
-  'Sector 8 Company': { bg: 'rgba(16,185,129,0.1)',         text: '#059669' },
+  'Section 8 Company': { bg: 'rgba(16,185,129,0.1)',         text: '#059669' },
 }
 const DEFAULT_TAG_STYLE = { bg: 'var(--color-slate-100)', text: 'var(--color-slate-600)' }
 
@@ -83,7 +76,7 @@ export default async function GroupCompaniesPage() {
       />
 
       {/* Companies grid */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
@@ -117,9 +110,6 @@ export default async function GroupCompaniesPage() {
                     <h3 className="font-display text-lg font-semibold mb-2" style={{ color: isListed ? 'white' : 'var(--color-ink)' }}>
                       {c.name}
                     </h3>
-                    <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: isListed ? 'var(--color-primary-light)' : 'var(--color-primary)' }}>
-                      {ENTITY_TYPE_LABEL[c.entityType]}
-                    </p>
                     {c.cin && (
                       <p className="text-xs font-mono mb-3" style={{ color: isListed ? 'rgba(255,255,255,0.55)' : 'var(--color-ink-subtle)' }}>
                         CIN: {c.cin}
@@ -190,7 +180,7 @@ export default async function GroupCompaniesPage() {
 
       {/* Group financials */}
       {groupsWithFinancials.length > 0 ? (
-        <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+        <section className="py-14 lg:py-12" style={{ background: 'var(--color-surface)' }}>
           <div className="container-wide">
             <Reveal>
               <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>

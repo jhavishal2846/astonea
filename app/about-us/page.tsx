@@ -123,7 +123,7 @@ export default function AboutUsPage() {
               </h2>
               <div className="mt-8 mx-auto w-12 h-0.5 rounded-full" style={{ background: 'var(--color-primary)' }} />
               <p className="mt-8 text-lg leading-relaxed max-w-2xl mx-auto" style={{ color: 'var(--color-ink-muted)' }}>
-                From a single facility in Haryana to serving over 2,000 brands across India and abroad — we have
+                From a single facility in Haryana to serving over 3,200 brands across India and abroad — we have
                 grown by keeping one principle constant: that quality is not a department, it is the entire operation.
               </p>
             </div>
@@ -164,7 +164,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Company identity — foundation facts */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-20 items-start">
             <StaggerReveal>
@@ -192,7 +192,7 @@ export default function AboutUsPage() {
                 { label: 'CIN', value: 'L24304CH2017PLC041482' },
                 { label: 'Facility', value: 'Village Haripur, Panchkula, Haryana' },
                 { label: 'Compliance', value: 'WHO-GMP Certified' },
-                { label: 'Market Status', value: 'BSE-SME  Public Company' },
+                { label: 'Market Status', value: 'BSE-SME Limitied Company' },
                 { label: 'Segments', value: 'Pharmaceutical & Cosmetics' },
               ].map((row) => (
                 <div
@@ -214,7 +214,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Path selection — "Enterprise Gateway" pattern: I am a... */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-slate-950)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-slate-950)' }}>
         <div className="container-wide">
           <Reveal>
             <div className="mb-14">
@@ -325,7 +325,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Pillars */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <Reveal>
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16">
@@ -351,7 +351,7 @@ export default function AboutUsPage() {
                 >
                   <span
                     className="font-display text-5xl font-bold tracking-tighter leading-none select-none"
-                    style={{ color: 'var(--color-primary-xlight)' }}
+                    style={{ color: 'var(--color-primary-light)' }}
                   >
                     {p.num}
                   </span>
@@ -367,7 +367,7 @@ export default function AboutUsPage() {
       </section>
 
       {/* Industries & Differentiators */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-slate-950)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-slate-950)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary-light)' }}>

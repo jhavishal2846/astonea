@@ -20,7 +20,7 @@ export default function InvestorGrievancesPage() {
         ]}
       />
 
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="max-w-2xl">
             <Reveal>

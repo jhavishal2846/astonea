@@ -348,9 +348,9 @@ export default function Navbar() {
   const isMenuOpen = open !== null || mobileOpen
   const effectiveHidden = hidden && !isMenuOpen
 
-  /* Transparent over the home-page hero so the video isn't clipped by the nav.
-     Goes solid the moment user scrolls or opens a menu. */
-  const transparent = pathname === '/' && !scrolled && !isMenuOpen
+  /* Transparent over the hero on every page (interior heroes also use a dark
+     photo background). Goes solid the moment the user scrolls or opens a menu. */
+  const transparent = !scrolled && !isMenuOpen
 
   /* Close mega-menu on route change */
   useEffect(() => {

@@ -45,7 +45,7 @@ export default function ManufacturingFacilityPage() {
       />
 
       {/* Location */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             <Reveal>
@@ -95,7 +95,7 @@ export default function ManufacturingFacilityPage() {
       </section>
 
       {/* Infrastructure */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-slate-950)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-slate-950)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary-light)' }}>Infrastructure</p>
@@ -118,7 +118,7 @@ export default function ManufacturingFacilityPage() {
       </section>
 
       {/* Production capabilities */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>Production</p>
@@ -130,7 +130,7 @@ export default function ManufacturingFacilityPage() {
             {capabilities.map((c, i) => (
               <Reveal key={c.label} delay={i * 60}>
                 <div className="flex flex-col gap-3 p-8 h-full" style={{ background: 'var(--color-bg)' }}>
-                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-light)' }}>
                     {c.num}
                   </span>
                   <span className="text-sm font-semibold" style={{ color: 'var(--color-ink)' }}>{c.label}</span>
@@ -143,7 +143,7 @@ export default function ManufacturingFacilityPage() {
       </section>
 
       {/* Quality standards */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>Quality & Compliance</p>

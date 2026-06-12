@@ -44,7 +44,7 @@ export default function CSRPage() {
       />
 
       {/* Philosophy */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <Reveal>
@@ -83,7 +83,7 @@ export default function CSRPage() {
       </section>
 
       {/* Focus areas */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-surface)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-surface)' }}>
         <div className="container-wide">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--color-primary)' }}>
@@ -97,7 +97,7 @@ export default function CSRPage() {
             {focusAreas.map((f, i) => (
               <Reveal key={f.title} delay={i * 80}>
                 <div className="flex flex-col gap-4 p-10 h-full" style={{ background: 'var(--color-bg)' }}>
-                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-xlight)' }}>
+                  <span className="font-display text-4xl font-bold tracking-tighter leading-none select-none" style={{ color: 'var(--color-primary-light)' }}>
                     {f.num}
                   </span>
                   <h3 className="font-display text-xl font-semibold" style={{ color: 'var(--color-ink)' }}>{f.title}</h3>
@@ -110,7 +110,7 @@ export default function CSRPage() {
       </section>
 
       {/* Principles */}
-      <section className="py-24 lg:py-32" style={{ background: 'var(--color-bg)' }}>
+      <section className="py-14 lg:py-12" style={{ background: 'var(--color-bg)' }}>
         <div className="container-wide">
           <div className="max-w-3xl">
             <Reveal>
