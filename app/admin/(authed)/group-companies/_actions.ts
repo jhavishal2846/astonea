@@ -24,11 +24,24 @@ function readForm(formData: FormData) {
   const entityType = String(formData.get('entityType') ?? '') as EntityType
   const cinRaw = String(formData.get('cin') ?? '').trim()
   const descRaw = String(formData.get('description') ?? '').trim()
+  const websiteRaw = String(formData.get('websiteUrl') ?? '').trim()
   const orderRaw = String(formData.get('displayOrder') ?? '0')
 
   if (!slug) throw new Error('Slug is required')
   if (!name) throw new Error('Name is required')
   if (!ENTITY_TYPES.includes(entityType)) throw new Error('Invalid entity type')
+
+  let websiteUrl: string | null = null
+  if (websiteRaw !== '') {
+    const normalized = /^https?:\/\//i.test(websiteRaw) ? websiteRaw : `https://${websiteRaw}`
+    try {
+      const u = new URL(normalized)
+      if (u.protocol !== 'http:' && u.protocol !== 'https:') throw new Error('bad protocol')
+      websiteUrl = u.toString()
+    } catch {
+      throw new Error('Website URL is invalid')
+    }
+  }
 
   return {
     slug,
@@ -36,6 +49,7 @@ function readForm(formData: FormData) {
     entityType,
     cin: cinRaw === '' ? null : cinRaw,
     description: descRaw === '' ? null : descRaw,
+    websiteUrl,
     displayOrder: Number(orderRaw) || 0,
   }
 }

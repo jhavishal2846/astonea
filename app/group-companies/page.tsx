@@ -131,7 +131,7 @@ export default async function GroupCompaniesPage() {
                       </p>
                     )}
 
-                    <div className="mt-6 pt-5 border-t" style={{ borderColor: isListed ? 'rgba(255,255,255,0.08)' : 'var(--color-border)' }}>
+                    <div className="mt-6 pt-5 border-t flex flex-wrap items-center gap-2" style={{ borderColor: isListed ? 'rgba(255,255,255,0.08)' : 'var(--color-border)' }}>
                       {hasFinancials ? (
                         isParent ? (
                           <Link
@@ -163,6 +163,21 @@ export default async function GroupCompaniesPage() {
                         >
                           Financials Unavailable
                         </span>
+                      )}
+                      {c.websiteUrl && (
+                        <a
+                          href={c.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border transition-colors hover:bg-blue-50"
+                          style={{
+                            borderColor: isListed ? 'rgba(255,255,255,0.25)' : 'var(--color-primary)',
+                            color: isListed ? 'white' : 'var(--color-primary)',
+                          }}
+                        >
+                          Visit website
+                          <span aria-hidden>↗</span>
+                        </a>
                       )}
                     </div>
                   </div>

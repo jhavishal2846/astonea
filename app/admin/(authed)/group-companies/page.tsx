@@ -31,7 +31,7 @@ export default async function GroupCompaniesPage({
     .orderBy(asc(groupCompanies.displayOrder), asc(groupCompanies.name))
     .limit(PER_PAGE)
     .offset(offset)
-
+  
   return (
     <div className="max-w-5xl mx-auto">
       <AdminPageHeader
