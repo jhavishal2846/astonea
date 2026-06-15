@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal, StaggerReveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'What We Do',
-  description: 'Our pharmaceutical and cosmetic manufacturing capabilities — from formulation to global distribution.',
-}
+export const generateMetadata = () =>
+  pageMeta('/what-we-do', {
+    title: 'What We Do',
+    description: 'Our pharmaceutical and cosmetic manufacturing capabilities — from formulation to global distribution.',
+  })
 
 const metrics = [
   { value: '9+', label: 'Therapeutic categories' },

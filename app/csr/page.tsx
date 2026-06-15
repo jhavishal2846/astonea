@@ -1,11 +1,12 @@
-import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'CSR',
-  description: 'Astonea Labs\' corporate social responsibility — ecological preservation, social empowerment, and community advancement.',
-}
+export const generateMetadata = () =>
+  pageMeta('/csr', {
+    title: 'CSR',
+    description: 'Astonea Labs\' corporate social responsibility — ecological preservation, social empowerment, and community advancement.',
+  })
 
 const focusAreas = [
   {

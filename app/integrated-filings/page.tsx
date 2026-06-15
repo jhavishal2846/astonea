@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Integrated Filings',
-  description: 'Integrated quarterly governance and financial filings of Astonea Labs Limited submitted to BSE.',
-}
+export const generateMetadata = () =>
+  pageMeta('/integrated-filings', {
+    title: 'Integrated Filings',
+    description: 'Integrated quarterly governance and financial filings of Astonea Labs Limited submitted to BSE.',
+  })
 
 const categories = [
   {

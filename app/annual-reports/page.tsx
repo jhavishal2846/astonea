@@ -1,14 +1,13 @@
-import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 import { listPublishedByCategory } from '@/lib/cms/queries'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Annual Reports',
-  description: 'Astonea Labs Limited annual reports — full-year consolidated reports for shareholders and investors.',
-}
-
-export const dynamic = 'force-dynamic'
+export const generateMetadata = () =>
+  pageMeta('/annual-reports', {
+    title: 'Annual Reports',
+    description: 'Astonea Labs Limited annual reports — full-year consolidated reports for shareholders and investors.',
+  })
 
 function periodToYear(period: string | null): string {
   if (!period) return ''

@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Corporate Governance',
-  description: 'Astonea Labs Limited corporate governance — board committees, meetings, and governance framework.',
-}
+export const generateMetadata = () =>
+  pageMeta('/corporate-governance', {
+    title: 'Corporate Governance',
+    description: 'Astonea Labs Limited corporate governance — board committees, meetings, and governance framework.',
+  })
 
 const committees = [
   {

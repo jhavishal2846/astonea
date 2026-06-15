@@ -1,11 +1,12 @@
-import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Investor Grievances',
-  description: 'Investor and shareholder grievance redressal contact at Astonea Labs Limited.',
-}
+export const generateMetadata = () =>
+  pageMeta('/investor-grievances', {
+    title: 'Investor Grievances',
+    description: 'Investor and shareholder grievance redressal contact at Astonea Labs Limited.',
+  })
 
 export default function InvestorGrievancesPage() {
   return (

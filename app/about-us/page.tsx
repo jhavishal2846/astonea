@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal, StaggerReveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'About Us',
-  description: 'Our story, values, and the people behind Astonea Labs Limited.',
-}
+export const generateMetadata = () =>
+  pageMeta('/about-us', {
+    title: 'About Us',
+    description: 'Our story, values, and the people behind Astonea Labs Limited.',
+  })
 
 const trustMetrics = [
   { value: '3,200+', label: 'Brands Served', sub: 'Pharma & cosmetics' },

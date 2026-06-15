@@ -26,6 +26,15 @@ export const documentCategoryEnum = pgEnum('document_category', [
   'reg46',
   'subsidiary_financial',
   'certification',
+  'agm',
+  'egm',
+  'shareholding_pattern',
+  'trading_window',
+  'related_party',
+  'corporate_announcement',
+  'newspaper_publication',
+  'integrated_filing',
+  'corporate_document',
 ])
 
 export const activityActionEnum = pgEnum('activity_action', [
@@ -109,6 +118,18 @@ export const documents = pgTable(
   ],
 )
 
+export const pageMetadata = pgTable('page_metadata', {
+  pagePath: text('page_path').primaryKey(),
+  title: text('title').notNull(),
+  description: text('description'),
+  ogImage: text('og_image'),
+  keywords: text('keywords'),
+  canonical: text('canonical'),
+  noIndex: boolean('no_index').notNull().default(false),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
+})
+
 export const activityLog = pgTable(
   'activity_log',
   {
@@ -136,6 +157,8 @@ export type GroupCompany = typeof groupCompanies.$inferSelect
 export type NewGroupCompany = typeof groupCompanies.$inferInsert
 export type DocumentRow = typeof documents.$inferSelect
 export type NewDocument = typeof documents.$inferInsert
+export type PageMetadataRow = typeof pageMetadata.$inferSelect
+export type NewPageMetadata = typeof pageMetadata.$inferInsert
 
 export type DocumentCategory = (typeof documentCategoryEnum.enumValues)[number]
 export type EntityType = (typeof entityTypeEnum.enumValues)[number]

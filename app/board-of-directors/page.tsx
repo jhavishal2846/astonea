@@ -1,14 +1,15 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 import CountUp from '@/components/CountUp'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Board of Directors',
-  description: 'Meet the Board of Directors of Astonea Labs Limited — governance, expertise, and oversight.',
-}
+export const generateMetadata = () =>
+  pageMeta('/board-of-directors', {
+    title: 'Board of Directors',
+    description: 'Meet the Board of Directors of Astonea Labs Limited — governance, expertise, and oversight.',
+  })
 
 const directors = [
   {

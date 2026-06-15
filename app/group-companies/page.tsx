@@ -1,14 +1,15 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 import { listGroupCompaniesWithFinancials } from '@/lib/cms/queries'
 import type { DocumentRow, GroupCompany } from '@/lib/db/schema'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Group Companies',
-  description: 'The corporate family of Astonea Labs Limited — group entities and affiliated organisations.',
-}
+export const generateMetadata = () =>
+  pageMeta('/group-companies', {
+    title: 'Group Companies',
+    description: 'The corporate family of Astonea Labs Limited — group entities and affiliated organisations.',
+  })
 
 export const dynamic = 'force-dynamic'
 

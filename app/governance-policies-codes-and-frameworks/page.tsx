@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Governance Policies, Codes & Frameworks',
-  description: 'Astonea Labs Limited governance policies, codes of conduct, and regulatory frameworks.',
-}
+export const generateMetadata = () =>
+  pageMeta('/governance-policies-codes-and-frameworks', {
+    title: 'Governance Policies, Codes & Frameworks',
+    description: 'Astonea Labs Limited governance policies, codes of conduct, and regulatory frameworks.',
+  })
 
 const categories = [
   {

@@ -1,11 +1,12 @@
-import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal, StaggerReveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Vision & Mission',
-  description: 'Our vision and mission — building sustainable brands with global reach.',
-}
+export const generateMetadata = () =>
+  pageMeta('/vision-and-mission', {
+    title: 'Vision & Mission',
+    description: 'Our vision and mission — building sustainable brands with global reach.',
+  })
 
 const values = [
   { num: '01', title: 'Global Ambition', desc: 'We pursue international markets through both our own brand portfolio and as a preferred supplier to global partners.' },

@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Subsidiaries',
-  description: 'Astonea Labs\' subsidiaries — including the wholly owned US subsidiary Astonea LLC.',
-}
+export const generateMetadata = () =>
+  pageMeta('/subsidiaries', {
+    title: 'Subsidiaries',
+    description: 'Astonea Labs\' subsidiaries — including the wholly owned US subsidiary Astonea LLC.',
+  })
 
 export default function SubsidiariesPage() {
   return (

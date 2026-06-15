@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Investor Insights',
-  description: 'Investor resources for Astonea Labs Limited — disclosures, reports, shareholding, and stakeholder communications.',
-}
+export const generateMetadata = () =>
+  pageMeta('/investor-insights', {
+    title: 'Investor Insights',
+    description: 'Investor resources for Astonea Labs Limited — disclosures, reports, shareholding, and stakeholder communications.',
+  })
 
 const quickLinks = [
   {
@@ -58,7 +59,7 @@ const quickLinks = [
 
 const keyFacts = [
   { label: 'CIN', value: 'L24304CH2017PLC041482' },
-  { label: 'Listed On', value: 'BSE' },
+  { label: 'Listed On', value: 'BSE-SME' },
   { label: 'Incorporation', value: '2017 · Chandigarh' },
   { label: 'Sector', value: 'Pharmaceuticals & Cosmetics' },
   { label: 'Registered Office', value: 'SCO 321-322, Basement, Sector 35B, Chandigarh — 160022' },

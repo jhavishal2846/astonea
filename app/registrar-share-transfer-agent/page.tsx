@@ -1,11 +1,12 @@
-import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Registrar & Share Transfer Agent',
-  description: 'Contact details of the Registrar and Share Transfer Agent for Astonea Labs Limited shareholders.',
-}
+export const generateMetadata = () =>
+  pageMeta('/registrar-share-transfer-agent', {
+    title: 'Registrar & Share Transfer Agent',
+    description: 'Contact details of the Registrar and Share Transfer Agent for Astonea Labs Limited shareholders.',
+  })
 
 export default function RegistrarShareTransferAgentPage() {
   return (

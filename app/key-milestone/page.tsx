@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { MilestoneStats, MilestoneTimeline } from '@/components/MilestoneTimeline'
 import type { Milestone, Stat } from '@/components/MilestoneTimeline'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Key Milestones',
-  description: 'Astonea Labs\' journey from incorporation in 2017 to its 2025 BSE SME listing as a pan-India manufacturer.',
-}
+export const generateMetadata = () =>
+  pageMeta('/key-milestone', {
+    title: 'Key Milestones',
+    description: 'Astonea Labs\' journey from incorporation in 2017 to its 2025 BSE SME listing as a pan-India manufacturer.',
+  })
 
 const milestones: Milestone[] = [
   {

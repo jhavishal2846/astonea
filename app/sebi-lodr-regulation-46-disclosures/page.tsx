@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'SEBI LODR Regulation 46 Disclosures',
-  description: 'Statutory disclosures by Astonea Labs Limited under SEBI LODR Regulation 46.',
-}
+export const generateMetadata = () =>
+  pageMeta('/sebi-lodr-regulation-46-disclosures', {
+    title: 'SEBI LODR Regulation 46 Disclosures',
+    description: 'Statutory disclosures by Astonea Labs Limited under SEBI LODR Regulation 46.',
+  })
 
 type SectionItem = {
   title: string

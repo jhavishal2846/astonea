@@ -147,3 +147,11 @@ export const IconChevronRight = (p: Props) => (
     <polyline points="9 18 15 12 9 6" />
   </svg>
 )
+
+export const IconSeo = (p: Props) => (
+  <svg {...base(p)}>
+    <circle cx="11" cy="11" r="7" />
+    <line x1="20" y1="20" x2="16.65" y2="16.65" />
+    <path d="M8 11h6M11 8v6" />
+  </svg>
+)

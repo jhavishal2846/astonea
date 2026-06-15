@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal, StaggerReveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Manufacturing Facility',
-  description: 'GMP-compliant manufacturing facility in Panchkula, Haryana — state-of-the-art pharma and cosmetics production.',
-}
+export const generateMetadata = () =>
+  pageMeta('/manufacturing-facility', {
+    title: 'Manufacturing Facility',
+    description: 'GMP-compliant manufacturing facility in Panchkula, Haryana — state-of-the-art pharma and cosmetics production.',
+  })
 
 const capabilities = [
   { num: '01', label: 'Tablets & Capsules', detail: 'Conventional, film-coated, enteric-coated, and extended-release solid dosage forms.' },

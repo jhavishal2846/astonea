@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Meetings',
-  description: 'Notices, intimations and outcomes of Annual General Meetings, Extra-Ordinary General Meetings and Board Meetings of Astonea Labs Limited.',
-}
+export const generateMetadata = () =>
+  pageMeta('/meetings', {
+    title: 'Meetings',
+    description: 'Notices, intimations and outcomes of Annual General Meetings, Extra-Ordinary General Meetings and Board Meetings of Astonea Labs Limited.',
+  })
 
 const categories = [
   {

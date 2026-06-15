@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal, StaggerReveal } from '@/components/StaggerReveal'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Public Offering',
-  description: 'Astonea Labs Limited public offering information — IPO, listing, and capital markets.',
-}
+export const generateMetadata = () =>
+  pageMeta('/public-offering', {
+    title: 'Public Offering',
+    description: 'Astonea Labs Limited public offering information — IPO, listing, and capital markets.',
+  })
 
 const listingDetails = [
   { label: 'Company Name', value: 'Astonea Labs Limited' },

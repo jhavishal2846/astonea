@@ -1,15 +1,14 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 import { listPublishedByCategory } from '@/lib/cms/queries'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Certifications',
-  description: 'Astonea Labs\' quality certifications and regulatory approvals — WHO-GMP, ISO, AYUSH, FSSAI and more.',
-}
-
-export const dynamic = 'force-dynamic'
+export const generateMetadata = () =>
+  pageMeta('/certifications', {
+    title: 'Certifications',
+    description: 'Astonea Labs\' quality certifications and regulatory approvals — WHO-GMP, ISO, AYUSH, FSSAI and more.',
+  })
 
 // Quality practices remain a static list (no per-row CMS need yet).
 const qualityPractices = [

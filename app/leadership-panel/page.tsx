@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 import { AnimatedPersonRow, type Person } from './AnimatedPersonRow'
+import { pageMeta } from '@/lib/seo/generate-metadata'
 
-export const metadata: Metadata = {
-  title: 'Leadership Panel',
-  description: 'Meet the executive team and senior management behind Astonea Labs Limited.',
-}
+export const generateMetadata = () =>
+  pageMeta('/leadership-panel', {
+    title: 'Leadership Panel',
+    description: 'Meet the executive team and senior management behind Astonea Labs Limited.',
+  })
 
 const boardMembers: Person[] = [
   {
