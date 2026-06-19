@@ -11,6 +11,8 @@ import {
   IconActivity,
   IconLogout,
   IconSeo,
+  IconLanguages,
+  IconPages,
 } from '@/app/admin/_icons'
 
 type NavLink = {
@@ -21,8 +23,10 @@ type NavLink = {
 
 const LINKS: NavLink[] = [
   { href: '/admin',                 label: 'Dashboard',      icon: IconDashboard },
+  { href: '/admin/pages',           label: 'Pages',          icon: IconPages      },
   { href: '/admin/documents',       label: 'Documents',      icon: IconDocs       },
   { href: '/admin/seo',             label: 'SEO',            icon: IconSeo        },
+  { href: '/admin/languages',       label: 'Languages',      icon: IconLanguages  },
   { href: '/admin/group-companies', label: 'Group Companies',icon: IconBuilding   },
   { href: '/admin/users',           label: 'Admins',         icon: IconUsers      },
   { href: '/admin/activity',        label: 'Activity log',   icon: IconActivity   },

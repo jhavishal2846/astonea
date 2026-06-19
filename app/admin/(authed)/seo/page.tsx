@@ -4,17 +4,22 @@ import { db } from '@/lib/db'
 import { pageMetadata } from '@/lib/db/schema'
 import { PAGE_REGISTRY } from '@/lib/seo/pages-registry'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
+import AdminPagination from '@/app/admin/_components/Pagination'
+import AdminSearchInput from '@/app/admin/_components/SearchInput'
+
+const PER_PAGE = 20
 
 export const dynamic = 'force-dynamic'
 
 export default async function SeoListPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; group?: string }>
+  searchParams: Promise<{ q?: string; group?: string; page?: string }>
 }) {
   const sp = await searchParams
   const q = sp.q?.trim().toLowerCase() ?? ''
   const group = sp.group ?? ''
+  const requested = Number(sp.page) || 1
 
   const existing = await db
     .select({
@@ -26,7 +31,7 @@ export default async function SeoListPage({
 
   const existingByPath = new Map(existing.map((r) => [r.pagePath, r]))
 
-  const rows = PAGE_REGISTRY.filter((p) => {
+  const filtered = PAGE_REGISTRY.filter((p) => {
     if (group && p.group !== group) return false
     if (q) {
       return (
@@ -40,6 +45,12 @@ export default async function SeoListPage({
 
   const groups = Array.from(new Set(PAGE_REGISTRY.map((p) => p.group)))
 
+  const total = filtered.length
+  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE))
+  const page = Math.min(Math.max(1, requested), totalPages)
+  const offset = (page - 1) * PER_PAGE
+  const rows = filtered.slice(offset, offset + PER_PAGE)
+
   return (
     <>
       <AdminPageHeader
@@ -48,23 +59,12 @@ export default async function SeoListPage({
         breadcrumbs={[{ label: 'Admin', href: '/admin' }, { label: 'SEO' }]}
       />
 
-      <div className="mb-6 flex flex-wrap gap-2 items-center">
-        <form className="flex items-center gap-2" action="/admin/seo">
-          <input
-            type="text"
-            name="q"
-            defaultValue={q}
-            placeholder="Search pages…"
-            className="px-3 py-2 rounded-lg border border-slate-200 bg-white text-sm w-64 focus:outline-none focus:border-primary/40 focus:ring-4 focus:ring-primary/10"
-          />
-          {group && <input type="hidden" name="group" value={group} />}
-          <button
-            type="submit"
-            className="px-3 py-2 rounded-lg bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition-colors"
-          >
-            Search
-          </button>
-        </form>
+      <div className="mb-6 flex flex-wrap gap-3 items-center">
+        <AdminSearchInput
+          basePath="/admin/seo"
+          initial={q}
+          placeholder="Search pages…"
+        />
 
         <div className="flex flex-wrap gap-1 ml-auto">
           <Link
@@ -99,8 +99,8 @@ export default async function SeoListPage({
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-x-auto">
+        <table className="w-full text-sm min-w-[900px]">
           <thead className="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
             <tr>
               <th className="px-4 py-3 text-left">Page</th>
@@ -152,6 +152,18 @@ export default async function SeoListPage({
           </tbody>
         </table>
       </div>
+
+      <AdminPagination
+        total={total}
+        perPage={PER_PAGE}
+        current={page}
+        basePath="/admin/seo"
+        searchParams={{
+          ...(q ? { q } : {}),
+          ...(group ? { group } : {}),
+        }}
+        itemLabel="pages"
+      />
     </>
   )
 }

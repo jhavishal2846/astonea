@@ -13,7 +13,7 @@
  */
 import { and, eq, isNull, type SQL } from 'drizzle-orm'
 import { db } from '../lib/db'
-import { documents, groupCompanies, users, type NewDocument } from '../lib/db/schema'
+import { documents, groupCompanies, languages, users, type NewDocument } from '../lib/db/schema'
 import { hashPassword } from '../lib/auth/password'
 
 /* ─── Admin bootstrap ────────────────────────────────────────────────────── */
@@ -530,9 +530,28 @@ async function seedDocuments(items: SeedDoc[]) {
 
 /* ─── Run ────────────────────────────────────────────────────────────────── */
 
+async function seedDefaultLanguage() {
+  await db
+    .insert(languages)
+    .values({
+      code: 'en',
+      name: 'English',
+      nativeName: 'English',
+      isDefault: true,
+      isActive: true,
+      displayOrder: 0,
+    })
+    .onConflictDoUpdate({
+      target: languages.code,
+      set: { name: 'English', nativeName: 'English', isDefault: true, isActive: true },
+    })
+  console.log('[seed] default language: en')
+}
+
 async function main() {
   console.log('[seed] starting…')
   await seedAdmin()
+  await seedDefaultLanguage()
 
   const slugToId = await seedGroupCompanies()
 

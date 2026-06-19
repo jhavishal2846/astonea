@@ -7,6 +7,7 @@ import { animate, motion, useInView, useMotionValue, useScroll, useTransform } f
 import type { MotionValue } from 'framer-motion'
 import Magnetic from './Magnetic'
 import TiltCard from './TiltCard'
+import { usePageText } from './PageTextProvider'
 
 const E = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
@@ -133,6 +134,19 @@ const investorFacts = [
   { label: 'Sector', value: 'Pharma and cosmetics' },
 ]
 
+// Resolve a `t()` lookup to a plain string. In edit mode `t()` returns a
+// ReactNode-wrapped span; for places that need the raw value (counters,
+// `aria-label`, etc.) we unwrap it.
+function textOf(t: (key: string, fallback: string) => React.ReactNode, key: string, fallback: string): string {
+  const v = t(key, fallback)
+  if (typeof v === 'string') return v
+  if (v && typeof v === 'object' && 'props' in v) {
+    const node = v as { props: { children?: unknown } }
+    if (typeof node.props.children === 'string') return node.props.children
+  }
+  return fallback
+}
+
 function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
@@ -202,6 +216,7 @@ function ImageFrame({
 function ProofSection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  const t = usePageText()
 
   return (
     <section
@@ -219,17 +234,18 @@ function ProofSection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, ease: E }}
           >
-            <SectionLabel>Manufacturing Partner</SectionLabel>
+            <SectionLabel>{t('home.proof.label', 'Manufacturing Partner')}</SectionLabel>
             <h2
               className="font-display font-bold leading-[1.02] tracking-tight text-balance"
               style={{ color: 'var(--color-ink)', fontSize: 'clamp(2.45rem, 5vw, 5.4rem)' }}
             >
-              Built for brands that need science, speed, and steady supply.
+              {t('home.proof.heading', 'Built for brands that need science, speed, and steady supply.')}
             </h2>
             <p className="mt-7 max-w-xl text-base leading-[1.85] sm:text-lg" style={{ color: 'var(--color-ink-muted)' }}>
-              Astonea Labs Limited is a BSE-SME pharma and cosmetics manufacturer
-              serving founders, exporters, and established labels with GMP-led production
-              and practical launch support.
+              {t(
+                'home.proof.description',
+                'Astonea Labs Limited is a BSE-SME pharma and cosmetics manufacturer serving founders, exporters, and established labels with GMP-led production and practical launch support.',
+              )}
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Magnetic>
@@ -238,7 +254,7 @@ function ProofSection() {
                   className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-6 text-sm font-bold text-white"
                   style={{ background: 'var(--color-primary)' }}
                 >
-                  Our Story
+                  {t('home.proof.cta_primary', 'Our Story')}
                   <ArrowIcon />
                 </Link>
               </Magnetic>
@@ -247,7 +263,7 @@ function ProofSection() {
                 className="inline-flex min-h-12 items-center justify-center rounded-full border px-6 text-sm font-semibold"
                 style={{ borderColor: 'var(--color-border-strong)', color: 'var(--color-ink-muted)', background: 'rgba(255,255,255,0.72)' }}
               >
-                Certifications
+                {t('home.proof.cta_secondary', 'Certifications')}
               </Link>
             </div>
           </motion.div>
@@ -295,22 +311,27 @@ function ProofSection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.85, delay: 0.22, ease: E }}
         >
-          {proofStats.map((stat) => (
-            <div key={stat.label} className="min-h-[158px] p-6 sm:p-7" style={{ background: 'var(--color-surface)' }}>
-              <p
-                className="font-display font-bold leading-none tracking-tight"
-                style={{ color: 'var(--color-ink)', fontSize: typeof stat.value === 'number' ? 'clamp(2.35rem, 4vw, 4rem)' : 'clamp(2rem, 3vw, 3rem)' }}
-              >
-                {typeof stat.value === 'number' ? <Counter to={stat.value} suffix={stat.suffix} /> : stat.value}
-              </p>
-              <p className="mt-4 text-sm font-bold" style={{ color: 'var(--color-ink)' }}>
-                {stat.label}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
-                {stat.detail}
-              </p>
-            </div>
-          ))}
+          {proofStats.map((stat, i) => {
+            const rawValue = textOf(t, `home.proof.stat_${i}.value`, String(stat.value))
+            const suffix = textOf(t, `home.proof.stat_${i}.suffix`, stat.suffix ?? '')
+            const numeric = /^-?\d+(?:\.\d+)?$/.test(rawValue.trim())
+            return (
+              <div key={i} className="min-h-[158px] p-6 sm:p-7" style={{ background: 'var(--color-surface)' }}>
+                <p
+                  className="font-display font-bold leading-none tracking-tight"
+                  style={{ color: 'var(--color-ink)', fontSize: numeric ? 'clamp(2.35rem, 4vw, 4rem)' : 'clamp(2rem, 3vw, 3rem)' }}
+                >
+                  {numeric ? <Counter to={Number(rawValue)} suffix={suffix} /> : `${rawValue}${suffix}`}
+                </p>
+                <p className="mt-4 text-sm font-bold" style={{ color: 'var(--color-ink)' }}>
+                  {t(`home.proof.stat_${i}.label`, stat.label)}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
+                  {t(`home.proof.stat_${i}.detail`, stat.detail)}
+                </p>
+              </div>
+            )
+          })}
         </motion.div>
       </div>
     </section>
@@ -320,6 +341,7 @@ function ProofSection() {
 function CapabilitiesSection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  const t = usePageText()
 
   return (
     <section ref={ref} className="relative overflow-hidden py-24 lg:py-32" style={{ background: 'var(--color-slate-950)' }}>
@@ -340,12 +362,12 @@ function CapabilitiesSection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, ease: E }}
           >
-            <SectionLabel light>Capabilities</SectionLabel>
+            <SectionLabel light>{t('home.capabilities.label', 'Capabilities')}</SectionLabel>
             <h2
               className="font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
               style={{ fontSize: 'clamp(2.5rem, 5vw, 5.25rem)' }}
             >
-              One manufacturing floor. Many routes to market.
+              {t('home.capabilities.heading', 'One manufacturing floor. Many routes to market.')}
             </h2>
           </motion.div>
           <motion.p
@@ -355,16 +377,17 @@ function CapabilitiesSection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.12, ease: E }}
           >
-            From formulation through packaging and paperwork, the work stays connected:
-            facilities, lab discipline, product handling, and regulatory follow-through
-            all move in one rhythm.
+            {t(
+              'home.capabilities.subtext',
+              'From formulation through packaging and paperwork, the work stays connected: facilities, lab discipline, product handling, and regulatory follow-through all move in one rhythm.',
+            )}
           </motion.p>
         </div>
 
         <div className="grid overflow-hidden rounded-[8px] border border-white/10 md:grid-cols-2 xl:grid-cols-4">
           {capabilityCards.map((cap, index) => (
             <motion.div
-              key={cap.title}
+              key={index}
               className="border-white/10 bg-slate-950 md:border-r xl:last:border-r-0"
               initial={{ opacity: 0, y: 34 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -384,16 +407,16 @@ function CapabilitiesSection() {
                   </div>
                   <div className="flex flex-1 flex-col p-7">
                     <p className="text-[10px] font-extrabold uppercase tracking-[0.22em]" style={{ color: 'var(--color-primary-light)' }}>
-                      {cap.kicker}
+                      {t(`home.capabilities.card_${index}.kicker`, cap.kicker)}
                     </p>
                     <h3 className="mt-5 font-display text-2xl font-semibold leading-tight text-white">
-                      {cap.title}
+                      {t(`home.capabilities.card_${index}.title`, cap.title)}
                     </h3>
                     <p className="mt-4 flex-1 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                      {cap.desc}
+                      {t(`home.capabilities.card_${index}.desc`, cap.desc)}
                     </p>
                     <Link href={cap.href} className="group/link mt-7 inline-flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-primary-light)' }}>
-                      Learn More
+                      {t('home.capabilities.cta', 'Learn More')}
                       <svg className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -413,6 +436,7 @@ function IndustriesSection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
   const [active, setActive] = useState(0)
+  const t = usePageText()
 
   return (
     <section
@@ -427,12 +451,12 @@ function IndustriesSection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, ease: E }}
           >
-            <SectionLabel>Industries We Serve</SectionLabel>
+            <SectionLabel>{t('home.industries.label', 'Industries We Serve')}</SectionLabel>
             <h2
               className="font-display font-bold leading-[1.02] tracking-tight text-balance"
               style={{ color: 'var(--color-ink)', fontSize: 'clamp(2.4rem, 4.8vw, 5rem)' }}
             >
-              One floor, six product worlds.
+              {t('home.industries.heading', 'One floor, six product worlds.')}
             </h2>
           </motion.div>
           <motion.p
@@ -442,9 +466,10 @@ function IndustriesSection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.12, ease: E }}
           >
-            Pharma, nutraceutical, cosmetic, and wellness brands share the same
-            GMP-graded production floor — separated by process, joined by the same
-            discipline around batch records, release, and traceability.
+            {t(
+              'home.industries.subtext',
+              'Pharma, nutraceutical, cosmetic, and wellness brands share the same GMP-graded production floor — separated by process, joined by the same discipline around batch records, release, and traceability.',
+            )}
           </motion.p>
         </div>
 
@@ -459,14 +484,14 @@ function IndustriesSection() {
             <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-auto lg:h-full">
               {industries.map((ind, i) => (
                 <motion.div
-                  key={ind.name}
+                  key={i}
                   className="absolute inset-0"
                   initial={false}
                   animate={{ opacity: active === i ? 1 : 0 }}
                   transition={{ duration: 0.55, ease: E }}
                   aria-hidden={active !== i}
                 >
-                  <Image src={ind.image} alt={ind.name} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+                  <Image src={ind.image} alt={textOf(t, `home.industries.item_${i}.name`, ind.name)} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(5,6,15,0.05) 0%, rgba(5,6,15,0.78) 100%)' }} />
                   <div className="absolute inset-x-0 bottom-0 p-7 lg:p-10">
                     <div className="flex items-center gap-3">
@@ -476,10 +501,10 @@ function IndustriesSection() {
                       </p>
                     </div>
                     <h3 className="mt-4 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
-                      {ind.name}
+                      {t(`home.industries.item_${i}.name`, ind.name)}
                     </h3>
                     <p className="mt-3 max-w-md text-sm leading-relaxed text-white/[0.78]">
-                      {ind.desc}
+                      {t(`home.industries.item_${i}.desc`, ind.desc)}
                     </p>
                   </div>
                 </motion.div>
@@ -496,7 +521,7 @@ function IndustriesSection() {
             {industries.map((ind, i) => {
               const isActive = active === i
               return (
-                <li key={ind.name}>
+                <li key={i}>
                   <button
                     type="button"
                     onMouseEnter={() => setActive(i)}
@@ -521,13 +546,13 @@ function IndustriesSection() {
                           className="font-display text-xl font-semibold leading-tight transition-colors sm:text-2xl"
                           style={{ color: isActive ? 'var(--color-ink)' : 'var(--color-ink-muted)' }}
                         >
-                          {ind.name}
+                          {t(`home.industries.item_${i}.name`, ind.name)}
                         </p>
                         <p
                           className="mt-1 max-w-md text-sm leading-relaxed transition-opacity"
                           style={{ color: 'var(--color-ink-muted)', opacity: isActive ? 1 : 0.7 }}
                         >
-                          {ind.desc}
+                          {t(`home.industries.item_${i}.desc`, ind.desc)}
                         </p>
                       </div>
                     </div>
@@ -606,17 +631,18 @@ function FadeChapterText({
     [0, 1, 0],
   )
   const y = useTransform(progress, [start, mid, end], [40, 0, -40])
+  const t = usePageText()
 
   return (
     <motion.div className="absolute" style={{ opacity, y }}>
       <p className="text-[11px] font-mono font-extrabold uppercase tracking-[0.32em] text-cyan-200/80">
-        {slide.kicker}
+        {t(`home.fade.chapter_${index}.kicker`, slide.kicker)}
       </p>
       <h3
         className="mt-4 font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
         style={{ fontSize: 'clamp(2.5rem, 5.2vw, 5.25rem)' }}
       >
-        {slide.label}
+        {t(`home.fade.chapter_${index}.label`, slide.label)}
       </h3>
     </motion.div>
   )
@@ -655,7 +681,7 @@ function BackgroundFadeSection() {
     >
       <div className="sticky top-0 h-svh w-full overflow-hidden">
         {fadeBackdrops.map((slide, i) => (
-          <FadeBackdrop key={slide.src} slide={slide} progress={scrollYProgress} index={i} total={total} />
+          <FadeBackdrop key={i} slide={slide} progress={scrollYProgress} index={i} total={total} />
         ))}
 
         <div className="absolute inset-0 z-10 flex items-end pb-20 lg:pb-28">
@@ -663,7 +689,7 @@ function BackgroundFadeSection() {
             <div className="relative h-44 max-w-2xl sm:h-52">
               {fadeBackdrops.map((slide, i) => (
                 <FadeChapterText
-                  key={slide.label}
+                  key={i}
                   slide={slide}
                   progress={scrollYProgress}
                   index={i}
@@ -673,8 +699,8 @@ function BackgroundFadeSection() {
             </div>
 
             <div className="mt-2 flex items-center gap-2">
-              {fadeBackdrops.map((slide, i) => (
-                <FadeProgressBar key={slide.label} progress={scrollYProgress} index={i} total={total} />
+              {fadeBackdrops.map((_, i) => (
+                <FadeProgressBar key={i} progress={scrollYProgress} index={i} total={total} />
               ))}
             </div>
           </div>
@@ -687,6 +713,7 @@ function BackgroundFadeSection() {
 function LabGallerySection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-120px' })
+  const t = usePageText()
 
   return (
     <section
@@ -701,12 +728,12 @@ function LabGallerySection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, ease: E }}
           >
-            <SectionLabel>Inside the Lab</SectionLabel>
+            <SectionLabel>{t('home.lab.label', 'Inside the Lab')}</SectionLabel>
             <h2
               className="font-display font-bold leading-[1.02] tracking-tight text-balance"
               style={{ color: 'var(--color-ink)', fontSize: 'clamp(2.4rem, 4.8vw, 5rem)' }}
             >
-              Where every batch earns its release.
+              {t('home.lab.heading', 'Where every batch earns its release.')}
             </h2>
           </motion.div>
           <motion.p
@@ -716,9 +743,10 @@ function LabGallerySection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.12, ease: E }}
           >
-            Walking through the floor — from raw-material assay to sterile fill,
-            sampling, and finished-goods checks. Quality isn&apos;t a stamp at the end,
-            it&apos;s the discipline you can see at every station.
+            {t(
+              'home.lab.subtext',
+              "Walking through the floor — from raw-material assay to sterile fill, sampling, and finished-goods checks. Quality isn't a stamp at the end, it's the discipline you can see at every station.",
+            )}
           </motion.p>
         </div>
 
@@ -735,7 +763,7 @@ function LabGallerySection() {
 
             return (
               <motion.figure
-                key={img.src}
+                key={i}
                 className={`group relative overflow-hidden rounded-md ${layout}`}
                 style={{ background: 'var(--color-border)' }}
                 initial={{ opacity: 0, y: 28, scale: 0.98 }}
@@ -764,7 +792,7 @@ function LabGallerySection() {
                   <div className="overflow-hidden">
                     <span className="block h-px w-8 origin-left bg-cyan-300/80 opacity-0 transition-all duration-500 group-hover:opacity-100" />
                     <p className="mt-2 text-sm font-semibold text-white transition-transform duration-500 ease-out group-hover:-translate-y-0.5">
-                      {img.caption}
+                      {t(`home.lab.caption_${i}`, img.caption)}
                     </p>
                   </div>
                   <span
@@ -788,6 +816,8 @@ function LabGallerySection() {
 function QualitySection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  const t = usePageText()
+  const badgeDefaults = ['WHO-GMP', 'ISO 9001:2015', 'AYUSH', 'FSSAI']
 
   return (
     <section ref={ref} className="relative overflow-hidden py-24 lg:py-36" style={{ background: '#07101f' }}>
@@ -816,21 +846,23 @@ function QualitySection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, ease: E }}
           >
-            <SectionLabel light>Quality System</SectionLabel>
+            <SectionLabel light>{t('home.quality.label', 'Quality System')}</SectionLabel>
             <h2
               className="font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
               style={{ fontSize: 'clamp(2.4rem, 5vw, 5.1rem)' }}
             >
-              Digital ambition with GMP discipline underneath.
+              {t('home.quality.heading', 'Digital ambition with GMP discipline underneath.')}
             </h2>
             <p className="mt-6 max-w-xl text-base leading-[1.85]" style={{ color: 'rgba(255,255,255,0.62)' }}>
-              Clean-room proof meets forward-looking biotech systems, helping each product
-              move from idea to validated output with control.
+              {t(
+                'home.quality.subtext',
+                'Clean-room proof meets forward-looking biotech systems, helping each product move from idea to validated output with control.',
+              )}
             </p>
             <div className="mt-9 grid max-w-md grid-cols-2 gap-3">
-              {['WHO-GMP', 'ISO 9001:2015', 'AYUSH', 'FSSAI'].map((badge) => (
-                <div key={badge} className="rounded-[8px] border border-white/10 px-4 py-3 text-sm font-bold text-white" style={{ background: 'rgba(255,255,255,0.07)' }}>
-                  {badge}
+              {badgeDefaults.map((badge, i) => (
+                <div key={i} className="rounded-[8px] border border-white/10 px-4 py-3 text-sm font-bold text-white" style={{ background: 'rgba(255,255,255,0.07)' }}>
+                  {t(`home.quality.badge_${i}`, badge)}
                 </div>
               ))}
             </div>
@@ -850,15 +882,15 @@ function QualitySection() {
 
             <div className="grid gap-px bg-white/10 md:grid-cols-2">
               {processSteps.map((step, index) => (
-                <div key={step.title} className="p-6" style={{ background: 'rgba(5,6,15,0.72)' }}>
+                <div key={index} className="p-6" style={{ background: 'rgba(5,6,15,0.72)' }}>
                   <p className="font-mono text-xs font-bold" style={{ color: 'var(--color-accent)' }}>
                     0{index + 1}
                   </p>
                   <h3 className="mt-4 font-display text-xl font-semibold leading-tight text-white">
-                    {step.title}
+                    {t(`home.process.step_${index}.title`, step.title)}
                   </h3>
                   <p className="mt-3 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.52)' }}>
-                    {step.detail}
+                    {t(`home.process.step_${index}.detail`, step.detail)}
                   </p>
                 </div>
               ))}
@@ -873,6 +905,7 @@ function QualitySection() {
 function InvestorSection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  const t = usePageText()
 
   return (
     <section ref={ref} className="py-20 lg:py-28" style={{ background: 'var(--color-primary)' }}>
@@ -884,17 +917,19 @@ function InvestorSection() {
             transition={{ duration: 0.85, ease: E }}
           >
             <p className="mb-5 text-[11px] font-extrabold uppercase tracking-[0.28em]" style={{ color: 'rgba(255,255,255,0.62)' }}>
-              Investor Relations
+              {t('home.investor.label', 'Investor Relations')}
             </p>
             <h2
               className="font-display font-bold leading-[1.02] tracking-tight text-white text-balance"
               style={{ fontSize: 'clamp(2.4rem, 5vw, 5rem)' }}
             >
-              Listed, documented, and easy to evaluate.
+              {t('home.investor.heading', 'Listed, documented, and easy to evaluate.')}
             </h2>
             <p className="mt-6 max-w-2xl text-base leading-[1.8]" style={{ color: 'rgba(255,255,255,0.72)' }}>
-              Financial results, annual reports, SEBI disclosures, and governance documents
-              stay accessible for shareholders and market watchers.
+              {t(
+                'home.investor.subtext',
+                'Financial results, annual reports, SEBI disclosures, and governance documents stay accessible for shareholders and market watchers.',
+              )}
             </p>
           </motion.div>
 
@@ -906,17 +941,17 @@ function InvestorSection() {
             transition={{ duration: 0.85, delay: 0.12, ease: E }}
           >
             <div className="grid gap-px bg-white/[0.12]">
-              {investorFacts.map((fact) => (
+              {investorFacts.map((fact, i) => (
                 <div
-                  key={fact.label}
+                  key={i}
                   className="flex items-baseline justify-between gap-5 p-5 sm:p-6"
                   style={{ background: 'rgba(0,80,145,0.35)' }}
                 >
                   <p className="shrink-0 text-[10px] font-extrabold uppercase tracking-[0.24em]" style={{ color: 'rgba(255,255,255,0.54)' }}>
-                    {fact.label}
+                    {t(`home.investor.fact_${i}.label`, fact.label)}
                   </p>
                   <p className="text-right text-sm font-bold leading-snug text-white break-all sm:text-base">
-                    {fact.value}
+                    {t(`home.investor.fact_${i}.value`, fact.value)}
                   </p>
                 </div>
               ))}
@@ -924,15 +959,15 @@ function InvestorSection() {
             <div className="flex flex-wrap gap-3 p-5">
               <Magnetic>
                 <Link href="/financial-results" className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold" style={{ color: 'var(--color-primary)' }}>
-                  Financial Results
+                  {t('home.investor.cta_primary', 'Financial Results')}
                   <ArrowIcon />
                 </Link>
               </Magnetic>
               <Link href="/annual-reports" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/[0.28] px-5 text-sm font-semibold text-white/[0.78] hover:text-white">
-                Annual Reports
+                {t('home.investor.cta_secondary', 'Annual Reports')}
               </Link>
               <Link href="/sebi-lodr-regulation-46-disclosures" className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/[0.28] px-5 text-sm font-semibold text-white/[0.78] hover:text-white">
-                SEBI Disclosures
+                {t('home.investor.cta_tertiary', 'SEBI Disclosures')}
               </Link>
             </div>
           </motion.div>
@@ -945,6 +980,7 @@ function InvestorSection() {
 function CTASection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  const t = usePageText()
 
   return (
     <section ref={ref} className="relative overflow-hidden py-24 lg:py-36" style={{ background: 'var(--color-slate-950)' }}>
@@ -974,18 +1010,19 @@ function CTASection() {
           transition={{ duration: 0.85, ease: E }}
         >
           <p className="mb-6 text-[11px] font-extrabold uppercase tracking-[0.28em]" style={{ color: 'var(--color-accent)' }}>
-            Start With Astonea
+            {t('home.cta.label', 'Start With Astonea')}
           </p>
           <h2
             className="font-display font-bold leading-[1.04] tracking-tight text-white text-balance"
             style={{ fontSize: 'clamp(2.4rem, 4.8vw, 4.75rem)' }}
           >
-            Your formulation deserves a sharper manufacturing partner.
+            {t('home.cta.heading', 'Your formulation deserves a sharper manufacturing partner.')}
           </h2>
           <p className="mt-7 max-w-2xl text-base leading-[1.85] sm:text-lg" style={{ color: 'rgba(255,255,255,0.62)' }}>
-            Share the product you want to build, the market you want to enter, and the
-            timeline you are working toward. We will help shape the route from
-            formulation to dispatch.
+            {t(
+              'home.cta.subtext',
+              'Share the product you want to build, the market you want to enter, and the timeline you are working toward. We will help shape the route from formulation to dispatch.',
+            )}
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Magnetic>
@@ -994,7 +1031,7 @@ function CTASection() {
                 className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full px-7 text-sm font-bold"
                 style={{ background: 'var(--color-accent)', color: 'var(--color-slate-950)' }}
               >
-                Start a Conversation
+                {t('home.cta.primary', 'Start a Conversation')}
                 <ArrowIcon />
               </Link>
             </Magnetic>
@@ -1003,7 +1040,7 @@ function CTASection() {
               className="inline-flex min-h-12 items-center justify-center rounded-full border px-7 text-sm font-semibold"
               style={{ borderColor: 'rgba(255,255,255,0.24)', color: 'rgba(255,255,255,0.78)' }}
             >
-              View Facility
+              {t('home.cta.secondary', 'View Facility')}
             </Link>
           </div>
         </motion.div>

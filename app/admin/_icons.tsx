@@ -155,3 +155,19 @@ export const IconSeo = (p: Props) => (
     <path d="M8 11h6M11 8v6" />
   </svg>
 )
+
+export const IconLanguages = (p: Props) => (
+  <svg {...base(p)}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M2 12h20" />
+    <path d="M12 2a15 15 0 0 1 0 20" />
+    <path d="M12 2a15 15 0 0 0 0 20" />
+  </svg>
+)
+
+export const IconPages = (p: Props) => (
+  <svg {...base(p)}>
+    <rect x="3" y="4" width="14" height="16" rx="2" />
+    <rect x="7" y="8" width="14" height="12" rx="2" />
+  </svg>
+)

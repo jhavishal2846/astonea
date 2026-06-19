@@ -5,12 +5,11 @@ import Link from 'next/link'
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import Magnetic from './Magnetic'
+import { usePageText } from './PageTextProvider'
 
 const E = [0.16, 1, 0.3, 1] as const
 
-const HERO_TAGS = ['EST. 2017', 'BSE-SME LISTED', 'WHO-GMP', 'ISO 9001:2015']
-
-const HEADLINE = 'Trusted Pharmaceutical Manufacturing for Brands Ready to Scale.'
+const HERO_TAG_DEFAULTS = ['EST. 2017', 'BSE-SME LISTED', 'WHO-GMP', 'ISO 9001:2015']
 
 function SplitWord({ word, index, total }: { word: string; index: number; total: number }) {
   const reduce = useReducedMotion()
@@ -80,7 +79,7 @@ function HeroCTA({
     </Magnetic>
   )
 }
- 
+
 function ArrowIcon() {
   return (
     <svg
@@ -100,9 +99,23 @@ function ArrowIcon() {
   )
 }
 
+// Resolve a `t()` lookup to a plain string. In edit mode `t()` returns a
+// ReactNode-wrapped span, but the headline is split word-by-word for animation
+// so we need the raw string.
+function textOf(t: (key: string, fallback: string) => React.ReactNode, key: string, fallback: string): string {
+  const v = t(key, fallback)
+  if (typeof v === 'string') return v
+  if (v && typeof v === 'object' && 'props' in v) {
+    const node = v as { props: { children?: unknown } }
+    if (typeof node.props.children === 'string') return node.props.children
+  }
+  return fallback
+}
+
 export default function ScrollHero() {
   const reduce = useReducedMotion()
   const sectionRef = useRef<HTMLElement>(null)
+  const t = usePageText()
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -114,6 +127,8 @@ export default function ScrollHero() {
   const yAccent = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -40])
   const headlineY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 60])
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.35])
+
+  const headline = textOf(t, 'home.hero.headline', 'Trusted Pharmaceutical Manufacturing for Brands Ready to Scale.')
 
   return (
     <section
@@ -177,7 +192,7 @@ export default function ScrollHero() {
           >
             <p className="inline-flex items-center gap-3 rounded-full border border-white/[0.14] bg-white/[0.04] px-4 py-1.5 text-[10px] font-mono uppercase tracking-[0.28em] text-cyan-100/[0.88] backdrop-blur-md sm:text-[11px]">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(98,209,255,0.95)]" />
-              Inside Astonea Labs · Chandigarh
+              {t('home.hero.kicker', 'Inside Astonea Labs · Chandigarh')}
             </p>
           </motion.div>
 
@@ -189,12 +204,12 @@ export default function ScrollHero() {
             transition={{ duration: 0.7, delay: 0.18, ease: E }}
           >
             <span className="h-px w-10 bg-cyan-300/70" />
-            01 / Manufacturing
+            {t('home.hero.chapter', '01 / Manufacturing')}
           </motion.p>
 
           {/* split-text headline */}
           <div className="mt-4 max-w-[640px]">
-            <SplitHeadline text={HEADLINE} />
+            <SplitHeadline text={headline} />
           </div>
 
           {/* supporting paragraph */}
@@ -205,7 +220,10 @@ export default function ScrollHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.78, ease: E }}
           >
-           WHO-GMP certified manufacturer of tablets, capsules, syrups, topical formulations, and cosmetics. Helping healthcare, nutraceutical, and personal care brands launch faster with consistent quality.
+           {t(
+             'home.hero.supporting',
+             'WHO-GMP certified manufacturer of tablets, capsules, syrups, topical formulations, and cosmetics. Helping healthcare, nutraceutical, and personal care brands launch faster with consistent quality.',
+           )}
           </motion.p>
 
           {/* CTAs */}
@@ -216,11 +234,11 @@ export default function ScrollHero() {
             transition={{ duration: 0.8, delay: 0.92, ease: E }}
           >
             <HeroCTA href="/what-we-do" variant="primary">
-              Explore Capabilities
+              {t('home.hero.cta_primary', 'Explore Capabilities')}
               <ArrowIcon />
             </HeroCTA>
             <HeroCTA href="/contact-us" variant="ghost">
-              Enquire Now
+              {t('home.hero.cta_secondary', 'Enquire Now')}
             </HeroCTA>
           </motion.div>
 
@@ -236,15 +254,15 @@ export default function ScrollHero() {
               className="flex flex-wrap items-center gap-x-3 gap-y-2"
               aria-label="Astonea certifications and listings"
             >
-              {HERO_TAGS.map((tag, i) => (
-                <li key={tag} className="flex items-center gap-3">
+              {HERO_TAG_DEFAULTS.map((tag, i) => (
+                <li key={i} className="flex items-center gap-3">
                   <span
                     className="font-mono text-[10px] font-bold uppercase tracking-[0.26em]"
                     style={{ color: 'rgba(255,255,255,0.55)' }}
                   >
-                    {tag}
+                    {t(`home.hero.tag_${i}`, tag)}
                   </span>
-                  {i < HERO_TAGS.length - 1 && (
+                  {i < HERO_TAG_DEFAULTS.length - 1 && (
                     <span className="h-1 w-1 rounded-full bg-white/[0.18]" aria-hidden="true" />
                   )}
                 </li>
@@ -295,7 +313,7 @@ export default function ScrollHero() {
             <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 p-5">
               <span className="h-px w-8 bg-cyan-300" />
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-cyan-100/[0.88]">
-                Analytical Bench / QC Release
+                {t('home.hero.caption_primary', 'Analytical Bench / QC Release')}
               </p>
             </div>
           </motion.div>
@@ -342,7 +360,7 @@ export default function ScrollHero() {
                 className="font-mono text-[9px] font-bold uppercase tracking-[0.26em]"
                 style={{ color: 'rgba(255,200,120,0.92)' }}
               >
-                Finished Dosage
+                {t('home.hero.caption_secondary', 'Finished Dosage')}
               </p>
             </div>
           </motion.div>
@@ -366,7 +384,7 @@ export default function ScrollHero() {
           }
         >
           <span className="font-mono text-[9px] font-bold uppercase tracking-[0.32em] text-white/50">
-            Scroll
+            {t('home.hero.scroll_cue', 'Scroll')}
           </span>
           <span className="block h-9 w-px bg-gradient-to-b from-white/60 to-transparent" />
         </motion.div>
