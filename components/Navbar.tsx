@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import AstoneaLogo from '@/components/AstoneaLogo'
+import LanguageSwitcher, { type LocaleOption } from '@/components/LanguageSwitcher'
 
 /* ─── Nav data ────────────────────────────────────────────────────────────── */
 
@@ -300,7 +301,13 @@ function MobileDrawer({
 
 /* ─── Main Navbar ─────────────────────────────────────────────────────────── */
 
-export default function Navbar() {
+export default function Navbar({
+  languages = [],
+  currentLocale = 'en',
+}: {
+  languages?: LocaleOption[]
+  currentLocale?: string
+} = {}) {
   const pathname    = usePathname()
   const [open, setOpen] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -459,7 +466,12 @@ export default function Navbar() {
               </nav>
 
               {/* Desktop CTA */}
-              <div className="hidden lg:flex items-center gap-4">
+              <div className="hidden lg:flex items-center gap-3">
+                <LanguageSwitcher
+                  languages={languages}
+                  currentLocale={currentLocale}
+                  transparent={transparent}
+                />
                 <Link
                   href="/contact-us"
                   className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-primary text-white text-sm font-semibold hover:bg-primary-dark active:scale-95 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"

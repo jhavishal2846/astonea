@@ -13,7 +13,7 @@
  */
 import { and, eq, isNull, type SQL } from 'drizzle-orm'
 import { db } from '../lib/db'
-import { documents, groupCompanies, users, type NewDocument } from '../lib/db/schema'
+import { documents, groupCompanies, languages, users, type NewDocument } from '../lib/db/schema'
 import { hashPassword } from '../lib/auth/password'
 
 /* ─── Admin bootstrap ────────────────────────────────────────────────────── */
@@ -209,8 +209,19 @@ function parseEventDate(s: string): string | undefined {
 
 const reg30Raw = [
   {
+    sub: 'intimation',
+    items: [
+      { title: 'Intimation — 4th July 2025',   date: '04 Jul 2025', desc: 'Prior intimation of Board Meeting under Regulation 29 of SEBI LODR.', href: '/pdf/intimation/04th July, 2025.pdf' },
+      { title: 'Intimation — 6th November 2025',  date: '06 Nov 2025', desc: 'Prior intimation of Board Meeting under Regulation 29 of SEBI LODR.', href: '/pdf/intimation/06th Nov, 2025.pdf' },
+      { title: 'Intimation — 28th November 2025', date: '28 Nov 2025', desc: 'Prior intimation of Board Meeting under Regulation 29 of SEBI LODR.', href: '/pdf/intimation/28th Nov, 2025.pdf' },
+      { title: 'Intimation — 24th February 2026', date: '24 Feb 2026', desc: 'Prior intimation of Board Meeting under Regulation 29 of SEBI LODR.', href: '/pdf/intimation/24th Feb 2026.pdf' },
+      { title: 'Intimation — 25th May 2026',   date: '25 May 2026', desc: 'Prior intimation of Board Meeting under Regulation 29 of SEBI LODR.', href: '/pdf/intimation/BM-Prior Intimation.pdf' },
+    ],
+  },
+  {
     sub: 'board_meeting',
     items: [
+      { title: 'Outcome of Board Meeting — 30th May 2026', date: '30 May 2026', desc: 'Board approved standalone audited financial results for FY 2025-26 and other matters.', href: '/pdf/outcome/BM Outcome 30.05.2026.pdf' },
       { title: 'Outcome of Board Meeting — 27th February 2026', date: '27 Feb 2026', desc: 'Board approved variation in the objects of the IPO for deployment towards acquisition of equity stake in Damaira Pharmaceuticals.', href: '/pdf/outcome 27th Feb 2026.pdf' },
       { title: 'Outcome of Board Meeting — 6th February 2026', date: '06 Feb 2026', desc: 'Board approved acquisition/purchase of immovable property (land) at Village Haripur, Panchkula for expansion of manufacturing facility.', href: '/pdf/Board Meeting -Outcome 6feb2026.pdf' },
       { title: 'Outcome of Board Meeting — 3rd December 2025', date: '03 Dec 2025', desc: 'Board approved appointment of Mr. Ankit Kapoor as Company Secretary and Compliance Officer.', href: '/pdf/Appointment of Company Secretary- Dec 25.pdf' },
@@ -400,6 +411,66 @@ function buildSubsidiaryFinancials(slugToId: Map<string, string>): SeedDoc[] {
   })
 }
 
+/* ─── New-category seeds (Phase 1 — extracted from previously hardcoded pages) ── */
+
+const agmDocs: SeedDoc[] = [
+  { category: 'agm', subcategory: 'notice',      title: 'Notice of 8th AGM',                description: 'Notice convening the 8th Annual General Meeting.', fileUrl: '/pdf/Notice of 8th AGM.pdf' },
+  { category: 'agm', subcategory: 'notice',      title: 'Corrigendum to Notice of 8th AGM', description: 'Corrigendum to the notice of the 8th Annual General Meeting.', fileUrl: '/pdf/Corrigendum to Notice of 8th AGM.pdf' },
+  { category: 'agm', subcategory: 'proceedings', title: 'Proceedings of 8th AGM',           period: '27 Dec 2025', eventDate: '2025-12-27', description: 'Proceedings of the 8th Annual General Meeting.', fileUrl: '/pdf/Proceedings of AGM 27 Dec 2025.pdf' },
+  { category: 'agm', subcategory: 'scrutinizer', title: 'Scrutinizer Report — 8th AGM',     description: 'Scrutinizer\'s report and voting results for the 8th AGM.', fileUrl: '/pdf/Voting Result and Scrutinizer Report.pdf' },
+]
+
+const egmDocs: SeedDoc[] = [
+  { category: 'egm', subcategory: 'notice',      title: 'Notice of EGM',       period: '02 Mar 2026', eventDate: '2026-03-02', description: 'Notice convening the Extraordinary General Meeting on 27.03.2026.', fileUrl: '/pdf/Notice of EGM -02.03.2026 (ALL).pdf' },
+  { category: 'egm', subcategory: 'proceedings', title: 'Proceedings of EGM',  period: '27 Mar 2026', eventDate: '2026-03-27', description: 'Proceedings of the Extraordinary General Meeting held on 27.03.2026.', fileUrl: '/pdf/EGM Proceedings-27.03.2026.pdf' },
+  { category: 'egm', subcategory: 'scrutinizer', title: 'Scrutinizer Report', period: '27 Mar 2026', eventDate: '2026-03-27', description: 'Scrutinizer\'s report and voting results for the EGM.', fileUrl: '/pdf/Scrutinizer Report 27.03.2026.pdf' },
+]
+
+const shareholdingPattern: SeedDoc[] = [
+  { category: 'shareholding_pattern', title: 'Shareholding Pattern — HY 30.09.2025', period: '30 Sep 2025', eventDate: '2025-09-30', fileUrl: '/pdf/shareholding-patternpage/Shareholding Pattern (1).pdf' },
+  { category: 'shareholding_pattern', title: 'Shareholding Pattern — HY 31.03.2026', period: '31 Mar 2026', eventDate: '2026-03-31', fileUrl: '/pdf/shareholding-patternpage/Shareholding Pattern-31.03.2026 HY.pdf' },
+]
+
+const tradingWindow: SeedDoc[] = [
+  { category: 'trading_window', title: 'Trading Window Closure — Sep 2025', period: 'Sep 2025', eventDate: '2025-09-01', fileUrl: '/pdf/trading-window-closure/Closure of Trading Window- Sep 25.pdf' },
+  { category: 'trading_window', title: 'Trading Window Closure — Mar 2026', period: 'Mar 2026', eventDate: '2026-03-01', fileUrl: '/pdf/trading-window-closure/Trading Window Closure Mar 2026.pdf' },
+]
+
+const relatedParty: SeedDoc[] = [
+  { category: 'related_party', title: 'RPT — Half-Year ended 31.03.2026', period: '31 Mar 2026', eventDate: '2026-03-31', fileUrl: '/pdf/related-party-transactions/RPT.pdf' },
+  { category: 'related_party', title: 'RPT — Half-Year ended 30.09.2025', period: '30 Sep 2025', eventDate: '2025-09-30', fileUrl: '/pdf/related-party-transactions/RPT-Sep 25.pdf' },
+  { category: 'related_party', title: 'RPT — Year ended 31.03.2025',     period: '31 Mar 2025', eventDate: '2025-03-31', fileUrl: '/pdf/related-party-transactions/RPT-Mar25 (Y).pdf' },
+  { category: 'related_party', title: 'RPT — Half-Year ended 31.03.2025', period: '31 Mar 2025', eventDate: '2025-03-31', fileUrl: '/pdf/related-party-transactions/RPT-Mar25 (HY).pdf' },
+]
+
+const corporateAnnouncements: SeedDoc[] = [
+  { category: 'corporate_announcement', title: 'Notice of 8th AGM',                fileUrl: '/pdf/announcements/Notice of 8th AGM.pdf' },
+  { category: 'corporate_announcement', title: 'Corrigendum to Notice of 8th AGM', fileUrl: '/pdf/announcements/Corrigendum to Notice of 8th AGM.pdf' },
+  { category: 'corporate_announcement', title: 'Notice of EGM', period: '02 Mar 2026', eventDate: '2026-03-02', fileUrl: '/pdf/announcements/Notice of EGM -02.03.2026 (ALL).pdf' },
+]
+
+const newspaperPublications: SeedDoc[] = [
+  { category: 'newspaper_publication', title: 'Newspaper Publication — 3rd March 2026', period: '03 Mar 2026', eventDate: '2026-03-03', fileUrl: '/pdf/newspape-publications/Newspaper Publication 03.03.2026.pdf' },
+]
+
+const integratedFilings: SeedDoc[] = [
+  // Quarterly governance filings
+  { category: 'integrated_filing', subcategory: 'quarterly', title: 'Integrated Governance — Q4 Mar 2026', period: 'Q4 FY 2025-26', eventDate: '2026-03-31', fileUrl: '/pdf/integrated-fillings/integrated-governance/Integrated Governance- Q3 Mar 2026.pdf' },
+  { category: 'integrated_filing', subcategory: 'quarterly', title: 'Integrated Governance — Q3 Dec 2025', period: 'Q3 FY 2025-26', eventDate: '2025-12-31', fileUrl: '/pdf/integrated-fillings/integrated-governance/Integrated Governance-Q3 Dec 2025.pdf' },
+  { category: 'integrated_filing', subcategory: 'quarterly', title: 'Integrated Governance — Q2 Sep 2025', period: 'Q2 FY 2025-26', eventDate: '2025-09-30', fileUrl: '/pdf/integrated-fillings/integrated-governance/Integrated Governance-Q2 Sep 2025.pdf' },
+  { category: 'integrated_filing', subcategory: 'quarterly', title: 'Integrated Governance — Q1 Jun 2025', period: 'Q1 FY 2025-26', eventDate: '2025-06-30', fileUrl: '/pdf/integrated-fillings/integrated-governance/Integrated Governance-Q1 June 2025.pdf' },
+  // Annual finance filings
+  { category: 'integrated_filing', subcategory: 'annual', title: 'Integrated Finance — Yearly Mar 2026', period: '31 Mar 2026', eventDate: '2026-03-31', fileUrl: '/pdf/integrated-fillings/integrated-finance/Integrated Filing Finance.pdf' },
+  { category: 'integrated_filing', subcategory: 'annual', title: 'Integrated Finance — HY Mar 2026',     period: '31 Mar 2026', eventDate: '2026-03-31', fileUrl: '/pdf/integrated-fillings/integrated-finance/Integrated Filing Finance (1).pdf' },
+  { category: 'integrated_filing', subcategory: 'annual', title: 'Integrated Finance — HY Sep 2025',     period: '30 Sep 2025', eventDate: '2025-09-30', fileUrl: '/pdf/integrated-fillings/integrated-finance/Integrated Finance- HY Sep2025.pdf' },
+  { category: 'integrated_filing', subcategory: 'annual', title: 'Integrated Finance — Yearly Mar 2025', period: '31 Mar 2025', eventDate: '2025-03-31', fileUrl: '/pdf/integrated-fillings/integrated-finance/Integrated Finance- Yearly Mar 2025.pdf' },
+  { category: 'integrated_filing', subcategory: 'annual', title: 'Integrated Finance — HY Mar 2025',     period: '31 Mar 2025', eventDate: '2025-03-31', fileUrl: '/pdf/integrated-fillings/integrated-finance/Integrated Finance- HY Mar 2025.pdf' },
+]
+
+const corporateDocuments: SeedDoc[] = [
+  { category: 'corporate_document', title: 'AOA — Proposed for Approval at EGM', description: 'Articles of Association proposed for adoption at the Extraordinary General Meeting.', fileUrl: '/pdf/AOA- Proposed for Approval at EGM.pdf' },
+]
+
 /**
  * For certifications we use the schema fields liberally:
  *   subcategory → short label (badge)            e.g. "WHO-GMP"
@@ -459,9 +530,28 @@ async function seedDocuments(items: SeedDoc[]) {
 
 /* ─── Run ────────────────────────────────────────────────────────────────── */
 
+async function seedDefaultLanguage() {
+  await db
+    .insert(languages)
+    .values({
+      code: 'en',
+      name: 'English',
+      nativeName: 'English',
+      isDefault: true,
+      isActive: true,
+      displayOrder: 0,
+    })
+    .onConflictDoUpdate({
+      target: languages.code,
+      set: { name: 'English', nativeName: 'English', isDefault: true, isActive: true },
+    })
+  console.log('[seed] default language: en')
+}
+
 async function main() {
   console.log('[seed] starting…')
   await seedAdmin()
+  await seedDefaultLanguage()
 
   const slugToId = await seedGroupCompanies()
 
@@ -473,6 +563,15 @@ async function main() {
     { name: 'reg46',                 items: reg46 },
     { name: 'subsidiary_financial',  items: buildSubsidiaryFinancials(slugToId) },
     { name: 'certification',         items: certifications },
+    { name: 'agm',                   items: agmDocs },
+    { name: 'egm',                   items: egmDocs },
+    { name: 'shareholding_pattern',  items: shareholdingPattern },
+    { name: 'trading_window',        items: tradingWindow },
+    { name: 'related_party',         items: relatedParty },
+    { name: 'corporate_announcement',items: corporateAnnouncements },
+    { name: 'newspaper_publication', items: newspaperPublications },
+    { name: 'integrated_filing',     items: integratedFilings },
+    { name: 'corporate_document',    items: corporateDocuments },
   ]
 
   let totalIns = 0

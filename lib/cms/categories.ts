@@ -8,6 +8,15 @@ export const CATEGORY_LABELS: Record<DocumentCategory, string> = {
   reg46:                 'SEBI Reg 46 Disclosure',
   subsidiary_financial:  'Subsidiary Financial',
   certification:         'Certification',
+  agm:                   'AGM Document',
+  egm:                   'EGM Document',
+  shareholding_pattern:  'Shareholding Pattern',
+  trading_window:        'Trading Window Closure',
+  related_party:         'Related Party Transaction',
+  corporate_announcement:'Corporate Announcement',
+  newspaper_publication: 'Newspaper Publication',
+  integrated_filing:     'Integrated Filing',
+  corporate_document:    'Corporate Document',
 }
 
 export const CATEGORY_PLURAL: Record<DocumentCategory, string> = {
@@ -18,6 +27,15 @@ export const CATEGORY_PLURAL: Record<DocumentCategory, string> = {
   reg46:                 'SEBI Reg 46 Disclosures',
   subsidiary_financial:  'Subsidiary Financials',
   certification:         'Certifications',
+  agm:                   'AGM Documents',
+  egm:                   'EGM Documents',
+  shareholding_pattern:  'Shareholding Patterns',
+  trading_window:        'Trading Window Closures',
+  related_party:         'Related Party Transactions',
+  corporate_announcement:'Corporate Announcements',
+  newspaper_publication: 'Newspaper Publications',
+  integrated_filing:     'Integrated Filings',
+  corporate_document:    'Corporate Documents',
 }
 
 export const SUBCATEGORY_OPTIONS: Record<DocumentCategory, { value: string; label: string }[]> = {
@@ -42,6 +60,7 @@ export const SUBCATEGORY_OPTIONS: Record<DocumentCategory, { value: string; labe
     { value: 'structural',       label: 'Structural Change' },
     { value: 'ipo_acquisition',  label: 'IPO / Acquisition' },
     { value: 'property_ops',     label: 'Property / Operations' },
+    { value: 'intimation',       label: 'Board Meeting Intimation' },
   ],
   reg46: [
     { value: 'corporate_overview',         label: 'Corporate Overview' },
@@ -60,6 +79,28 @@ export const SUBCATEGORY_OPTIONS: Record<DocumentCategory, { value: string; labe
   ],
   subsidiary_financial: [],
   certification: [],
+  agm: [
+    { value: 'notice',     label: 'Notice' },
+    { value: 'proceedings',label: 'Proceedings' },
+    { value: 'voting',     label: 'Voting Results' },
+    { value: 'scrutinizer',label: 'Scrutinizer Report' },
+  ],
+  egm: [
+    { value: 'notice',     label: 'Notice' },
+    { value: 'proceedings',label: 'Proceedings' },
+    { value: 'voting',     label: 'Voting Results' },
+    { value: 'scrutinizer',label: 'Scrutinizer Report' },
+  ],
+  shareholding_pattern: [],
+  trading_window: [],
+  related_party: [],
+  corporate_announcement: [],
+  newspaper_publication: [],
+  integrated_filing: [
+    { value: 'quarterly',  label: 'Quarterly' },
+    { value: 'annual',     label: 'Annual' },
+  ],
+  corporate_document: [],
 }
 
 export const SUBCATEGORY_LABELS: Record<string, string> = Object.fromEntries(

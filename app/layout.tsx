@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
+import { headers } from 'next/headers'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PageTransition from '@/components/PageTransition'
 import HideOnAdmin from '@/components/HideOnAdmin'
-import { Analytics } from '@vercel/analytics/next'
+import { DEFAULT_LOCALE } from '@/lib/i18n/locales'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
 
@@ -75,11 +77,20 @@ export const metadata: Metadata = {
 
 /* ─── Root Layout ─────────────────────────────────────────────────────────── */
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// RTL languages — extend as needed.
+const RTL_LOCALES = new Set(['ar', 'he', 'fa', 'ur'])
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Middleware sets x-locale on every public request. Admin/API routes don't
+  // run through middleware → fall back to default.
+  const h = await headers()
+  const locale = h.get('x-locale') ?? DEFAULT_LOCALE
+  const dir = RTL_LOCALES.has(locale) ? 'rtl' : 'ltr'
+
   return (
     <html
-      lang="en"
-      dir="ltr"
+      lang={locale}
+      dir={dir}
       className={`${inter.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-bg text-ink font-sans">

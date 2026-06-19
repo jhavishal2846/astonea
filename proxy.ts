@@ -1,31 +1,78 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getActiveLocaleCodes, DEFAULT_LOCALE } from '@/lib/i18n/locales'
 
 const SESSION_COOKIE = 'astonea_session'
 
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl
+/**
+ * This Next.js fork uses `proxy.ts` (the new name for `middleware.ts`).
+ *
+ * Two responsibilities — order matters:
+ *   1. /admin gate: redirect unauthenticated admins to /admin/login.
+ *   2. i18n routing: rewrite `/about-us` → `/en/about-us` internally, and
+ *      pass through `/hi/about-us` etc. for non-default locales. Active
+ *      locales are read from the `languages` table at request time
+ *      (cached 1h, tag-invalidated) so admins can add a language and
+ *      have it live without redeploying.
+ */
+export async function proxy(request: NextRequest) {
+  const { pathname, search, searchParams } = request.nextUrl
   const hasSession = request.cookies.has(SESSION_COOKIE)
+  // CMS in-place editing: only honour `?edit=1` when the visitor has an admin
+  // session. We forward it to the page via a request header so the layout
+  // and content components can switch into edit mode.
+  const editMode = searchParams.get('edit') === '1' && hasSession
 
-  // Already authenticated and visiting login → bounce to dashboard.
+  // ─── Admin auth ──────────────────────────────────────────────────────
   if (pathname === '/admin/login' && hasSession) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin'
     return NextResponse.redirect(url)
   }
-
-  // Any other /admin/* without a session → login.
   if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !hasSession) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin/login'
     url.searchParams.set('next', pathname)
     return NextResponse.redirect(url)
   }
+  // Admin routes don't need locale rewriting.
+  if (pathname.startsWith('/admin')) return NextResponse.next()
 
-  return NextResponse.next()
+  // ─── i18n routing ────────────────────────────────────────────────────
+  const segments = pathname.split('/').filter(Boolean)
+  const first = segments[0] ?? ''
+  const locales = await getActiveLocaleCodes()
+
+  // URL already carries a non-default locale prefix.
+  if (locales.includes(first) && first !== DEFAULT_LOCALE) {
+    const headers = new Headers(request.headers)
+    headers.set('x-locale', first)
+    headers.set('x-pathname', pathname)
+    if (editMode) headers.set('x-cms-edit', '1')
+    return NextResponse.next({ request: { headers } })
+  }
+
+  // Strip an accidentally-prefixed /en
+  if (first === DEFAULT_LOCALE) {
+    const stripped = pathname.replace(/^\/en(?=\/|$)/, '') || '/'
+    const url = request.nextUrl.clone()
+    url.pathname = stripped
+    return NextResponse.redirect(url)
+  }
+
+  // No locale prefix → default English. Rewrite internally to /en/<rest>
+  // so the [locale] dynamic segment matches without changing the URL.
+  const url = request.nextUrl.clone()
+  url.pathname = `/${DEFAULT_LOCALE}${pathname}`
+  url.search = search
+  const headers = new Headers(request.headers)
+  headers.set('x-locale', DEFAULT_LOCALE)
+  headers.set('x-pathname', pathname)
+  if (editMode) headers.set('x-cms-edit', '1')
+  return NextResponse.rewrite(url, { request: { headers } })
 }
 
 export const config = {
-  // Only run on admin routes — public pages stay untouched.
-  matcher: ['/admin/:path*'],
+  // Run on admin AND public routes; skip Next internals, api, static assets.
+  matcher: ['/((?!_next|api|favicon|.*\\..*).*)'],
 }

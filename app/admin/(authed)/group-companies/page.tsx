@@ -1,4 +1,4 @@
-import { asc, sql } from 'drizzle-orm'
+import { and, asc, ilike, sql, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { groupCompanies } from '@/lib/db/schema'
 import { createCompany, deleteCompany } from './_actions'
@@ -6,6 +6,7 @@ import CompanyRow from './CompanyRow'
 import NewCompanyTrigger from './NewCompanyTrigger'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
 import AdminPagination from '@/app/admin/_components/Pagination'
+import AdminSearchInput from '@/app/admin/_components/SearchInput'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,12 +15,22 @@ const PER_PAGE = 10
 export default async function GroupCompaniesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ q?: string; page?: string }>
 }) {
-  const { page: pageRaw } = await searchParams
+  const { q, page: pageRaw } = await searchParams
+  const search = (q ?? '').trim()
   const requested = Number(pageRaw) || 1
 
-  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(groupCompanies)
+  const conditions: SQL[] = []
+  if (search) {
+    conditions.push(ilike(groupCompanies.name, `%${search}%`))
+  }
+  const where = conditions.length ? and(...conditions) : undefined
+
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(groupCompanies)
+    .where(where)
   const total = count ?? 0
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE))
   const page = Math.min(Math.max(1, requested), totalPages)
@@ -28,10 +39,11 @@ export default async function GroupCompaniesPage({
   const rows = await db
     .select()
     .from(groupCompanies)
+    .where(where)
     .orderBy(asc(groupCompanies.displayOrder), asc(groupCompanies.name))
     .limit(PER_PAGE)
     .offset(offset)
-  
+
   return (
     <div className="max-w-5xl mx-auto">
       <AdminPageHeader
@@ -41,13 +53,25 @@ export default async function GroupCompaniesPage({
         actions={<NewCompanyTrigger action={createCompany} />}
       />
 
+      <div className="mb-4">
+        <AdminSearchInput
+          basePath="/admin/group-companies"
+          initial={search}
+          placeholder="Search by entity name…"
+        />
+      </div>
+
       <div className="space-y-3">
         {rows.map((row) => (
           <CompanyRow key={row.id} row={row} deleteAction={deleteCompany.bind(null, row.id)} />
         ))}
         {rows.length === 0 && (
           <div className="px-4 py-16 text-center text-sm text-slate-500 bg-white border border-slate-200 rounded-2xl">
-            No group companies yet. Click <span className="font-semibold text-slate-700">New entity</span> to add one.
+            {search ? (
+              <>No entities match &ldquo;{search}&rdquo;.</>
+            ) : (
+              <>No group companies yet. Click <span className="font-semibold text-slate-700">New entity</span> to add one.</>
+            )}
           </div>
         )}
       </div>
@@ -57,6 +81,7 @@ export default async function GroupCompaniesPage({
         perPage={PER_PAGE}
         current={page}
         basePath="/admin/group-companies"
+        searchParams={search ? { q: search } : {}}
         itemLabel="entities"
       />
     </div>

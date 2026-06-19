@@ -10,6 +10,7 @@ import {
   useScroll,
   useSpring,
 } from 'framer-motion'
+import { usePageText } from './PageTextProvider'
 
 const E = [0.16, 1, 0.3, 1] as const
 
@@ -143,30 +144,59 @@ function StatValue({ value }: { value: string }) {
   )
 }
 
-export function MilestoneStats({ stats }: { stats: Stat[] }) {
+// Resolve a `t()` lookup back to a plain string. In edit mode `t()` returns
+// a span ReactNode; for places that need the raw value (regex parse, counter
+// animation) we unwrap it.
+function textOf(t: (key: string, fallback: string) => React.ReactNode, key: string, fallback: string): string {
+  const v = t(key, fallback)
+  if (typeof v === 'string') return v
+  if (v && typeof v === 'object' && 'props' in v) {
+    const node = v as { props: { children?: unknown } }
+    if (typeof node.props.children === 'string') return node.props.children
+  }
+  return fallback
+}
+
+export function MilestoneStats({
+  stats,
+  keyPrefix,
+}: {
+  stats: Stat[]
+  /** CMS key prefix for per-stat overrides (e.g. "km.stat"). */
+  keyPrefix?: string
+}) {
+  const t = usePageText()
   return (
     <div style={{ background: 'var(--color-primary)' }}>
       <div className="container-wide">
         <div className="grid grid-cols-2 lg:grid-cols-4">
-          {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className={[
-                'py-8 px-6 text-center',
-                i < stats.length - 1 ? 'lg:border-r border-white/20' : '',
-                i % 2 === 0 ? 'border-r border-white/20 lg:border-r' : '',
-                i < 2 ? 'border-b border-white/20 lg:border-b-0' : '',
-              ].join(' ')}
-            >
-              <StatValue value={s.value} />
-              <p
-                className="text-xs font-medium uppercase tracking-widest"
-                style={{ color: 'rgba(255,255,255,0.72)' }}
+          {stats.map((s, i) => {
+            const value = keyPrefix
+              ? textOf(t, `${keyPrefix}_${i}.value`, s.value)
+              : s.value
+            const label = keyPrefix
+              ? t(`${keyPrefix}_${i}.label`, s.label)
+              : s.label
+            return (
+              <div
+                key={i}
+                className={[
+                  'py-8 px-6 text-center',
+                  i < stats.length - 1 ? 'lg:border-r border-white/20' : '',
+                  i % 2 === 0 ? 'border-r border-white/20 lg:border-r' : '',
+                  i < 2 ? 'border-b border-white/20 lg:border-b-0' : '',
+                ].join(' ')}
               >
-                {s.label}
-              </p>
-            </div>
-          ))}
+                <StatValue value={value} />
+                <p
+                  className="text-xs font-medium uppercase tracking-widest"
+                  style={{ color: 'rgba(255,255,255,0.72)' }}
+                >
+                  {label}
+                </p>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
@@ -180,17 +210,23 @@ function MilestoneRow({
   index,
   total,
   reduce,
+  keyPrefix,
 }: {
   m: Milestone
   index: number
   total: number
   reduce: boolean | null
+  keyPrefix?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-30% 0px -30% 0px' })
+  const t = usePageText()
   const isLast = index === total - 1
   const accent = isLast ? 'var(--color-accent)' : 'var(--color-primary)'
   const ringColor = isLast ? 'rgba(232,169,0,0.16)' : 'rgba(0,114,206,0.14)'
+
+  const yearLabel = keyPrefix ? t(`${keyPrefix}_${index}.year`, m.year) : m.year
+  const titleLabel = keyPrefix ? t(`${keyPrefix}_${index}.title`, m.title) : m.title
 
   return (
     <div ref={ref} className="relative pl-[68px] sm:pl-24">
@@ -200,7 +236,7 @@ function MilestoneRow({
         className="pointer-events-none absolute right-0 -top-8 hidden select-none font-display font-bold leading-none lg:block"
         style={{ fontSize: '8rem', color: accent, opacity: 0.045 }}
       >
-        {m.year}
+        {keyPrefix ? textOf(t, `${keyPrefix}_${index}.year`, m.year) : m.year}
       </span>
 
       {/* icon badge on the rail */}
@@ -233,13 +269,13 @@ function MilestoneRow({
             className="font-mono text-4xl font-bold tracking-tight lg:text-5xl tabular-nums"
             style={{ color: accent }}
           >
-            {m.year}
+            {yearLabel}
           </span>
           <span
             className="text-xs font-semibold uppercase tracking-widest"
             style={{ color: 'var(--color-ink-subtle)' }}
           >
-            {m.title}
+            {titleLabel}
           </span>
         </div>
 
@@ -249,7 +285,7 @@ function MilestoneRow({
         >
           {m.events.map((e, j) => (
             <div
-              key={e}
+              key={j}
               className="flex items-start gap-3.5 p-5"
               style={{ borderTop: j > 0 ? '1px solid var(--color-border)' : 'none' }}
             >
@@ -259,7 +295,7 @@ function MilestoneRow({
                 style={{ background: accent }}
               />
               <span className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
-                {e}
+                {keyPrefix ? t(`${keyPrefix}_${index}.event_${j}`, e) : e}
               </span>
             </div>
           ))}
@@ -271,7 +307,14 @@ function MilestoneRow({
 
 /* ─── Timeline with scroll-progress spine ────────────────────────────────── */
 
-export function MilestoneTimeline({ milestones }: { milestones: Milestone[] }) {
+export function MilestoneTimeline({
+  milestones,
+  keyPrefix,
+}: {
+  milestones: Milestone[]
+  /** CMS key prefix for per-milestone overrides (e.g. "km.ms"). */
+  keyPrefix?: string
+}) {
   const reduce = useReducedMotion()
   const trackRef = useRef<HTMLDivElement>(null)
 
@@ -305,11 +348,12 @@ export function MilestoneTimeline({ milestones }: { milestones: Milestone[] }) {
           <div className="space-y-14 lg:space-y-20">
             {milestones.map((m, i) => (
               <MilestoneRow
-                key={m.year}
+                key={i}
                 m={m}
                 index={i}
                 total={milestones.length}
                 reduce={reduce}
+                keyPrefix={keyPrefix}
               />
             ))}
           </div>

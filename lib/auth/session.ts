@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { eq, lt } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { sessions, users } from '@/lib/db/schema'
+import { withRetry } from '@/lib/db/retry'
 
 export const SESSION_COOKIE = 'astonea_session'
 const SESSION_TTL_DAYS = 30
@@ -16,7 +17,7 @@ function newToken(): string {
 export async function createSession(userId: string): Promise<{ id: string; expiresAt: Date }> {
   const id = newToken()
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS)
-  await db.insert(sessions).values({ id, userId, expiresAt })
+  await withRetry(() => db.insert(sessions).values({ id, userId, expiresAt }))
   return { id, expiresAt }
 }
 
@@ -51,24 +52,26 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   const token = store.get(SESSION_COOKIE)?.value
   if (!token) return null
 
-  const rows = await db
-    .select({
-      sessionId: sessions.id,
-      expiresAt: sessions.expiresAt,
-      userId: users.id,
-      email: users.email,
-      name: users.name,
-    })
-    .from(sessions)
-    .innerJoin(users, eq(users.id, sessions.userId))
-    .where(eq(sessions.id, token))
-    .limit(1)
+  const rows = await withRetry(() =>
+    db
+      .select({
+        sessionId: sessions.id,
+        expiresAt: sessions.expiresAt,
+        userId: users.id,
+        email: users.email,
+        name: users.name,
+      })
+      .from(sessions)
+      .innerJoin(users, eq(users.id, sessions.userId))
+      .where(eq(sessions.id, token))
+      .limit(1),
+  )
 
   const row = rows[0]
   if (!row) return null
 
   if (row.expiresAt.getTime() < Date.now()) {
-    await db.delete(sessions).where(eq(sessions.id, row.sessionId))
+    await withRetry(() => db.delete(sessions).where(eq(sessions.id, row.sessionId)))
     return null
   }
 
@@ -79,12 +82,12 @@ export async function deleteCurrentSession() {
   const store = await cookies()
   const token = store.get(SESSION_COOKIE)?.value
   if (token) {
-    await db.delete(sessions).where(eq(sessions.id, token))
+    await withRetry(() => db.delete(sessions).where(eq(sessions.id, token)))
   }
   await clearSessionCookie()
 }
 
 /** Maintenance: drop sessions whose expiry has passed. */
 export async function purgeExpiredSessions() {
-  await db.delete(sessions).where(lt(sessions.expiresAt, new Date()))
+  await withRetry(() => db.delete(sessions).where(lt(sessions.expiresAt, new Date())))
 }

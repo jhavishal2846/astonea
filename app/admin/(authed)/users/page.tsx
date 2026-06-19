@@ -1,4 +1,4 @@
-import { asc, sql } from 'drizzle-orm'
+import { and, asc, ilike, or, sql, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -8,6 +8,7 @@ import UserResetForm from './UserResetForm'
 import DeleteAdminButton from './DeleteAdminButton'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
 import AdminPagination from '@/app/admin/_components/Pagination'
+import AdminSearchInput from '@/app/admin/_components/SearchInput'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,13 +17,24 @@ const PER_PAGE = 10
 export default async function AdminUsersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ q?: string; page?: string }>
 }) {
-  const { page: pageRaw } = await searchParams
+  const { q, page: pageRaw } = await searchParams
+  const search = (q ?? '').trim()
   const requested = Number(pageRaw) || 1
 
+  const conditions: SQL[] = []
+  if (search) {
+    const like = `%${search}%`
+    conditions.push(or(ilike(users.email, like), ilike(users.name, like))!)
+  }
+  const where = conditions.length ? and(...conditions) : undefined
+
   const me = await getCurrentUser()
-  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(users)
+  const [{ count }] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(users)
+    .where(where)
   const total = count ?? 0
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE))
   const page = Math.min(Math.max(1, requested), totalPages)
@@ -31,6 +43,7 @@ export default async function AdminUsersPage({
   const rows = await db
     .select({ id: users.id, email: users.email, name: users.name, createdAt: users.createdAt })
     .from(users)
+    .where(where)
     .orderBy(asc(users.createdAt))
     .limit(PER_PAGE)
     .offset(offset)
@@ -43,6 +56,14 @@ export default async function AdminUsersPage({
         breadcrumbs={[{ label: 'Dashboard', href: '/admin' }, { label: 'Admins' }]}
         actions={<NewAdminTrigger action={createAdmin} />}
       />
+
+      <div className="mb-4">
+        <AdminSearchInput
+          basePath="/admin/users"
+          initial={search}
+          placeholder="Search by name or email…"
+        />
+      </div>
 
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
         <ul className="divide-y divide-slate-100">
@@ -73,7 +94,7 @@ export default async function AdminUsersPage({
           })}
           {rows.length === 0 && (
             <li className="px-5 py-12 text-center text-sm text-slate-500">
-              No admins yet.
+              {search ? `No admins match "${search}".` : 'No admins yet.'}
             </li>
           )}
         </ul>
@@ -84,6 +105,7 @@ export default async function AdminUsersPage({
         perPage={PER_PAGE}
         current={page}
         basePath="/admin/users"
+        searchParams={search ? { q: search } : {}}
         itemLabel="admins"
       />
     </div>

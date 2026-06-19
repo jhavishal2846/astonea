@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { usePageText } from '@/components/PageTextProvider'
 
 interface PageHeaderProps {
   eyebrow: string
@@ -98,6 +99,12 @@ export function PageHeader({
   image,
 }: PageHeaderProps) {
   const resolved = resolveImage(image, breadcrumb)
+  // Admin-set overrides take precedence; the props passed in by the page
+  // are treated as fallbacks when no override is stored.
+  const t = usePageText()
+  const eyebrowText = t('header.eyebrow', eyebrow)
+  const titleText = t('header.title', title)
+  const descriptionText = t('header.description', description)
 
   return (
     <div
@@ -193,13 +200,13 @@ export function PageHeader({
             textShadow: '0 1px 12px rgba(0,0,0,0.5)',
           }}
         >
-          {eyebrow}
+          {eyebrowText}
         </p>
         <h1
           className="font-display text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight max-w-2xl text-balance"
           style={{ textShadow: '0 2px 18px rgba(0,0,0,0.55)' }}
         >
-          {title}
+          {titleText}
         </h1>
         <p
           className="mt-5 text-lg max-w-xl leading-relaxed"
@@ -208,7 +215,7 @@ export function PageHeader({
             textShadow: '0 1px 12px rgba(0,0,0,0.5)',
           }}
         >
-          {description}
+          {descriptionText}
         </p>
       </div>
     </div>

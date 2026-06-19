@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { after } from 'next/server'
 import { eq } from 'drizzle-orm'
@@ -10,6 +10,12 @@ import { documents, type NewDocument, type DocumentCategory } from '@/lib/db/sch
 import { getCurrentUser, type SessionUser } from '@/lib/auth/session'
 import { isValidCategory, CATEGORY_LABELS } from '@/lib/cms/categories'
 import { recordActivity } from '@/lib/cms/audit'
+import { documentsTag, entityDocsTag } from '@/lib/cms/cache-tags'
+
+function invalidateCategory(category: DocumentCategory, entityId?: string | null) {
+  updateTag(documentsTag(category))
+  if (entityId) updateTag(entityDocsTag(entityId))
+}
 
 export type ActionState = { error?: string; ok?: boolean }
 
@@ -97,6 +103,7 @@ export async function createDocument(_prev: ActionState, formData: FormData): Pr
   }
   revalidatePath('/admin/documents')
   revalidatePath('/admin')
+  if (createdCategory) invalidateCategory(createdCategory)
   if (createdId && createdCategory) {
     const id = createdId
     const title = createdTitle
@@ -142,6 +149,7 @@ export async function updateDocument(id: string, _prev: ActionState, formData: F
   revalidatePath('/admin/documents')
   revalidatePath('/admin')
   revalidatePath(`/admin/documents/${id}/edit`)
+  if (updatedCategory) invalidateCategory(updatedCategory, (formData.get('entityId') as string) || null)
   const title = updatedTitle
   const cat = updatedCategory
   after(() => recordActivity({
@@ -157,11 +165,12 @@ export async function updateDocument(id: string, _prev: ActionState, formData: F
 
 export async function deleteDocument(id: string) {
   const user = await requireAdmin()
-  const [row] = await db.select({ title: documents.title, category: documents.category }).from(documents).where(eq(documents.id, id)).limit(1)
+  const [row] = await db.select({ title: documents.title, category: documents.category, entityId: documents.entityId }).from(documents).where(eq(documents.id, id)).limit(1)
   await db.delete(documents).where(eq(documents.id, id))
   revalidatePath('/admin/documents')
   revalidatePath('/admin')
   if (row) {
+    invalidateCategory(row.category, row.entityId)
     after(() => recordActivity({
       action: 'delete',
       entityType: 'document',
@@ -178,6 +187,12 @@ export async function togglePublish(id: string, next: boolean) {
   await db.update(documents).set({ isPublished: next, updatedAt: new Date() }).where(eq(documents.id, id))
   revalidatePath('/admin/documents')
   revalidatePath('/admin')
+  const [meta] = await db
+    .select({ category: documents.category, entityId: documents.entityId })
+    .from(documents)
+    .where(eq(documents.id, id))
+    .limit(1)
+  if (meta) invalidateCategory(meta.category, meta.entityId)
   after(async () => {
     const [row] = await db.select({ title: documents.title }).from(documents).where(eq(documents.id, id)).limit(1)
     if (row) {
@@ -216,6 +231,7 @@ export async function duplicateDocument(id: string) {
 
   revalidatePath('/admin/documents')
   revalidatePath('/admin')
+  invalidateCategory(source.category, source.entityId)
   after(() => recordActivity({
     action: 'duplicate',
     entityType: 'document',
