@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import { headers } from 'next/headers'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import PageTransition from '@/components/PageTransition'
+import HideOnAdmin from '@/components/HideOnAdmin'
 import { DEFAULT_LOCALE } from '@/lib/i18n/locales'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
@@ -89,7 +94,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${inter.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-bg text-ink font-sans">
-        {children}
+        <HideOnAdmin>
+          <Navbar />
+        </HideOnAdmin>
+        <PageTransition>
+          <main id="main-content" className="flex-1 flex flex-col" tabIndex={-1}>
+            {children}
+          </main>
+        </PageTransition>
+        <HideOnAdmin>
+          <Footer />
+        </HideOnAdmin>
+        <Analytics />
       </body>
     </html>
   )
