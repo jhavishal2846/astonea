@@ -318,7 +318,7 @@ export const activityLog = pgTable(
     userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
     userEmail: text('user_email').notNull(),
     action: activityActionEnum('action').notNull(),
-    entityType: activityEntityEnum('entity_type').notNull(),
+    entityType: activityEntityEnum('entity_type').notNull(), 
     entityId: uuid('entity_id'),
     entityTitle: text('entity_title').notNull(),
     detail: text('detail'),
