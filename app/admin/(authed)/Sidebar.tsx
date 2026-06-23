@@ -13,6 +13,7 @@ import {
   IconSeo,
   IconLanguages,
   IconPages,
+  IconProducts,
 } from '@/app/admin/_icons'
 
 type NavLink = {
@@ -24,6 +25,7 @@ type NavLink = {
 const LINKS: NavLink[] = [
   { href: '/admin',                 label: 'Dashboard',      icon: IconDashboard },
   { href: '/admin/pages',           label: 'Pages',          icon: IconPages      },
+  { href: '/admin/products',        label: 'Products',       icon: IconProducts   },
   { href: '/admin/documents',       label: 'Documents',      icon: IconDocs       },
   { href: '/admin/seo',             label: 'SEO',            icon: IconSeo        },
   { href: '/admin/languages',       label: 'Languages',      icon: IconLanguages  },

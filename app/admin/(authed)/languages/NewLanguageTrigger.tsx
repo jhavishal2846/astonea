@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import Modal from '@/app/admin/_components/Modal'
@@ -16,10 +16,16 @@ export default function NewLanguageTrigger() {
     {},
   )
 
-  if (state.ok && open) {
-    setOpen(false)
-    router.refresh()
-  }
+  // Close the modal + refresh the list after a successful submit. Has to run
+  // post-commit (useEffect) — calling setOpen / router.refresh during render
+  // triggers React 19's "setState while rendering a different component"
+  // warning because router.refresh updates the Router context.
+  useEffect(() => {
+    if (state.ok && open) {
+      setOpen(false)
+      router.refresh()
+    }
+  }, [state.ok, open, router])
 
   return (
     <>

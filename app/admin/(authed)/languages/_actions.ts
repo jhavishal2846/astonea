@@ -2,7 +2,7 @@
 
 import { revalidatePath, updateTag } from 'next/cache'
 import { after } from 'next/server'
-import { and, eq, inArray, sql } from 'drizzle-orm'
+import { and, eq, inArray, isNull, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import {
   languages,
@@ -13,7 +13,12 @@ import {
   pageBlocks,
   pageBlockTranslations,
   pages,
+  pageTextOverrides,
   uiStrings,
+  productCategories,
+  productCategoryTranslations,
+  products,
+  productTranslations,
   translationJobs,
   type TranslationJobStatus,
 } from '@/lib/db/schema'
@@ -22,6 +27,7 @@ import { recordActivity } from '@/lib/cms/audit'
 import { LOCALES_TAG, DEFAULT_LOCALE } from '@/lib/i18n/locales'
 import { uiStringsTag } from '@/lib/i18n/ui-strings'
 import { PAGE_REGISTRY } from '@/lib/seo/pages-registry'
+import { getAllPageDefaults } from '@/lib/cms/page-defaults'
 import { DEFAULT_UI_STRINGS_EN } from '@/lib/i18n/default-messages'
 import { getBlockDescriptor, expandTranslatablePaths, getByPath, setByPath } from '@/lib/cms/blocks'
 import { pageTag, pageLocaleTag } from '@/lib/cms/pages'
@@ -112,6 +118,47 @@ export async function setLanguageActive(code: string, active: boolean) {
   )
 }
 
+/**
+ * Force-fail any running translation job for this locale. Use this to
+ * recover from a stuck row — for example when the dev server was killed
+ * mid-run and the row is still marked `running`, blocking re-clicks of
+ * "Generate translations".
+ */
+export async function cancelTranslationJob(locale: string) {
+  const user = await requireAdmin()
+  if (locale === DEFAULT_LOCALE) throw new Error('No translation jobs run on the default locale')
+
+  const updated = await db
+    .update(translationJobs)
+    .set({
+      status: 'failed',
+      errorMessage: 'Cancelled by admin',
+      finishedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(translationJobs.locale, locale),
+        inArray(translationJobs.status, ['queued', 'running']),
+      ),
+    )
+    .returning({ id: translationJobs.id })
+
+  revalidatePath('/admin/languages')
+
+  after(() =>
+    recordActivity({
+      action: 'update',
+      entityType: 'document',
+      entityId: null,
+      entityTitle: `Translations: ${locale}`,
+      detail: `Cancelled ${updated.length} in-flight translation job${updated.length === 1 ? '' : 's'}.`,
+      user,
+    }),
+  )
+
+  return { cancelled: updated.length }
+}
+
 export async function deleteLanguage(code: string) {
   const user = await requireAdmin()
   if (code === DEFAULT_LOCALE) throw new Error('Cannot delete the default locale')
@@ -149,7 +196,7 @@ export async function deleteLanguage(code: string) {
  *   doc::<id>::title|description
  */
 async function fetchExistingTranslationKeys(locale: string): Promise<Set<string>> {
-  const [uiRows, pageRows, docRows, blockRows] = await Promise.all([
+  const [uiRows, pageRows, docRows, blockRows, overrideRows, prodCatRows, prodRows] = await Promise.all([
     db.select({ key: uiStrings.key }).from(uiStrings).where(eq(uiStrings.locale, locale)),
     db
       .select({ pagePath: pageMetadataTranslations.pagePath })
@@ -163,6 +210,18 @@ async function fetchExistingTranslationKeys(locale: string): Promise<Set<string>
       .select({ blockId: pageBlockTranslations.blockId })
       .from(pageBlockTranslations)
       .where(eq(pageBlockTranslations.locale, locale)),
+    db
+      .select({ pagePath: pageTextOverrides.pagePath, key: pageTextOverrides.key })
+      .from(pageTextOverrides)
+      .where(eq(pageTextOverrides.locale, locale)),
+    db
+      .select({ id: productCategoryTranslations.categoryId })
+      .from(productCategoryTranslations)
+      .where(eq(productCategoryTranslations.locale, locale)),
+    db
+      .select({ id: productTranslations.productId })
+      .from(productTranslations)
+      .where(eq(productTranslations.locale, locale)),
   ])
   const existing = new Set<string>()
   for (const r of uiRows) existing.add(`ui::${r.key}`)
@@ -181,6 +240,24 @@ async function fetchExistingTranslationKeys(locale: string): Promise<Set<string>
   // builder can skip the whole block (good enough — admins re-translate at
   // block granularity, not field granularity).
   for (const r of blockRows) existing.add(`block::${r.blockId}`)
+  // Page-scoped text overrides: every (pagePath, key) row counts as already
+  // translated. The resumable filter then skips that exact (path, key) tuple
+  // on re-runs — useful when an admin curated a single string by hand or a
+  // partial translation job finished some pages.
+  for (const r of overrideRows) {
+    existing.add(`pagetext::${r.pagePath}::${r.key}`)
+  }
+  // Product / category translations: presence of one row counts the whole
+  // entity (label+description for categories, name+description for products)
+  // as already translated. Matches the doc/page convention.
+  for (const r of prodCatRows) {
+    existing.add(`prodcat::${r.id}::label`)
+    existing.add(`prodcat::${r.id}::description`)
+  }
+  for (const r of prodRows) {
+    existing.add(`prod::${r.id}::name`)
+    existing.add(`prod::${r.id}::description`)
+  }
   return existing
 }
 
@@ -231,7 +308,21 @@ async function buildSourceCorpus(): Promise<{
     if (d.description) items[`doc::${d.id}::description`] = d.description
   }
 
-  // 4. Page blocks (only on published pages). Walk each block's
+  // 4. Page-scoped editorial slots from lib/cms/page-defaults.ts. Each public
+  // page registers its admin-editable strings (hero eyebrow/title/desc plus
+  // every section heading, label, card title, stat label, etc.). These keys
+  // are scoped to (pagePath, key) — the same `header.title` key has a
+  // different value on /about-us vs /career — so they belong in
+  // page_text_overrides, not the global ui_strings catalog.
+  for (const page of getAllPageDefaults()) {
+    for (const slot of page.slots) {
+      const value = slot.defaultValue
+      if (typeof value !== 'string' || value.trim().length === 0) continue
+      items[`pagetext::${page.path}::${slot.key}`] = value
+    }
+  }
+
+  // 5. Page blocks (only on published pages). Walk each block's
   // translatable-field paths from its registered descriptor.
   const blockRows = await db
     .select({
@@ -257,6 +348,46 @@ async function buildSourceCorpus(): Promise<{
     }
   }
 
+  // 6. Product categories — translate label + description for every active,
+  // non-deleted category. The slug stays canonical (per-locale slug overrides
+  // are an admin-curated feature, not something MT should guess).
+  const catRows = await db
+    .select({
+      id: productCategories.id,
+      label: productCategories.label,
+      description: productCategories.description,
+    })
+    .from(productCategories)
+    .where(
+      and(eq(productCategories.isActive, true), isNull(productCategories.deletedAt)),
+    )
+  for (const c of catRows) {
+    items[`prodcat::${c.id}::label`] = c.label
+    if (c.description && c.description.trim().length > 0) {
+      items[`prodcat::${c.id}::description`] = c.description
+    }
+  }
+
+  // 7. Products — name + description for every published product. Translatable
+  // attribute fields (per category-schemas.ts) are intentionally skipped here:
+  // they're a mix of strings, arrays, and kv-lists, and the resumable filter
+  // tracks at entity granularity so adding them later doesn't re-translate
+  // already-done names.
+  const prodRows = await db
+    .select({
+      id: products.id,
+      name: products.name,
+      description: products.description,
+    })
+    .from(products)
+    .where(and(eq(products.status, 'published'), isNull(products.deletedAt)))
+  for (const p of prodRows) {
+    items[`prod::${p.id}::name`] = p.name
+    if (p.description && p.description.trim().length > 0) {
+      items[`prod::${p.id}::description`] = p.description
+    }
+  }
+
   return { items, uiOverrides }
 }
 
@@ -274,6 +405,33 @@ async function setJobStatus(
     .update(translationJobs)
     .set(patch)
     .where(eq(translationJobs.id, id))
+}
+
+/**
+ * Retry a transient DB op (Neon HTTP can drop one-off connections) up to
+ * `attempts` times with exponential backoff. Returns null after exhausting
+ * retries — the caller decides whether to treat that as fatal or skip. We
+ * use this around the in-loop progress flush so a single connection blip
+ * can't stall the bar at 27% or push the whole job to "failed".
+ */
+async function withRetry<T>(
+  label: string,
+  op: () => Promise<T>,
+  attempts = 3,
+): Promise<T | null> {
+  let lastErr: unknown
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await op()
+    } catch (e) {
+      lastErr = e
+      if (i < attempts - 1) {
+        await new Promise((r) => setTimeout(r, 1_000 * (i + 1)))
+      }
+    }
+  }
+  console.error(`[translation-job] ${label} failed after ${attempts} attempts:`, lastErr)
+  return null
 }
 
 async function persistTranslations(
@@ -295,6 +453,20 @@ async function persistTranslations(
     description: string | null
   }
 
+  type PageTextUpsert = { pagePath: string; key: string; locale: string; value: string }
+  type ProdCatUpsert = {
+    categoryId: string
+    locale: string
+    label: string
+    description: string | null
+  }
+  type ProdUpsert = {
+    productId: string
+    locale: string
+    name: string
+    description: string | null
+  }
+
   const ui: UiUpsert[] = []
   const pageUpserts: Map<string, PageUpsert> = new Map()
   const docs: Map<string, DocUpsert> = new Map()
@@ -302,6 +474,14 @@ async function persistTranslations(
   // a sparse props patch (only the translated leaves) for the translation row.
   const blockPatches: Map<string, Record<string, unknown>> = new Map()
   const blockPagePaths: Map<string, string> = new Map()
+  // Per-page editorial text overrides (hero, section labels, card titles —
+  // every slot declared in lib/cms/page-defaults.ts). Each row is keyed by
+  // (pagePath, key, locale).
+  const pageTextUpserts: PageTextUpsert[] = []
+  const pageTextPagePaths = new Set<string>()
+  // Product catalog: category labels/descriptions and product names/descriptions.
+  const prodCatUpserts: Map<string, ProdCatUpsert> = new Map()
+  const prodUpserts: Map<string, ProdUpsert> = new Map()
 
   for (const [k, value] of Object.entries(translated)) {
     if (k.startsWith('ui::')) {
@@ -346,6 +526,49 @@ async function persistTranslations(
       const cur = blockPatches.get(blockId) ?? {}
       setByPath(cur, path, value)
       blockPatches.set(blockId, cur)
+      continue
+    }
+    if (k.startsWith('pagetext::')) {
+      // Key shape: pagetext::<pagePath>::<slot.key>
+      // Page paths can contain '/' (e.g. '/products/apis'), and slot keys
+      // contain '.' but never '::', so the last '::' is the path/key boundary.
+      const rest = k.slice(10)
+      const lastSep = rest.lastIndexOf('::')
+      if (lastSep === -1) continue
+      const pagePath = rest.slice(0, lastSep)
+      const slotKey = rest.slice(lastSep + 2)
+      pageTextUpserts.push({ pagePath, key: slotKey, locale: targetLocale, value })
+      pageTextPagePaths.add(pagePath)
+      continue
+    }
+    if (k.startsWith('prodcat::')) {
+      // Key shape: prodcat::<uuid>::label|description
+      const rest = k.slice(9)
+      const lastSep = rest.lastIndexOf('::')
+      if (lastSep === -1) continue
+      const id = rest.slice(0, lastSep)
+      const field = rest.slice(lastSep + 2) as 'label' | 'description'
+      const cur =
+        prodCatUpserts.get(id) ??
+        ({ categoryId: id, locale: targetLocale, label: '', description: null } as ProdCatUpsert)
+      if (field === 'label') cur.label = value
+      if (field === 'description') cur.description = value
+      prodCatUpserts.set(id, cur)
+      continue
+    }
+    if (k.startsWith('prod::')) {
+      // Key shape: prod::<uuid>::name|description
+      const rest = k.slice(6)
+      const lastSep = rest.lastIndexOf('::')
+      if (lastSep === -1) continue
+      const id = rest.slice(0, lastSep)
+      const field = rest.slice(lastSep + 2) as 'name' | 'description'
+      const cur =
+        prodUpserts.get(id) ??
+        ({ productId: id, locale: targetLocale, name: '', description: null } as ProdUpsert)
+      if (field === 'name') cur.name = value
+      if (field === 'description') cur.description = value
+      prodUpserts.set(id, cur)
     }
   }
 
@@ -408,7 +631,50 @@ async function persistTranslations(
     }
   }
 
-  return { affectedPagePaths: new Set(blockPagePaths.values()) }
+  // Persist per-page editorial overrides into page_text_overrides. Composite
+  // PK (pagePath, key, locale) makes the upsert safe on rerun.
+  for (const h of pageTextUpserts) {
+    await db
+      .insert(pageTextOverrides)
+      .values(h)
+      .onConflictDoUpdate({
+        target: [pageTextOverrides.pagePath, pageTextOverrides.key, pageTextOverrides.locale],
+        set: { value: h.value, updatedAt: new Date() },
+      })
+  }
+
+  // Product category translations. Skip incomplete rows defensively (every
+  // category should have a label, but a translation can miss it if MT errored
+  // on that one string and we fell back to source).
+  for (const c of prodCatUpserts.values()) {
+    if (!c.label) continue
+    await db
+      .insert(productCategoryTranslations)
+      .values(c)
+      .onConflictDoUpdate({
+        target: [productCategoryTranslations.categoryId, productCategoryTranslations.locale],
+        set: { label: c.label, description: c.description, updatedAt: new Date() },
+      })
+  }
+
+  // Product translations. Same defensive skip on missing name.
+  for (const p of prodUpserts.values()) {
+    if (!p.name) continue
+    await db
+      .insert(productTranslations)
+      .values(p)
+      .onConflictDoUpdate({
+        target: [productTranslations.productId, productTranslations.locale],
+        set: { name: p.name, description: p.description, updatedAt: new Date() },
+      })
+  }
+
+  const affectedPagePaths = new Set<string>([
+    ...blockPagePaths.values(),
+    ...pageTextPagePaths,
+  ])
+
+  return { affectedPagePaths }
 }
 
 export async function generateTranslationsForLocale(
@@ -469,7 +735,10 @@ export async function generateTranslationsForLocale(
       const accumulator: TranslatedBatch = {}
       const affectedPagePaths = new Set<string>()
       let done = 0
-      const PERSIST_EVERY = 15 // flush partial results every N items
+      // Flush partial results every N items. Kept small so the progress bar
+      // moves visibly (every ~1.3s at MyMemory's 260ms pace) rather than
+      // jumping in 4-second steps.
+      const PERSIST_EVERY = 5
       let lastFlushAt = 0
       let quotaHit = false
       let quotaMessage = ''
@@ -490,9 +759,19 @@ export async function generateTranslationsForLocale(
         done++
 
         if (done - lastFlushAt >= PERSIST_EVERY) {
-          const { affectedPagePaths: paths } = await persistTranslations(locale, accumulator)
-          for (const p of paths) affectedPagePaths.add(p)
-          await setJobStatus(job.id, { completedItems: done })
+          // Retry the flush so a transient Neon connection blip doesn't
+          // freeze the bar or push the whole job to "failed". If it still
+          // fails after retries we skip this flush and keep translating —
+          // the final post-loop flush (also retried) picks up the slack.
+          const result = await withRetry('persistTranslations', () =>
+            persistTranslations(locale, accumulator),
+          )
+          if (result) {
+            for (const p of result.affectedPagePaths) affectedPagePaths.add(p)
+          }
+          await withRetry('setJobStatus', () =>
+            setJobStatus(job.id, { completedItems: done }),
+          )
           lastFlushAt = done
         }
       }

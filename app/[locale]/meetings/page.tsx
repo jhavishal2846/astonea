@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 import { getPageText } from '@/lib/cms/page-text'

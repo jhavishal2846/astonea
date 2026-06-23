@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { Reveal } from '@/components/StaggerReveal'
 import type { BlockDescriptor } from '../types'
 
