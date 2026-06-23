@@ -1801,24 +1801,96 @@ const REGISTRY: PageDefaults[] = [
   CORPORATE_GOVERNANCE,
 
   // Hero-only document & disclosure pages
-  docPage(
-    '/group-companies',
-    'Corporate Structure',
-    'Group Companies',
-    'Astonea Labs Limited operates alongside several affiliated entities forming a diversified pharmaceutical and cosmetic group.',
-  ),
-  docPage(
-    '/subsidiaries',
-    'Corporate Structure',
-    'Subsidiaries',
-    "Astonea Labs Limited's subsidiary entities supporting the group's global expansion strategy.",
-  ),
-  docPage(
-    '/governance-policies-codes-and-frameworks',
-    'Governance',
-    'Governance Policies, Codes & Frameworks',
-    "The formal policies, codes, and regulatory frameworks that govern Astonea Labs Limited's operations and ethics.",
-  ),
+  {
+    path: '/group-companies',
+    slots: [
+      ...hero(
+        'Corporate Structure',
+        'Group Companies',
+        'Astonea Labs Limited operates alongside several affiliated entities forming a diversified pharmaceutical and cosmetic group.',
+      ),
+      { key: 'gc.crumb.self', label: 'Breadcrumb label', widget: 'text', defaultValue: 'Group Companies', group: 'Breadcrumb' },
+
+      /* ── Companies grid ────────────────────────────────────────── */
+      { key: 'gc.grid.label', label: 'Grid section label', widget: 'text', defaultValue: 'Corporate Family', group: 'Companies grid' },
+      { key: 'gc.grid.heading', label: 'Grid heading', widget: 'text', defaultValue: 'Entities within the Astonea group', group: 'Companies grid' },
+      { key: 'gc.tag.parent', label: 'Parent-entity tag', widget: 'text', defaultValue: 'Listed', group: 'Tags' },
+      { key: 'gc.tag.subsidiary', label: 'Subsidiary tag', widget: 'text', defaultValue: 'Private', group: 'Tags' },
+      { key: 'gc.tag.associate', label: 'Associate tag', widget: 'text', defaultValue: 'Public', group: 'Tags' },
+      { key: 'gc.tag.nonprofit', label: 'Non-profit tag', widget: 'text', defaultValue: 'Section 8 Company', group: 'Tags' },
+      { key: 'gc.cin_label', label: 'CIN prefix', widget: 'text', defaultValue: 'CIN:', group: 'Cards' },
+      { key: 'gc.cta.view_financials', label: 'View financials CTA', widget: 'text', defaultValue: 'View Financials', group: 'Cards' },
+      { key: 'gc.cta.unavailable', label: 'Financials unavailable label', widget: 'text', defaultValue: 'Financials Unavailable', group: 'Cards' },
+      { key: 'gc.cta.unavailable_tooltip', label: 'Unavailable tooltip', widget: 'text', defaultValue: 'No financials available yet', group: 'Cards' },
+      { key: 'gc.cta.visit_website', label: 'Visit website CTA', widget: 'text', defaultValue: 'Visit website', group: 'Cards' },
+
+      /* ── Group financials ──────────────────────────────────────── */
+      { key: 'gc.financials.label', label: 'Financials section label', widget: 'text', defaultValue: 'Financial Documents', group: 'Group financials' },
+      { key: 'gc.financials.heading', label: 'Financials heading', widget: 'text', defaultValue: 'Group company financials', group: 'Group financials' },
+      { key: 'gc.financials.intro_before', label: 'Intro — before "Financial Results" link', widget: 'text', defaultValue: 'Annual financial statements for each entity within the Astonea group. For Astonea Labs Limited financials, refer to the ', group: 'Group financials' },
+      { key: 'gc.financials.fr_link', label: 'Intro — "Financial Results" link text', widget: 'text', defaultValue: 'Financial Results', group: 'Group financials' },
+      { key: 'gc.financials.intro_middle', label: 'Intro — between links', widget: 'text', defaultValue: ' and ', group: 'Group financials' },
+      { key: 'gc.financials.ar_link', label: 'Intro — "Annual Reports" link text', widget: 'text', defaultValue: 'Annual Reports', group: 'Group financials' },
+      { key: 'gc.financials.intro_after', label: 'Intro — trailing text', widget: 'text', defaultValue: ' pages.', group: 'Group financials' },
+      { key: 'gc.financials.fy_badge', label: 'FY pill badge', widget: 'text', defaultValue: 'FY', group: 'Group financials' },
+      { key: 'gc.financials.pdf_label', label: 'PDF link label', widget: 'text', defaultValue: 'PDF', group: 'Group financials' },
+    ],
+  },
+  {
+    path: '/subsidiaries',
+    slots: [
+      ...hero(
+        'Corporate Structure',
+        'Subsidiaries',
+        "Astonea Labs Limited's subsidiary entities supporting the group's global expansion strategy.",
+      ),
+      { key: 'sub.crumb.self', label: 'Breadcrumb label', widget: 'text', defaultValue: 'Subsidiaries', group: 'Breadcrumb' },
+
+      /* ── Section header ────────────────────────────────────────── */
+      { key: 'sub.section.label', label: 'Section label', widget: 'text', defaultValue: 'Subsidiaries', group: 'Section header' },
+      { key: 'sub.section.heading', label: 'Section heading', widget: 'text', defaultValue: 'Global footprint through subsidiary entities', group: 'Section header' },
+
+      /* ── Astonea LLC card ──────────────────────────────────────── */
+      { key: 'sub.card.badge', label: 'Card badge — type', widget: 'text', defaultValue: 'Wholly Owned Subsidiary', group: 'Astonea LLC card' },
+      { key: 'sub.card.country', label: 'Card badge — country', widget: 'text', defaultValue: 'USA', group: 'Astonea LLC card' },
+      { key: 'sub.card.name', label: 'Subsidiary name', widget: 'text', defaultValue: 'Astonea LLC', group: 'Astonea LLC card' },
+      { key: 'sub.card.subtitle', label: 'Subsidiary subtitle', widget: 'text', defaultValue: 'Wholly Owned Subsidiary — United States of America', group: 'Astonea LLC card' },
+      { key: 'sub.card.body', label: 'Subsidiary description', widget: 'textarea', defaultValue: "Astonea LLC is the wholly owned US subsidiary (WOS) of Astonea Labs Limited, incorporated to support the company's international expansion, distribution, and market development efforts in North America. The establishment of this entity is a significant step in Astonea's vision to become a global pharmaceutical and cosmetic brand.", group: 'Astonea LLC card' },
+      { key: 'sub.card.doc_cta', label: 'Incorporation doc CTA', widget: 'text', defaultValue: 'View Incorporation Document', group: 'Astonea LLC card' },
+      { key: 'sub.card.footer_before_link', label: 'Footer — before SEBI link', widget: 'textarea', defaultValue: 'Parent Company CIN: L24304CH2017PLC041482 — Astonea Labs Limited, Chandigarh, India. For other regulatory filings, refer to ', group: 'Astonea LLC card' },
+      { key: 'sub.card.footer_link', label: 'Footer — SEBI link text', widget: 'text', defaultValue: 'SEBI LODR Reg. 30 Disclosures', group: 'Astonea LLC card' },
+      { key: 'sub.card.footer_after_link', label: 'Footer — trailing text', widget: 'text', defaultValue: '.', group: 'Astonea LLC card' },
+
+      /* ── Context note ──────────────────────────────────────────── */
+      { key: 'sub.note.heading', label: 'Context note heading', widget: 'text', defaultValue: 'Group Company Relationships', group: 'Context note' },
+      { key: 'sub.note.before_link', label: 'Note — before "Group Companies" link', widget: 'text', defaultValue: 'In addition to Astonea LLC, the Astonea group includes several affiliated entities in India. For the complete corporate structure, refer to the ', group: 'Context note' },
+      { key: 'sub.note.link', label: 'Note — "Group Companies" link text', widget: 'text', defaultValue: 'Group Companies', group: 'Context note' },
+      { key: 'sub.note.after_link', label: 'Note — trailing text', widget: 'text', defaultValue: " page and the company's annual reports and regulatory filings.", group: 'Context note' },
+    ],
+  },
+  {
+    path: '/governance-policies-codes-and-frameworks',
+    slots: [
+      ...hero(
+        'Governance',
+        'Governance Policies, Codes & Frameworks',
+        "The formal policies, codes, and regulatory frameworks that govern Astonea Labs Limited's operations and ethics.",
+      ),
+      { key: 'gpcf.crumb.investors', label: 'Breadcrumb — Investors', widget: 'text', defaultValue: 'Investors', group: 'Breadcrumb' },
+      { key: 'gpcf.crumb.self', label: 'Breadcrumb — Governance Policies', widget: 'text', defaultValue: 'Governance Policies', group: 'Breadcrumb' },
+
+      { key: 'gpcf.section.label', label: 'Section label', widget: 'text', defaultValue: 'Categories', group: 'Section header' },
+      { key: 'gpcf.section.heading', label: 'Section heading', widget: 'text', defaultValue: 'Browse governance documents', group: 'Section header' },
+      { key: 'gpcf.card.view', label: 'Card "View" link', widget: 'text', defaultValue: 'View →', group: 'Cards' },
+
+      { key: 'gpcf.cat_0.title', label: 'Category 1 title', widget: 'text', defaultValue: 'Policies', group: 'Categories' },
+      { key: 'gpcf.cat_0.desc', label: 'Category 1 description', widget: 'textarea', defaultValue: 'Board-approved governance policies covering POSH, RPT, succession, board diversity and more.', group: 'Categories' },
+      { key: 'gpcf.cat_1.title', label: 'Category 2 title', widget: 'text', defaultValue: 'Codes', group: 'Categories' },
+      { key: 'gpcf.cat_1.desc', label: 'Category 2 description', widget: 'textarea', defaultValue: 'Codes of conduct governing insider trading, fair disclosure and conduct of Board & Senior Management.', group: 'Categories' },
+      { key: 'gpcf.cat_2.title', label: 'Category 3 title', widget: 'text', defaultValue: 'Frameworks', group: 'Categories' },
+      { key: 'gpcf.cat_2.desc', label: 'Category 3 description', widget: 'textarea', defaultValue: 'Frameworks governing compliance, evaluation and board processes.', group: 'Categories' },
+    ],
+  },
   {
     path: '/meetings',
     slots: [
@@ -2087,12 +2159,64 @@ const REGISTRY: PageDefaults[] = [
     'Newspaper Publications',
     'Statutory financial results and notices of Astonea Labs Limited published in approved newspapers.',
   ),
-  docPage(
-    '/public-offering',
-    'Investor Relations',
-    'Public Offering',
-    'Astonea Labs Limited public offering information — IPO, listing, and capital markets.',
-  ),
+  {
+    path: '/public-offering',
+    slots: [
+      ...hero(
+        'Investor Relations',
+        'Public Offering',
+        'Astonea Labs Limited is a publicly listed company on BSE SME — listed on 3 June 2025 under CIN L24304CH2017PLC041482.',
+      ),
+
+      /* ── Listing overview ──────────────────────────────────────── */
+      { key: 'po.overview.label', label: 'Overview section label', widget: 'text', defaultValue: 'Listing Overview', group: 'Listing overview' },
+      { key: 'po.overview.heading', label: 'Overview heading', widget: 'text', defaultValue: 'BSE-SME on BSE SME since June 2025', group: 'Listing overview' },
+      { key: 'po.overview.body_1', label: 'Overview paragraph 1', widget: 'textarea', defaultValue: "Astonea Labs Limited became a publicly listed company in 2025 — the IPO opened on 27 May 2025, closed on 29 May 2025, and equity shares were listed on the BSE SME platform on 3 June 2025. The listing represented a significant milestone in the company's growth journey, enabling access to public capital markets and enhancing governance transparency.", group: 'Listing overview' },
+      { key: 'po.overview.body_2', label: 'Overview paragraph 2', widget: 'textarea', defaultValue: 'The company is committed to maintaining full compliance with SEBI Listing Obligations and Disclosure Requirements (LODR) Regulations and all applicable securities laws, ensuring continued protection of shareholder interests.', group: 'Listing overview' },
+
+      /* ── Listing details panel ─────────────────────────────────── */
+      { key: 'po.detail_0.label', label: 'Detail 1 label', widget: 'text', defaultValue: 'Company Name', group: 'Listing details' },
+      { key: 'po.detail_0.value', label: 'Detail 1 value', widget: 'text', defaultValue: 'Astonea Labs Limited', group: 'Listing details' },
+      { key: 'po.detail_1.label', label: 'Detail 2 label', widget: 'text', defaultValue: 'CIN', group: 'Listing details' },
+      { key: 'po.detail_1.value', label: 'Detail 2 value', widget: 'text', defaultValue: 'L24304CH2017PLC041482', group: 'Listing details' },
+      { key: 'po.detail_2.label', label: 'Detail 3 label', widget: 'text', defaultValue: 'Listed On', group: 'Listing details' },
+      { key: 'po.detail_2.value', label: 'Detail 3 value', widget: 'text', defaultValue: 'BSE SME (Bombay Stock Exchange)', group: 'Listing details' },
+      { key: 'po.detail_3.label', label: 'Detail 4 label', widget: 'text', defaultValue: 'Date of Listing', group: 'Listing details' },
+      { key: 'po.detail_3.value', label: 'Detail 4 value', widget: 'text', defaultValue: '3 June 2025', group: 'Listing details' },
+      { key: 'po.detail_4.label', label: 'Detail 5 label', widget: 'text', defaultValue: 'Sector', group: 'Listing details' },
+      { key: 'po.detail_4.value', label: 'Detail 5 value', widget: 'text', defaultValue: 'Pharmaceuticals & Cosmetics Manufacturing', group: 'Listing details' },
+      { key: 'po.detail_5.label', label: 'Detail 6 label', widget: 'text', defaultValue: 'Registered Office', group: 'Listing details' },
+      { key: 'po.detail_5.value', label: 'Detail 6 value', widget: 'textarea', defaultValue: 'SCO 321-322, Basement, Sector 35B, Chandigarh — 160022', group: 'Listing details' },
+      { key: 'po.detail_6.label', label: 'Detail 7 label', widget: 'text', defaultValue: 'Compliance Officer', group: 'Listing details' },
+      { key: 'po.detail_6.value', label: 'Detail 7 value', widget: 'text', defaultValue: 'Mr. Ankit Kapoor, Company Secretary', group: 'Listing details' },
+      { key: 'po.detail_7.label', label: 'Detail 8 label', widget: 'text', defaultValue: 'Investor Contact', group: 'Listing details' },
+      { key: 'po.detail_7.value', label: 'Detail 8 value', widget: 'text', defaultValue: 'cs@astonea.org', group: 'Listing details' },
+
+      /* ── Documents section ─────────────────────────────────────── */
+      { key: 'po.docs.label', label: 'Documents section label', widget: 'text', defaultValue: 'Offering Documents', group: 'Documents' },
+      { key: 'po.docs.heading', label: 'Documents heading', widget: 'text', defaultValue: 'IPO & listing documents', group: 'Documents' },
+      { key: 'po.doc_0.title', label: 'Document 1 title', widget: 'text', defaultValue: 'Prospectus', group: 'Documents' },
+      { key: 'po.doc_0.desc', label: 'Document 1 description', widget: 'textarea', defaultValue: 'Final Prospectus dated May 30, 2025 — the definitive offer document for the IPO.', group: 'Documents' },
+      { key: 'po.doc_1.title', label: 'Document 2 title', widget: 'text', defaultValue: 'DRHP', group: 'Documents' },
+      { key: 'po.doc_1.desc', label: 'Document 2 description', widget: 'textarea', defaultValue: 'Draft Red Herring Prospectus dated August 16, 2024 filed with SEBI prior to the IPO.', group: 'Documents' },
+      { key: 'po.doc_2.title', label: 'Document 3 title', widget: 'text', defaultValue: 'RHP', group: 'Documents' },
+      { key: 'po.doc_2.desc', label: 'Document 3 description', widget: 'textarea', defaultValue: 'Red Herring Prospectus dated May 15, 2025 filed with the Registrar of Companies.', group: 'Documents' },
+      { key: 'po.pdf_label', label: 'PDF link label', widget: 'text', defaultValue: 'PDF', group: 'Documents' },
+      { key: 'po.soon_label', label: 'Coming-soon label', widget: 'text', defaultValue: 'Soon', group: 'Documents' },
+
+      /* ── Footer prose ──────────────────────────────────────────── */
+      { key: 'po.footer.before_email', label: 'Footer — before email', widget: 'text', defaultValue: 'For IPO-related queries, contact the Company Secretary at ', group: 'Footer' },
+      { key: 'po.footer.between_email_reg46', label: 'Footer — between email and Reg. 46 link', widget: 'text', defaultValue: '. For ongoing disclosures, refer to ', group: 'Footer' },
+      { key: 'po.footer.reg46_link', label: 'Footer — Reg. 46 link text', widget: 'text', defaultValue: 'SEBI Reg. 46', group: 'Footer' },
+      { key: 'po.footer.between_reg46_reg30', label: 'Footer — between Reg. 46 and Reg. 30 links', widget: 'text', defaultValue: ' and ', group: 'Footer' },
+      { key: 'po.footer.reg30_link', label: 'Footer — Reg. 30 link text', widget: 'text', defaultValue: 'SEBI Reg. 30', group: 'Footer' },
+      { key: 'po.footer.after_reg30', label: 'Footer — trailing text', widget: 'text', defaultValue: ' disclosure pages.', group: 'Footer' },
+
+      /* ── Breadcrumb ─────────────────────────────────────────────── */
+      { key: 'po.crumb.investors', label: 'Breadcrumb — Investors', widget: 'text', defaultValue: 'Investors', group: 'Breadcrumb' },
+      { key: 'po.crumb.self', label: 'Breadcrumb — Public Offering', widget: 'text', defaultValue: 'Public Offering', group: 'Breadcrumb' },
+    ],
+  },
 ]
 
 const BY_PATH: Record<string, PageDefaults> = Object.fromEntries(
@@ -2101,6 +2225,15 @@ const BY_PATH: Record<string, PageDefaults> = Object.fromEntries(
 
 export function getPageDefaults(path: string): PageDefaults | null {
   return BY_PATH[path] ?? null
+}
+
+/**
+ * Read-only view of the full registry. Used by the admin "Generate
+ * translations" flow to walk every page-scoped slot and queue its
+ * `defaultValue` for translation into `page_text_overrides`.
+ */
+export function getAllPageDefaults(): readonly PageDefaults[] {
+  return REGISTRY
 }
 
 /**

@@ -22,6 +22,12 @@ const MYMEMORY_URL = 'https://api.mymemory.translated.net/get'
 const MIN_REQUEST_INTERVAL_MS = 260
 let lastRequestAt = 0
 
+// Hard cap on each MyMemory request so a stalled TCP connection or slow DNS
+// can't freeze the translation loop. Normal responses come back in <500ms;
+// 15 seconds gives plenty of headroom for transient slowness without making
+// the job feel "stuck" on a hung request.
+const FETCH_TIMEOUT_MS = 15_000
+
 // Brand / regulatory tokens that must never be translated.
 const PRESERVE_TOKENS = [
   'Astonea Labs Limited',
@@ -90,6 +96,16 @@ function tokenize(s: string): { masked: string; map: Map<string, string> } {
     return ph
   })
 
+  // 3. ICU message placeholders ({year}, {count, plural, …}). next-intl
+  // substitutes these at render time, so they must survive the round-trip
+  // verbatim — otherwise the rendered string shows literal "{year}" or worse.
+  masked = masked.replace(/\{[^}]+\}/g, (icu) => {
+    const ph = `ICU${id.toString().padStart(3, '0')}ICU`
+    map.set(ph, icu)
+    id++
+    return ph
+  })
+
   return { masked, map }
 }
 
@@ -101,6 +117,11 @@ function detokenize(s: string, map: Map<string, string>): string {
     const re = new RegExp(ph, 'gi')
     out = out.replace(re, tok)
   }
+  // MyMemory occasionally wraps fuzzy translation-memory matches in XLIFF
+  // markers like `<g id="1">…</g>`, `<bpt>`, `<ept>`, `<ph>`. Those leak
+  // into the message catalog and break next-intl's ICU rich-text parser
+  // (INVALID_TAG). Strip them — the inner text is the real translation.
+  out = out.replace(/<\/?\s*(?:g|bpt|ept|ph|sub|it|mrk|x|bx|ex)\b[^>]*>/gi, '')
   return out
 }
 
@@ -160,16 +181,24 @@ export async function translateOne(
   await paceRequest()
 
   let res: Response
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
   try {
     res = await fetch(`${MYMEMORY_URL}?${params.toString()}`, {
       method: 'GET',
       headers: { Accept: 'application/json' },
+      signal: controller.signal,
     })
   } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      throw new TranslationError(`MyMemory request timed out after ${FETCH_TIMEOUT_MS}ms`)
+    }
     throw new TranslationError(
       e instanceof Error ? `MyMemory network error: ${e.message}` : 'MyMemory network error',
       e,
     )
+  } finally {
+    clearTimeout(timer)
   }
 
   if (!res.ok) {

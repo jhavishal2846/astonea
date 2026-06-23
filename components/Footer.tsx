@@ -1,32 +1,33 @@
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
+import { getTranslations } from 'next-intl/server'
 
 const irLinks = [
-  { label: 'SEBI LODR Reg. 46', href: '/sebi-lodr-regulation-46-disclosures' },
-  { label: 'SEBI LODR Reg. 30', href: '/sebi-lodr-regulation-30-disclosures' },
-  { label: 'Financial Results',  href: '/financial-results' },
-  { label: 'Annual Reports',     href: '/annual-reports' },
-  { label: 'Corporate Governance', href: '/corporate-governance' },
-  { label: 'Governance Policies',  href: '/governance-policies-codes-and-frameworks' },
-  { label: 'Public Offering',      href: '/public-offering' },
+  { labelKey: 'footer.link.sebi_lodr_46',         href: '/sebi-lodr-regulation-46-disclosures' },
+  { labelKey: 'footer.link.sebi_lodr_30',         href: '/sebi-lodr-regulation-30-disclosures' },
+  { labelKey: 'footer.link.financial_results',    href: '/financial-results' },
+  { labelKey: 'footer.link.annual_reports',       href: '/annual-reports' },
+  { labelKey: 'footer.link.corporate_governance', href: '/corporate-governance' },
+  { labelKey: 'footer.link.governance_policies',  href: '/governance-policies-codes-and-frameworks' },
+  { labelKey: 'footer.link.public_offering',      href: '/public-offering' },
 ]
 
 const aboutLinks = [
-  { label: 'About Us',             href: '/about-us' },
-  { label: 'Vision & Mission',     href: '/vision-and-mission' },
-  { label: 'Leadership Panel',     href: '/leadership-panel' },
-  { label: 'Board of Directors',   href: '/board-of-directors' },
-  { label: 'Key Milestones',       href: '/key-milestone' },
-  { label: 'Group Companies',      href: '/group-companies' },
-  { label: 'Subsidiaries',         href: '/subsidiaries' },
+  { labelKey: 'footer.link.about_us',           href: '/about-us' },
+  { labelKey: 'footer.link.vision_and_mission', href: '/vision-and-mission' },
+  { labelKey: 'footer.link.leadership_panel',   href: '/leadership-panel' },
+  { labelKey: 'footer.link.board_of_directors', href: '/board-of-directors' },
+  { labelKey: 'footer.link.key_milestones',     href: '/key-milestone' },
+  { labelKey: 'footer.link.group_companies',    href: '/group-companies' },
+  { labelKey: 'footer.link.subsidiaries',       href: '/subsidiaries' },
 ]
 
 const businessLinks = [
-  { label: 'What We Do',             href: '/what-we-do' },
-  { label: 'Manufacturing Facility', href: '/manufacturing-facility' },
-  { label: 'Certifications',         href: '/certifications' },
-  { label: 'CSR',                    href: '/csr' },
-  { label: 'Career',                 href: '/career' },
-  { label: 'Contact Us',             href: '/contact-us' },
+  { labelKey: 'footer.link.what_we_do',       href: '/what-we-do' },
+  { labelKey: 'footer.link.manufacturing',    href: '/manufacturing-facility' },
+  { labelKey: 'footer.link.certifications',   href: '/certifications' },
+  { labelKey: 'footer.link.csr',              href: '/csr' },
+  { labelKey: 'footer.link.career',           href: '/career' },
+  { labelKey: 'footer.link.contact_us',       href: '/contact-us' },
 ]
 
 const socials = [
@@ -59,7 +60,8 @@ const socials = [
   },
 ]
 
-export default function Footer() {
+export default async function Footer() {
+  const t = await getTranslations()
   const year = new Date().getFullYear()
 
   return (
@@ -69,10 +71,10 @@ export default function Footer() {
         <div className="container-wide py-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
             <p className="font-display text-2xl font-semibold text-white text-balance leading-snug">
-              Ready to manufacture with confidence?
+              {t('footer.cta.heading')}
             </p>
             <p className="mt-2 text-sm text-white/50 max-w-sm">
-              Speak with our team about formulation, third-party manufacturing, or investor enquiries.
+              {t('footer.cta.subtext')}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -80,13 +82,13 @@ export default function Footer() {
               href="/contact-us"
               className="inline-flex items-center px-6 py-3 rounded-full bg-accent text-slate-950 text-sm font-bold hover:bg-accent-dark transition-colors whitespace-nowrap"
             >
-              Get in Touch
+              {t('footer.cta.primary')}
             </Link>
             <Link
               href="/what-we-do"
               className="inline-flex items-center px-6 py-3 rounded-full border border-white/20 text-white/80 text-sm font-medium hover:border-white/40 hover:text-white transition-colors whitespace-nowrap"
             >
-              Our Capabilities
+              {t('footer.cta.secondary')}
             </Link>
           </div>
         </div>
@@ -100,15 +102,15 @@ export default function Footer() {
           <div className="col-span-2 lg:col-span-1">
             <div className="mb-5">
               <span className="font-display font-bold text-xl text-white tracking-tight">ASTONEA</span>
-              <span className="block text-[11px] tracking-[0.2em] uppercase text-white/40 mt-0.5">LABS LIMITED</span>
+              <span className="block text-[11px] tracking-[0.2em] uppercase text-white/40 mt-0.5">{t('footer.brand.line2')}</span>
             </div>
             <p className="text-sm leading-relaxed text-white/50 mb-5 max-w-xs">
-              Partnering with you for quality manufacturing and development. Innovative pharma and cosmetics solutions — excellence and reliability in every batch.
+              {t('footer.brand.tagline')}
             </p>
             <address className="text-xs text-white/40 not-italic leading-relaxed">
-              SCO 321-322, Basement, Sector 35B<br />
-              Chandigarh — 160022<br />
-              India
+              {t('footer.brand.address_line1')}<br />
+              {t('footer.brand.address_line2')}<br />
+              {t('footer.brand.address_line3')}
             </address>
             <div className="flex items-center gap-3 mt-6">
               {socials.map((s) => (
@@ -128,12 +130,12 @@ export default function Footer() {
 
           {/* About */}
           <div>
-            <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-white/30">About</p>
+            <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-white/30">{t('footer.col.about')}</p>
             <ul className="space-y-2.5">
               {aboutLinks.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-sm text-white/50 hover:text-white transition-colors">
-                    {l.label}
+                    {t(l.labelKey)}
                   </Link>
                 </li>
               ))}
@@ -142,12 +144,12 @@ export default function Footer() {
 
           {/* Business */}
           <div>
-            <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-white/30">Business</p>
+            <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-white/30">{t('footer.col.business')}</p>
             <ul className="space-y-2.5">
               {businessLinks.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-sm text-white/50 hover:text-white transition-colors">
-                    {l.label}
+                    {t(l.labelKey)}
                   </Link>
                 </li>
               ))}
@@ -156,12 +158,12 @@ export default function Footer() {
 
           {/* Investor Relations */}
           <div>
-            <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-white/30">Investor Relations</p>
+            <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-white/30">{t('footer.col.investor_relations')}</p>
             <ul className="space-y-2.5">
               {irLinks.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="text-sm text-white/50 hover:text-white transition-colors">
-                    {l.label}
+                    {t(l.labelKey)}
                   </Link>
                 </li>
               ))}
@@ -174,17 +176,17 @@ export default function Footer() {
       <div className="border-t border-white/8">
         <div className="container-wide py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/30">
           <p>
-            © {year} Astonea Labs Limited. All rights reserved.
+            {t('footer.copyright', { year })}
           </p>
           <p className="font-mono tracking-wide">
-            CIN: L24304CH2017PLC041482
+            {t('footer.cin')}
           </p>
           <div className="flex items-center gap-5">
             <Link href="/governance-policies-codes-and-frameworks" className="hover:text-white/60 transition-colors">
-              Privacy Policy
+              {t('footer.legal.privacy')}
             </Link>
             <Link href="/governance-policies-codes-and-frameworks" className="hover:text-white/60 transition-colors">
-              Terms of Use
+              {t('footer.legal.terms')}
             </Link>
           </div>
         </div>

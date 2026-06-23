@@ -1,8 +1,22 @@
 'use client'
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import { useMessages } from 'next-intl'
 
 type PageTextMap = Record<string, string>
+
+function lookupMessage(messages: unknown, key: string): string | null {
+  const parts = key.split('.')
+  let cur: unknown = messages
+  for (const p of parts) {
+    if (cur && typeof cur === 'object' && p in (cur as Record<string, unknown>)) {
+      cur = (cur as Record<string, unknown>)[p]
+    } else {
+      return null
+    }
+  }
+  return typeof cur === 'string' && cur.length > 0 ? cur : null
+}
 
 type Ctx = {
   overrides: PageTextMap
@@ -47,16 +61,23 @@ export default function PageTextProvider({
 }
 
 /**
- * Returns a `(key, fallback) => ReactNode` lookup that:
- *   - normal mode: gives back the plain string (override > fallback)
- *   - edit mode:  gives back a `<span data-cms-key=…>` wrapper so the
- *                 in-place editor can attach click-to-edit handlers.
+ * Returns a `(key, fallback) => ReactNode` lookup that resolves in this order:
+ *   1. per-path editorial override from `page_text_overrides` (admin-curated)
+ *   2. next-intl message catalog entry (auto-translated from `ui_strings`)
+ *   3. the English `fallback` passed by the caller
+ *
+ * Edit mode wraps the result in a `<span data-cms-key=…>` so the in-place
+ * editor can attach click-to-edit handlers.
  */
 export function usePageText() {
   const ctx = useContext(PageTextContext)
+  const messages = useMessages()
   return (key: string, fallback: string): ReactNode => {
-    const v = ctx.overrides[key]
-    const value = typeof v === 'string' && v.length > 0 ? v : fallback
+    const override = ctx.overrides[key]
+    const value =
+      typeof override === 'string' && override.length > 0
+        ? override
+        : lookupMessage(messages, key) ?? fallback
     if (!ctx.editMode || !ctx.path) return value
     return (
       <span

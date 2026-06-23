@@ -8,6 +8,17 @@ export function uiStringsTag(locale: string) {
   return `ui-strings:${locale}`
 }
 
+// XLIFF translation-memory markers (`<g id="1">…</g>`, `<bpt>`, etc.) that
+// MyMemory occasionally leaks into the translated payload. next-intl's ICU
+// parser rejects these as `INVALID_TAG`, crashing every page that uses the
+// affected message. Strip defensively at read time so already-saved bad
+// rows can't take the site down.
+const XLIFF_TAG_RE = /<\/?\s*(?:g|bpt|ept|ph|sub|it|mrk|x|bx|ex)\b[^>]*>/gi
+
+function sanitizeMessage(value: string): string {
+  return value.replace(XLIFF_TAG_RE, '')
+}
+
 async function fetchUiStrings(locale: string): Promise<Record<string, string>> {
   try {
     const rows = await db
@@ -15,7 +26,7 @@ async function fetchUiStrings(locale: string): Promise<Record<string, string>> {
       .from(uiStrings)
       .where(eq(uiStrings.locale, locale))
     const out: Record<string, string> = {}
-    for (const r of rows) out[r.key] = r.value
+    for (const r of rows) out[r.key] = sanitizeMessage(r.value)
     return out
   } catch {
     return {}

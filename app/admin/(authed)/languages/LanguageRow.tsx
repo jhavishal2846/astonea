@@ -3,7 +3,12 @@
 import { useState, useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { Language, TranslationJob } from '@/lib/db/schema'
-import { generateTranslationsForLocale, deleteLanguage, setLanguageActive } from './_actions'
+import {
+  cancelTranslationJob,
+  deleteLanguage,
+  generateTranslationsForLocale,
+  setLanguageActive,
+} from './_actions'
 
 export default function LanguageRow({
   lang,
@@ -14,7 +19,7 @@ export default function LanguageRow({
 }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
-  const [confirming, setConfirming] = useState<'delete' | null>(null)
+  const [confirming, setConfirming] = useState<'delete' | 'cancel' | null>(null)
 
   const isDefault = lang.isDefault
   const [errorExpanded, setErrorExpanded] = useState(false)
@@ -136,6 +141,47 @@ export default function LanguageRow({
               >
                 {job?.status === 'running' ? 'Translating…' : 'Generate translations'}
               </button>
+              {(job?.status === 'running' || job?.status === 'queued') && (
+                confirming === 'cancel' ? (
+                  <>
+                    <button
+                      type="button"
+                      disabled={pending}
+                      onClick={() => {
+                        startTransition(async () => {
+                          try {
+                            await cancelTranslationJob(lang.code)
+                            setConfirming(null)
+                            router.refresh()
+                          } catch (e) {
+                            alert(e instanceof Error ? e.message : 'Failed to cancel job')
+                          }
+                        })
+                      }}
+                      className="text-xs font-medium px-3 py-1.5 rounded-full bg-amber-600 text-white hover:bg-amber-700 transition-colors disabled:opacity-50"
+                    >
+                      Confirm cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirming(null)}
+                      className="text-xs text-slate-500 hover:text-slate-700"
+                    >
+                      Back
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={pending}
+                    onClick={() => setConfirming('cancel')}
+                    className="text-xs font-medium px-3 py-1.5 rounded-full text-amber-700 hover:bg-amber-50 transition-colors disabled:opacity-50"
+                    title="Force-fail a stuck running job so you can re-click Generate"
+                  >
+                    Cancel job
+                  </button>
+                )
+              )}
               <button
                 type="button"
                 disabled={pending}

@@ -1,40 +1,32 @@
 /**
- * Baseline English UI strings. These are merged with any `ui_strings` rows in
- * the database — DB values override these. New keys added here are picked up
- * automatically; admins only need to override what they want to customise.
+ * Baseline English UI strings. Merged with `ui_strings` DB rows — DB values
+ * override these. New keys added here are picked up automatically; admins
+ * only need to override what they want to customise.
  *
  * Use dotted keys (namespace.name) so next-intl's `useTranslations(namespace)`
  * groups them naturally.
+ *
+ * Anything that needs to be translated automatically by "Generate
+ * translations" MUST live here — that flow iterates this map and writes
+ * translated values into `ui_strings`.
  */
 export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
-  // Navigation
-  'nav.home':               'Home',
-  'nav.about':              'About Us',
-  'nav.products':           'Products',
-  'nav.what_we_do':         'What We Do',
-  'nav.vision':             'Vision & Mission',
-  'nav.manufacturing':      'Manufacturing Facility',
-  'nav.certifications':     'Certifications',
-  'nav.investors':          'Investors',
-  'nav.governance':         'Governance',
-  'nav.career':             'Career',
-  'nav.contact':            'Contact Us',
-  'nav.leadership':         'Leadership',
-  'nav.csr':                'CSR',
-
-  // CTAs / generic buttons
+  // Generic CTAs / buttons
   'cta.read_more':          'Read more',
-  'cta.learn_more':         'Learn more',
+  'cta.learn_more':         'Learn More',
   'cta.view_all':           'View all',
   'cta.download':           'Download',
   'cta.download_pdf':       'Download PDF',
   'cta.contact_us':         'Contact us',
-  'cta.get_in_touch':       'Get in touch',
+  'cta.get_in_touch':       'Get in Touch',
   'cta.explore':            'Explore',
   'cta.view_pdf':           'PDF',
   'cta.coming_soon':        'Soon',
   'cta.view':               'View',
   'cta.link':               'Link',
+  'cta.skip_to_main':       'Skip to main content',
+  'cta.open_nav':           'Open navigation',
+  'cta.close_nav':          'Close menu',
 
   // Common labels
   'label.search':           'Search',
@@ -48,16 +40,395 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'label.published':        'Published',
   'label.draft':            'Draft',
 
-  // Footer
-  'footer.copyright':       '© Astonea Labs Limited. All rights reserved.',
-  'footer.tagline':         'A BSE-SME listed pharmaceutical and specialty chemicals company.',
-  'footer.quick_links':     'Quick links',
-  'footer.investors':       'Investor relations',
-  'footer.governance':      'Governance',
-  'footer.contact':         'Contact',
-
   // Common page elements
   'common.loading':         'Loading…',
   'common.empty':           'Nothing to show yet.',
   'common.error':           'Something went wrong.',
+
+  // ─── Navbar ─────────────────────────────────────────────────────────────
+  'nav.our_company':                  'Our Company',
+  'nav.investor_relations':           'Investor Relations',
+  'nav.csr':                          'CSR',
+  'nav.career':                       'Career',
+
+  'nav.section.company':              'Company',
+  'nav.section.capabilities':         'Capabilities',
+  'nav.section.disclosures':          'Disclosures',
+  'nav.section.reports':              'Reports',
+  'nav.section.governance':           'Governance',
+  'nav.section.structure':            'Structure',
+
+  'nav.about_us':                     'About us',
+  'nav.vision_and_mission':           'Vision and Mission',
+  'nav.leadership_panel':             'Leadership Panel',
+  'nav.key_milestone':                'Key Milestone',
+  'nav.associate':                    'Associate',
+  'nav.what_we_do':                   'What We do',
+  'nav.products':                     'Products',
+  'nav.manufacturing_facility':       'Manufacturing Facility',
+  'nav.certifications':               'Certifications',
+  'nav.sebi_lodr_46':                 'SEBI LODR - Regulation 46 Disclosures',
+  'nav.sebi_lodr_30':                 'SEBI LODR - Regulation 30 Disclosures',
+  'nav.financial_results':            'Financial Insights',
+  'nav.investor_insights':            'Investor Insights',
+  'nav.annual_reports':               'Annual Reports',
+  'nav.board_of_directors':           'Board of Directors',
+  'nav.corporate_governance':         'Corporate Governance',
+  'nav.governance_policies':          'Governance Policies, Codes & Frameworks',
+  'nav.group_companies':              'Group Companies',
+  'nav.subsidiaries':                 'Subsidiaries',
+  'nav.public_offering':              'Public Offering',
+
+  'nav.aria.main':                    'Main navigation',
+  'nav.aria.home':                    'Astonea Labs — home',
+  'nav.aria.mobile':                  'Mobile navigation',
+
+  // ─── Footer ─────────────────────────────────────────────────────────────
+  'footer.cta.heading':               'Ready to manufacture with confidence?',
+  'footer.cta.subtext':               'Speak with our team about formulation, third-party manufacturing, or investor enquiries.',
+  'footer.cta.primary':               'Get in Touch',
+  'footer.cta.secondary':             'Our Capabilities',
+
+  'footer.brand.line2':               'LABS LIMITED',
+  'footer.brand.tagline':             'Partnering with you for quality manufacturing and development. Innovative pharma and cosmetics solutions — excellence and reliability in every batch.',
+  'footer.brand.address_line1':       'SCO 321-322, Basement, Sector 35B',
+  'footer.brand.address_line2':       'Chandigarh — 160022',
+  'footer.brand.address_line3':       'India',
+
+  'footer.col.about':                 'About',
+  'footer.col.business':              'Business',
+  'footer.col.investor_relations':    'Investor Relations',
+
+  'footer.link.about_us':             'About Us',
+  'footer.link.vision_and_mission':   'Vision & Mission',
+  'footer.link.leadership_panel':     'Leadership Panel',
+  'footer.link.board_of_directors':   'Board of Directors',
+  'footer.link.key_milestones':       'Key Milestones',
+  'footer.link.group_companies':      'Group Companies',
+  'footer.link.subsidiaries':         'Subsidiaries',
+  'footer.link.what_we_do':           'What We Do',
+  'footer.link.manufacturing':        'Manufacturing Facility',
+  'footer.link.certifications':       'Certifications',
+  'footer.link.csr':                  'CSR',
+  'footer.link.career':               'Career',
+  'footer.link.contact_us':           'Contact Us',
+  'footer.link.sebi_lodr_46':         'SEBI LODR Reg. 46',
+  'footer.link.sebi_lodr_30':         'SEBI LODR Reg. 30',
+  'footer.link.financial_results':    'Financial Results',
+  'footer.link.annual_reports':       'Annual Reports',
+  'footer.link.corporate_governance': 'Corporate Governance',
+  'footer.link.governance_policies':  'Governance Policies',
+  'footer.link.public_offering':      'Public Offering',
+
+  'footer.copyright':                 '© {year} Astonea Labs Limited. All rights reserved.',
+  'footer.cin':                       'CIN: L24304CH2017PLC041482',
+  'footer.legal.privacy':             'Privacy Policy',
+  'footer.legal.terms':               'Terms of Use',
+
+  // ─── Home page ──────────────────────────────────────────────────────────
+  // Proof section
+  'home.proof.label':          'Manufacturing Partner',
+  'home.proof.heading':        'Built for brands that need science, speed, and steady supply.',
+  'home.proof.description':    'Astonea Labs Limited is a BSE-SME pharma and cosmetics manufacturer serving founders, exporters, and established labels with GMP-led production and practical launch support.',
+  'home.proof.cta_primary':    'Our Story',
+  'home.proof.cta_secondary':  'Certifications',
+
+  'home.proof.stat_0.value':   '2000',
+  'home.proof.stat_0.suffix':  '+',
+  'home.proof.stat_0.label':   'Client Brands',
+  'home.proof.stat_0.detail':  'Across pharma, wellness, and personal care.',
+  'home.proof.stat_1.value':   '1500',
+  'home.proof.stat_1.suffix':  '+',
+  'home.proof.stat_1.label':   'Product Approvals',
+  'home.proof.stat_1.detail':  'Formulations cleared for commercial launch.',
+  'home.proof.stat_2.value':   '7',
+  'home.proof.stat_2.suffix':  '+',
+  'home.proof.stat_2.label':   'Years of Excellence',
+  'home.proof.stat_2.detail':  'Manufacturing since 2017 in Chandigarh.',
+  'home.proof.stat_3.value':   'Pan-India',
+  'home.proof.stat_3.suffix':  '',
+  'home.proof.stat_3.label':   'Market Reach',
+  'home.proof.stat_3.detail':  'Distributor and export-ready operations.',
+
+  // Capabilities section
+  'home.capabilities.label':    'Capabilities',
+  'home.capabilities.heading':  'One manufacturing floor. Many routes to market.',
+  'home.capabilities.subtext':  'From formulation through packaging and paperwork, the work stays connected: facilities, lab discipline, product handling, and regulatory follow-through all move in one rhythm.',
+  'home.capabilities.cta':      'Learn More',
+
+  'home.capabilities.card_0.kicker': 'Solid dosage',
+  'home.capabilities.card_0.title':  'Pharma tablets and capsules',
+  'home.capabilities.card_0.desc':   'Conventional, coated, enteric, and extended-release dosage formats for dependable batch output.',
+  'home.capabilities.card_1.kicker': 'Formulation breadth',
+  'home.capabilities.card_1.title':  'Liquid and topical lines',
+  'home.capabilities.card_1.desc':   'Syrups, suspensions, drops, creams, ointments, and gels with controlled stability and texture.',
+  'home.capabilities.card_2.kicker': 'Brand-ready SKUs',
+  'home.capabilities.card_2.title':  'Cosmetics and personal care',
+  'home.capabilities.card_2.desc':   'Serums, face wash, lotions, hair care, and white-label launches built around your market position.',
+  'home.capabilities.card_3.kicker': 'Regulatory support',
+  'home.capabilities.card_3.title':  'Compliance and documentation',
+  'home.capabilities.card_3.desc':   'Dossiers, labels, export documentation, certificates, and release discipline handled end to end.',
+
+  // Industries section
+  'home.industries.label':    'Industries We Serve',
+  'home.industries.heading':  'One floor, six product worlds.',
+  'home.industries.subtext':  'Pharma, nutraceutical, cosmetic, and wellness brands share the same GMP-graded production floor — separated by process, joined by the same discipline around batch records, release, and traceability.',
+
+  'home.industries.item_0.name': 'Pharmaceuticals',
+  'home.industries.item_0.desc': 'Tablets, capsules, syrups, dry syrups, and topicals across acute and chronic categories.',
+  'home.industries.item_1.name': 'Nutraceuticals',
+  'home.industries.item_1.desc': 'Vitamins, minerals, protein, and functional supplements built for retail and DTC launches.',
+  'home.industries.item_2.name': 'Cosmetics',
+  'home.industries.item_2.desc': 'Serums, lotions, creams, face wash, and hair care formulated for sensorial brand experience.',
+  'home.industries.item_3.name': 'Ayurveda & Herbal',
+  'home.industries.item_3.desc': 'AYUSH-licensed botanicals, classical formulations, and modern phyto-pharma launches.',
+  'home.industries.item_4.name': 'Veterinary',
+  'home.industries.item_4.desc': 'Animal health tablets, oral suspensions, and feed-grade premixes manufactured to GMP norms.',
+  'home.industries.item_5.name': 'OTC & Wellness',
+  'home.industries.item_5.desc': 'Pain relief, digestives, immunity boosters, and lifestyle SKUs ready for distribution at scale.',
+
+  // Fade chapters (scroll-driven backdrop section)
+  'home.fade.chapter_0.kicker': 'Chapter 01',
+  'home.fade.chapter_0.label':  'Analytical Lab',
+  'home.fade.chapter_1.kicker': 'Chapter 02',
+  'home.fade.chapter_1.label':  'Raw Material QC',
+  'home.fade.chapter_2.kicker': 'Chapter 03',
+  'home.fade.chapter_2.label':  'Sterile Fill',
+  'home.fade.chapter_3.kicker': 'Chapter 04',
+  'home.fade.chapter_3.label':  'Finished Goods',
+
+  // Lab gallery
+  'home.lab.label':    'Inside the Lab',
+  'home.lab.heading':  'Where every batch earns its release.',
+  'home.lab.subtext':  "Walking through the floor — from raw-material assay to sterile fill, sampling, and finished-goods checks. Quality isn't a stamp at the end, it's the discipline you can see at every station.",
+  'home.lab.caption_0': 'Analytical bench, QC release',
+  'home.lab.caption_1': 'Raw material assay',
+  'home.lab.caption_2': 'Finished dosage check',
+  'home.lab.caption_3': 'Sterile fill line',
+  'home.lab.caption_4': 'Liquid injectables',
+  'home.lab.caption_5': 'Stability sampling',
+
+  // Quality / process section
+  'home.quality.label':    'Quality System',
+  'home.quality.heading':  'Digital ambition with GMP discipline underneath.',
+  'home.quality.subtext':  'Clean-room proof meets forward-looking biotech systems, helping each product move from idea to validated output with control.',
+  'home.quality.badge_0':  'WHO-GMP',
+  'home.quality.badge_1':  'ISO 9001:2015',
+  'home.quality.badge_2':  'AYUSH',
+  'home.quality.badge_3':  'FSSAI',
+
+  'home.process.step_0.title':  'Brief and formulation',
+  'home.process.step_0.detail': 'We shape the product spec, claims, ingredients, packaging route, and commercial target.',
+  'home.process.step_1.title':  'Pilot and validation',
+  'home.process.step_1.detail': 'Trial batches, stability checks, quality controls, and documentation tighten the formula before scale.',
+  'home.process.step_2.title':  'GMP manufacturing',
+  'home.process.step_2.detail': 'Controlled rooms, trained operators, and batch records keep production repeatable and audit-ready.',
+  'home.process.step_3.title':  'Dispatch and support',
+  'home.process.step_3.detail': 'Finished goods move with the paperwork, batch traceability, and follow-through your team needs.',
+
+  // Investor section
+  'home.investor.label':         'Investor Relations',
+  'home.investor.heading':       'Listed, documented, and easy to evaluate.',
+  'home.investor.subtext':       'Financial results, annual reports, SEBI disclosures, and governance documents stay accessible for shareholders and market watchers.',
+  'home.investor.cta_primary':   'Financial Results',
+  'home.investor.cta_secondary': 'Annual Reports',
+  'home.investor.cta_tertiary':  'SEBI Disclosures',
+
+  'home.investor.fact_0.label':  'CIN',
+  'home.investor.fact_0.value':  'L24304CH2017PLC041482',
+  'home.investor.fact_1.label':  'Listing',
+  'home.investor.fact_1.value':  'BSE',
+  'home.investor.fact_2.label':  'Sector',
+  'home.investor.fact_2.value':  'Pharma and cosmetics',
+
+  // Final CTA
+  'home.cta.label':     'Start With Astonea',
+  'home.cta.heading':   'Your formulation deserves a sharper manufacturing partner.',
+  'home.cta.subtext':   'Share the product you want to build, the market you want to enter, and the timeline you are working toward. We will help shape the route from formulation to dispatch.',
+  'home.cta.primary':   'Start a Conversation',
+  'home.cta.secondary': 'View Facility',
+
+  // ─── Home — Scroll hero ────────────────────────────────────────────────
+  'home.hero.kicker':            'Inside Astonea Labs · Chandigarh',
+  'home.hero.chapter':           '01 / Manufacturing',
+  'home.hero.cta_primary':       'Explore Capabilities',
+  'home.hero.cta_secondary':     'Enquire Now',
+  'home.hero.tag_0':             'EST. 2017',
+  'home.hero.tag_1':             'BSE-SME LISTED',
+  'home.hero.tag_2':             'WHO-GMP',
+  'home.hero.tag_3':             'ISO 9001:2015',
+  'home.hero.caption_primary':   'Analytical Bench / QC Release',
+  'home.hero.caption_secondary': 'Finished Dosage',
+  'home.hero.scroll_cue':        'Scroll',
+
+  // ─── Contact page ──────────────────────────────────────────────────────
+  'contact.offices.label':         'Our Offices',
+  'contact.offices.heading':       'Find us across North India',
+  'contact.office_0.label':        'Registered Office',
+  'contact.office_0.address':      'SCO 321-322, Basement, Sector 35B\nChandigarh — 160022',
+  'contact.office_1.label':        'Corporate Office',
+  'contact.office_1.address':      'Plot No. 63, Industrial Area Phase-II\nPanchkula, Haryana — 134113',
+  'contact.office_2.label':        'Manufacturing Facility',
+  'contact.office_2.address':      'Vill. Haripur, Tehsil Raipur Rani\nDist. Panchkula, Haryana — 134204',
+
+  'contact.directory_label':       'Contact Directories',
+  'contact.c_0.dept':              'Business Development',
+  'contact.c_0.email':             'bdm.astonea@gmail.com',
+  'contact.c_0.phone':             '+91-9997774840',
+  'contact.c_1.dept':              'Export Enquiries',
+  'contact.c_1.email':             'export@astonea.org',
+  'contact.c_2.dept':              'Procurement',
+  'contact.c_2.email':             'purchase@astonea.org',
+  'contact.c_3.dept':              'Investor Relations',
+  'contact.c_3.email':             'cs@astonea.org',
+  'contact.business_hours':        'Business Hours: Monday – Saturday, 10 AM – 6 PM (IST)',
+
+  'contact.form.label':            'Enquiry Form',
+  'contact.form.heading':          'Send us a message',
+  'contact.form.success_label':    'MESSAGE RECEIVED',
+  'contact.form.success_heading':  'Thank you for reaching out.',
+  'contact.form.success_body':     'Our team will contact you within one business day.',
+  'contact.form.submit':           'Send Enquiry →',
+
+  // ─── Career page ───────────────────────────────────────────────────────
+  'career.why.label':              'Why Astonea',
+  'career.why.heading':            'A place where talent, dedication, and innovation are rewarded',
+
+  'career.why_0.num':              '01',
+  'career.why_0.title':            'State-of-the-Art Facility',
+  'career.why_0.desc':             'Work in a modern GMP-compliant manufacturing environment with advanced production systems and industry-leading equipment.',
+  'career.why_1.num':              '02',
+  'career.why_1.title':            'Stringent Quality Standards',
+  'career.why_1.desc':             'Be part of a culture where WHO-GMP, ISO, and cGMP compliance is not just policy — it is embedded in how we operate every single day.',
+  'career.why_2.num':              '03',
+  'career.why_2.title':            'Diverse Product Range',
+  'career.why_2.desc':             'Engage with a broad portfolio spanning antibiotics, antidiabetics, cardiovascular drugs, cosmetics, and nutraceuticals.',
+  'career.why_3.num':              '04',
+  'career.why_3.title':            'Career Development',
+  'career.why_3.desc':             'Growth opportunities across manufacturing, R&D, quality assurance, regulatory affairs, marketing, supply chain, and corporate functions.',
+  'career.why_4.num':              '05',
+  'career.why_4.title':            'Collaborative Culture',
+  'career.why_4.desc':             'A collaborative, inclusive environment that encourages teamwork, innovation, and continuous professional improvement.',
+  'career.why_5.num':              '06',
+  'career.why_5.title':            'Global Exposure',
+  'career.why_5.desc':             'Involvement in domestic and international operations, USFDA compliance, and global supply chain dynamics.',
+
+  'career.candidates.label':       'Who We Are Looking For',
+  'career.candidates.heading':     'Passionate, ethical, and driven by excellence',
+  'career.trait_0':                'Passionate about pharmaceuticals, cosmetics, manufacturing, quality control, and regulatory compliance',
+  'career.trait_1':                'Eager to learn and innovate in a structured, process-driven environment',
+  'career.trait_2':                'Committed to ethical standards and quality excellence',
+  'career.trait_3':                'Adaptable to dynamic industrial and regulatory settings',
+  'career.trait_4':                'Open to continuous professional development and growth',
+  'career.trait_5':                'Fresh graduates and experienced professionals are both welcome',
+
+  'career.dept_label':             'Departments Hiring',
+  'career.dept_0':                 'Manufacturing & Production',
+  'career.dept_1':                 'Quality Assurance',
+  'career.dept_2':                 'Research & Development',
+  'career.dept_3':                 'Drug Regulatory Affairs',
+  'career.dept_4':                 'Marketing & Sales',
+  'career.dept_5':                 'Supply Chain & Procurement',
+  'career.dept_6':                 'Finance & Accounts',
+  'career.dept_7':                 'Human Resources',
+  'career.dept_8':                 'Corporate Affairs',
+
+  'career.form.label':             'Apply Now',
+  'career.form.heading':           'Ready to join the Astonea team?',
+  'career.form.success_label':     'APPLICATION SUBMITTED',
+  'career.form.success_heading':   "We've received your application.",
+  'career.form.success_body':      'Thank you for your interest. Our HR team will review your application and reach out shortly.',
+  'career.form.submit':            'Submit Application →',
+
+  // ─── Products — landing / catalog / detail ─────────────────────────────
+  // Hero (the /products listing page)
+  'products.hero.title':              'Our Products',
+  'products.hero.subtitle':           'A comprehensive catalog of pharmaceutical, industrial, and specialty chemicals — sourced globally, tested in-house, and shipped worldwide.',
+  'products.hero.tag':                'Full Catalog',
+  'products.breadcrumb.home':         'Home',
+  'products.breadcrumb.products':     'Products',
+
+  // Listing cards
+  'products.card.browse_catalog':     'Browse catalog',
+  'products.card.product_count':      '{count, plural, =0 {No products} one {# product} other {# products}}',
+
+  // Card tag chip labels (heuristic categorisation from slug)
+  'products.tag.Pharmaceutical':      'Pharmaceutical',
+  'products.tag.Industrial':          'Industrial',
+  'products.tag.Specialty':           'Specialty',
+  'products.tag.Reference':           'Reference',
+  'products.tag.FoodGrade':           'Food Grade',
+  'products.tag.DrugDelivery':        'Drug Delivery',
+
+  // Bottom CTA on /products
+  'products.cta.cant_find_heading':   "Can't find what you need?",
+  'products.cta.cant_find_body':      "Our sourcing team can find virtually any chemical compound. Submit a custom request and we'll respond within 24 hours.",
+  'products.cta.custom_sourcing':     'Custom Sourcing Request',
+
+  // Category catalog page chrome
+  'products.catalog.search_placeholder': 'Search by name, CAS, E-number…',
+  'products.catalog.clear_filters':      'Clear filters',
+  'products.catalog.all':                'All',
+  'products.catalog.empty_heading':      'No products found',
+  'products.catalog.empty_filtered':     'Try a different search term, or clear the filters.',
+  'products.catalog.empty_unfiltered':   'This category is empty right now.',
+  'products.catalog.request_quote':      'Request Custom Quote',
+  'products.catalog.view_aria':          'View {name}',
+
+  // Column headers (used by labelForColumn — match category-schemas.ts attribute keys)
+  'products.col.name':                'Product Name',
+  'products.col.subCategory':         'Category',
+  'products.col.casNumber':           'CAS Number',
+  'products.col.grade':               'Grade',
+  'products.col.molecularFormula':    'Molecular Formula',
+  'products.col.molecularWeight':     'Molecular Weight',
+  'products.col.purity':              'Purity',
+  'products.col.appearance':          'Appearance',
+  'products.col.storageConditions':   'Storage Conditions',
+  'products.col.use':                 'Functional Use',
+  'products.col.pelletSize':          'Pellet Size',
+  'products.col.pelletType':          'Pellet Type',
+  'products.col.eNumber':             'E-Number',
+  'products.col.colourIndex':         'Colour Index (C.I.)',
+  'products.col.parentApi':           'Parent API',
+  'products.col.type':                'Type',
+  'products.col.standardisation':     'Standardisation',
+  'products.col.applications':        'Applications',
+  'products.col.packaging':           'Packaging Options',
+
+  // Product detail page
+  'products.detail.overview':          'Product Overview',
+  'products.detail.applications':     'Applications & Uses',
+  'products.detail.specs':            'Technical Specifications',
+  'products.detail.packaging':        'Packaging Options',
+  'products.detail.packaging_note':   'Custom packaging available on request. Minimum order quantities may apply.',
+  'products.detail.spec.cas':         'CAS Number',
+  'products.detail.spec.grade':       'Grade',
+  'products.detail.spec.formula':     'Molecular Formula',
+  'products.detail.spec.weight':      'Molecular Weight',
+  'products.detail.spec.purity':      'Purity',
+  'products.detail.spec.appearance':  'Appearance',
+  'products.detail.spec.storage':     'Storage',
+  'products.detail.spec.category':    'Category',
+  'products.detail.quote.heading':    'Request a Quote',
+  'products.detail.quote.subtext':    'Competitive pricing, COA samples, and full documentation within 24 hours.',
+  'products.detail.quote.enquire':    'Enquire Now',
+  'products.detail.quote.expert':     'Talk to Expert',
+  'products.detail.quote.response':   'Response within 24 business hours',
+  'products.detail.documentation':    'Available Documentation',
+  'products.detail.docs_note':        'Documents available on request after enquiry submission.',
+  'products.detail.related':          'Related Products',
+  'products.detail.back_to':          'Back to {label}',
+  'products.detail.cas_prefix':       'CAS:',
+  'products.detail.subtitle':         'CAS: {cas}  ·  Grade: {grade}  ·  Category: {category}',
+
+  // Document type labels (Certificate of Analysis, etc.) — keyed by abbreviation
+  'products.doc.COA':                 'Certificate of Analysis',
+  'products.doc.MSDS':                'Material Safety Data Sheet',
+  'products.doc.DMF':                 'Drug Master File',
+  'products.doc.CEP_COS':             'Certificate of Suitability',
+  'products.doc.TDS':                 'Technical Data Sheet',
+  'products.doc.COPP':                'Certificate of Pharma Product',
+  'products.doc.FSSAI':               'FSSAI Compliance',
+  'products.doc.WHO_GMP':             'WHO-GMP Certificate',
 }

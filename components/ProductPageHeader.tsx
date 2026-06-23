@@ -1,9 +1,10 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 
 interface Breadcrumb { label: string; href?: string }
 
@@ -42,6 +43,7 @@ export default function ProductPageHeader({
   tag,
   image,
 }: ProductPageHeaderProps) {
+  const t = useTranslations()
   const pathname = usePathname()
   const isDark = variant === 'dark' || variant === 'gradient'
 
@@ -135,7 +137,7 @@ export default function ProductPageHeader({
               href="/"
               className={`transition-colors ${isDark ? 'text-white/60 hover:text-white' : 'text-ink-subtle hover:text-primary'}`}
             >
-              Home
+              {t('products.breadcrumb.home')}
             </Link>
             {breadcrumbs.map((bc, i) => (
               <span key={i} className="flex items-center gap-2">

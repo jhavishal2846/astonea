@@ -1,5 +1,8 @@
 import { pageMeta } from '@/lib/seo/generate-metadata'
-import ProductsPage from './ProductsClient'
+import { getActiveCategories } from '@/lib/products/public-queries'
+import ProductsClient from './ProductsClient'
+
+export const revalidate = 300
 
 export const generateMetadata = () =>
   pageMeta('/products', {
@@ -7,6 +10,16 @@ export const generateMetadata = () =>
     description: 'Astonea Labs product portfolio across APIs, excipients and specialty chemicals.',
   })
 
-export default function Page() {
-  return <ProductsPage />
+export default async function Page() {
+  const categories = await getActiveCategories()
+  return (
+    <ProductsClient
+      categories={categories.map((c) => ({
+        slug: c.slug,
+        label: c.label,
+        description: c.description,
+        productCount: c.productCount,
+      }))}
+    />
+  )
 }

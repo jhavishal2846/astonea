@@ -1,90 +1,92 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/LocaleLink'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import AstoneaLogo from '@/components/AstoneaLogo'
 import LanguageSwitcher, { type LocaleOption } from '@/components/LanguageSwitcher'
 
 /* ─── Nav data ────────────────────────────────────────────────────────────── */
 
-type NavLink = { label: string; href: string; desc?: string }
-type NavSection = { heading: string; links: NavLink[] }
+type NavLink = { labelKey: string; href: string; desc?: string }
+type NavSection = { headingKey: string; links: NavLink[] }
 type NavItem =
-  | { label: string; href: string; mega?: false }
-  | { label: string; href?: string; mega: true; sections: NavSection[] }
+  | { labelKey: string; href: string; mega?: false }
+  | { labelKey: string; href?: string; mega: true; sections: NavSection[] }
 
 const navItems: NavItem[] = [
   {
-    label: 'Our Company',
+    labelKey: 'nav.our_company',
     mega: true,
     sections: [
       {
-        heading: 'Company',
+        headingKey: 'nav.section.company',
         links: [
-          { label: 'About us',          href: '/about-us' },
-          { label: 'Vision and Mission', href: '/vision-and-mission' },
-          { label: 'Leadership Panel',   href: '/leadership-panel' },
-          { label: 'Key Milestone',     href: '/key-milestone' },
-          { label: 'Associate',   href: '/' },
+          { labelKey: 'nav.about_us',           href: '/about-us' },
+          { labelKey: 'nav.vision_and_mission', href: '/vision-and-mission' },
+          { labelKey: 'nav.leadership_panel',   href: '/leadership-panel' },
+          { labelKey: 'nav.key_milestone',      href: '/key-milestone' },
+          { labelKey: 'nav.associate',          href: '/' },
         ],
       },
       {
-        heading: 'Capabilities',
+        headingKey: 'nav.section.capabilities',
         links: [
-          { label: 'What We do',             href: '/what-we-do' },
-          { label: 'Products',               href: '/products' },
-          { label: 'Manufacturing Facility', href: '/manufacturing-facility' },
-          { label: 'Certifications',         href: '/certifications' },
+          { labelKey: 'nav.what_we_do',             href: '/what-we-do' },
+          { labelKey: 'nav.products',               href: '/products' },
+          { labelKey: 'nav.manufacturing_facility', href: '/manufacturing-facility' },
+          { labelKey: 'nav.certifications',         href: '/certifications' },
         ],
       },
     ],
   },
   {
-    label: 'Investor Relations',
+    labelKey: 'nav.investor_relations',
     mega: true,
     sections: [
       {
-        heading: 'Disclosures',
+        headingKey: 'nav.section.disclosures',
         links: [
-          { label: 'SEBI LODR - Regulation 46 Disclosures', href: '/sebi-lodr-regulation-46-disclosures' },
-          { label: 'SEBI LODR - Regulation 30 Disclosures', href: '/sebi-lodr-regulation-30-disclosures' },
+          { labelKey: 'nav.sebi_lodr_46', href: '/sebi-lodr-regulation-46-disclosures' },
+          { labelKey: 'nav.sebi_lodr_30', href: '/sebi-lodr-regulation-30-disclosures' },
         ],
       },
       {
-        heading: 'Reports',
+        headingKey: 'nav.section.reports',
         links: [
-          { label: 'Financial Insights', href: '/financial-results' },
-          { label: 'Investor Insights',  href: '/investor-insights' },
-          { label: 'Annual Reports',     href: '/annual-reports' },
+          { labelKey: 'nav.financial_results',  href: '/financial-results' },
+          { labelKey: 'nav.investor_insights',  href: '/investor-insights' },
+          { labelKey: 'nav.annual_reports',     href: '/annual-reports' },
         ],
       },
       {
-        heading: 'Governance',
+        headingKey: 'nav.section.governance',
         links: [
-          { label: 'Board of Directors', href: '/board-of-directors' },
-          { label: 'Corporate Governance',href: '/corporate-governance' },
-          { label: 'Governance Policies, Codes & Frameworks', href: '/governance-policies-codes-and-frameworks' },
+          { labelKey: 'nav.board_of_directors',   href: '/board-of-directors' },
+          { labelKey: 'nav.corporate_governance', href: '/corporate-governance' },
+          { labelKey: 'nav.governance_policies',  href: '/governance-policies-codes-and-frameworks' },
         ],
       },
       {
-        heading: 'Structure',
+        headingKey: 'nav.section.structure',
         links: [
-          { label: 'Group Companies', href: '/group-companies' },
-          { label: 'Subsidiaries',    href: '/subsidiaries' },
-          { label: 'Public Offering', href: '/public-offering' },
+          { labelKey: 'nav.group_companies', href: '/group-companies' },
+          { labelKey: 'nav.subsidiaries',    href: '/subsidiaries' },
+          { labelKey: 'nav.public_offering', href: '/public-offering' },
         ],
       },
     ],
   },
-  { label: 'CSR',    href: '/csr' },
-  { label: 'Career', href: '/career' },
+  { labelKey: 'nav.csr',    href: '/csr' },
+  { labelKey: 'nav.career', href: '/career' },
 ]
 
 /* ─── Sub-components ─────────────────────────────────────────────────────── */
 
-function NavLinkItem({ href, label, active, transparent }: { href: string; label: string; active: boolean; transparent?: boolean }) {
+function NavLinkItem({ href, labelKey, active, transparent }: { href: string; labelKey: string; active: boolean; transparent?: boolean }) {
+  const t = useTranslations()
   return (
     <Link href={href} className="relative group px-1 py-0.5 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm">
       <span
@@ -96,7 +98,7 @@ function NavLinkItem({ href, label, active, transparent }: { href: string; label
             : 'text-ink/80 group-hover:text-ink'
         }`}
       >
-        {label}
+        {t(labelKey)}
       </span>
       {/* Animated underline */}
       <motion.span
@@ -117,6 +119,7 @@ function MegaMenu({
   sections: NavSection[]
   open: boolean
 }) {
+  const t = useTranslations()
   return (
     <AnimatePresence>
       {open && (
@@ -138,9 +141,9 @@ function MegaMenu({
             }`}
           >
             {sections.map((section) => (
-              <div key={section.heading}>
+              <div key={section.headingKey}>
                 <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink-subtle">
-                  {section.heading}
+                  {t(section.headingKey)}
                 </p>
                 <ul className="space-y-1">
                   {section.links.map((link) => (
@@ -150,7 +153,7 @@ function MegaMenu({
                         className="group flex items-center px-2 py-2 rounded-lg hover:bg-primary-xlight transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       >
                         <span className="text-sm font-medium text-ink group-hover:text-primary transition-colors duration-150">
-                          {link.label}
+                          {t(link.labelKey)}
                         </span>
                       </Link>
                     </li>
@@ -174,6 +177,7 @@ function MobileDrawer({
   open: boolean
   onClose: () => void
 }) {
+  const t = useTranslations()
   const [expanded, setExpanded] = useState<string | null>(null)
 
   useEffect(() => {
@@ -202,7 +206,7 @@ function MobileDrawer({
             exit={{    x: '100%' }}
             transition={{ type: 'spring', stiffness: 340, damping: 38, mass: 0.8 }}
             className="fixed top-0 right-0 bottom-0 z-50 w-80 max-w-[90vw] bg-surface shadow-2xl overflow-y-auto lg:hidden flex flex-col"
-            aria-label="Mobile navigation"
+            aria-label={t('nav.aria.mobile')}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-border">
@@ -211,7 +215,7 @@ function MobileDrawer({
               </Link>
               <button
                 onClick={onClose}
-                aria-label="Close menu"
+                aria-label={t('cta.close_nav')}
                 className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
               >
                 <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -224,23 +228,23 @@ function MobileDrawer({
             <div className="flex-1 py-4 px-4">
               {navItems.map((item) =>
                 item.mega ? (
-                  <div key={item.label}>
+                  <div key={item.labelKey}>
                     <button
-                      onClick={() => setExpanded(expanded === item.label ? null : item.label)}
+                      onClick={() => setExpanded(expanded === item.labelKey ? null : item.labelKey)}
                       className="w-full flex items-center justify-between px-3 py-3 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium text-ink"
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                       <motion.svg
                         className="w-4 h-4 text-ink-subtle"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
-                        animate={{ rotate: expanded === item.label ? 180 : 0 }}
+                        animate={{ rotate: expanded === item.labelKey ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </motion.svg>
                     </button>
                     <AnimatePresence>
-                      {expanded === item.label && (
+                      {expanded === item.labelKey && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
@@ -249,9 +253,9 @@ function MobileDrawer({
                           className="overflow-hidden"
                         >
                           {item.sections.map((section) => (
-                            <div key={section.heading} className="pl-4 pb-2">
+                            <div key={section.headingKey} className="pl-4 pb-2">
                               <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-ink-subtle">
-                                {section.heading}
+                                {t(section.headingKey)}
                               </p>
                               {section.links.map((link) => (
                                 <Link
@@ -260,7 +264,7 @@ function MobileDrawer({
                                   onClick={onClose}
                                   className="block px-3 py-2 rounded-lg text-sm text-ink/80 hover:text-primary hover:bg-primary-xlight transition-colors"
                                 >
-                                  {link.label}
+                                  {t(link.labelKey)}
                                 </Link>
                               ))}
                             </div>
@@ -276,7 +280,7 @@ function MobileDrawer({
                     onClick={onClose}
                     className="block px-3 py-3 rounded-lg text-sm font-medium text-ink hover:text-primary hover:bg-primary-xlight transition-colors"
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </Link>
                 )
               )}
@@ -289,7 +293,7 @@ function MobileDrawer({
                 onClick={onClose}
                 className="flex items-center justify-center w-full px-5 py-3 rounded-full bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
               >
-                Get in Touch
+                {t('cta.get_in_touch')}
               </Link>
             </div>
           </motion.nav>
@@ -308,6 +312,7 @@ export default function Navbar({
   languages?: LocaleOption[]
   currentLocale?: string
 } = {}) {
+  const t = useTranslations()
   const pathname    = usePathname()
   const [open, setOpen] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -381,7 +386,7 @@ export default function Navbar({
 
   return (
     <>
-      <a href="#main-content" className="skip-link">Skip to main content</a>
+      <a href="#main-content" className="skip-link">{t('cta.skip_to_main')}</a>
 
       <motion.header
         className="fixed top-0 left-0 right-0 z-30"
@@ -415,7 +420,7 @@ export default function Navbar({
               {/* Logo */}
               <Link
                 href="/"
-                aria-label="Astonea Labs — home"
+                aria-label={t('nav.aria.home')}
                 className="flex-shrink-0 flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm"
               >
                 <AstoneaLogo
@@ -425,39 +430,39 @@ export default function Navbar({
               </Link>
 
               {/* Desktop nav */}
-              <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
+              <nav className="hidden lg:flex items-center gap-8" aria-label={t('nav.aria.main')}>
                 {navItems.map((item) =>
                   item.mega ? (
                     <div
-                      key={item.label}
+                      key={item.labelKey}
                       className="relative"
-                      onMouseEnter={() => handleMouseEnter(item.label)}
+                      onMouseEnter={() => handleMouseEnter(item.labelKey)}
                       onMouseLeave={handleMouseLeave}
                     >
                       <button
-                        aria-expanded={open === item.label}
+                        aria-expanded={open === item.labelKey}
                         aria-haspopup="true"
                         className={`flex items-center gap-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm transition-colors duration-150 ${
                           transparent ? 'text-white/85 hover:text-white' : 'text-ink/80 hover:text-ink'
                         }`}
                       >
-                        {item.label}
+                        {t(item.labelKey)}
                         <motion.svg
                           className="w-3.5 h-3.5 opacity-60"
                           viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}
-                          animate={{ rotate: open === item.label ? 180 : 0 }}
+                          animate={{ rotate: open === item.labelKey ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                         </motion.svg>
                       </button>
-                      <MegaMenu sections={item.sections} open={open === item.label} />
+                      <MegaMenu sections={item.sections} open={open === item.labelKey} />
                     </div>
                   ) : (
                     <NavLinkItem
                       key={item.href}
                       href={item.href!}
-                      label={item.label}
+                      labelKey={item.labelKey}
                       active={pathname === item.href}
                       transparent={transparent}
                     />
@@ -476,7 +481,7 @@ export default function Navbar({
                   href="/contact-us"
                   className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-primary text-white text-sm font-semibold hover:bg-primary-dark active:scale-95 transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 >
-                  Get in Touch
+                  {t('cta.get_in_touch')}
                 </Link>
               </div>
 
@@ -486,7 +491,7 @@ export default function Navbar({
                   transparent ? 'hover:bg-white/10' : 'hover:bg-black/5'
                 }`}
                 onClick={() => setMobileOpen(true)}
-                aria-label="Open navigation"
+                aria-label={t('cta.open_nav')}
                 aria-expanded={mobileOpen}
               >
                 <svg
