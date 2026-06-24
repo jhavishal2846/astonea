@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Pagination from '@/components/Pagination'
+import { useNavTransition } from '@/app/_nav/AppLink'
 
 /**
  * URL-driven wrapper around the existing public `Pagination` component
@@ -20,6 +21,7 @@ export default function CatalogPagination({
   const router = useRouter()
   const sp = useSearchParams()
   const pathname = usePathname()
+  const [, startNavTransition] = useNavTransition()
 
   return (
     <Pagination
@@ -31,7 +33,9 @@ export default function CatalogPagination({
         if (p > 1) next.set('page', String(p))
         else next.delete('page')
         const qs = next.toString()
-        router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: true })
+        startNavTransition(() => {
+          router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: true })
+        })
       }}
     />
   )

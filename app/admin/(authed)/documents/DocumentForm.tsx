@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
 import { CATEGORY_LABELS, SUBCATEGORY_OPTIONS, ALL_CATEGORIES } from '@/lib/cms/categories'
 import type { DocumentCategory, GroupCompany } from '@/lib/db/schema'
 import { Field, inputClass, selectClass, textareaClass } from '@/app/admin/_components/Field'

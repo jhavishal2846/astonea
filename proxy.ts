@@ -4,6 +4,25 @@ import { getActiveLocaleCodes, DEFAULT_LOCALE } from '@/lib/i18n/locales'
 
 const SESSION_COOKIE = 'astonea_session'
 
+// Middleware runs on every public request. `unstable_cache` is unreliable
+// here (especially in dev), so memoize the locale list at module level with
+// a short TTL — admin language toggles propagate within TTL_MS.
+const LOCALES_TTL_MS = 60_000
+let localesCache: { codes: string[]; expiresAt: number } | null = null
+
+async function getCachedLocaleCodes(): Promise<string[]> {
+  const now = Date.now()
+  if (localesCache && localesCache.expiresAt > now) return localesCache.codes
+  const codes = await getActiveLocaleCodes()
+  localesCache = { codes, expiresAt: now + LOCALES_TTL_MS }
+  return codes
+}
+
+// Kick off the locale fetch as soon as the middleware module loads so the
+// first request doesn't pay the cold DB hit. Silent failure: if the DB isn't
+// ready yet, the request-time call will retry.
+void getCachedLocaleCodes().catch(() => {})
+
 /**
  * This Next.js fork uses `proxy.ts` (the new name for `middleware.ts`).
  *
@@ -41,7 +60,7 @@ export async function proxy(request: NextRequest) {
   // ─── i18n routing ────────────────────────────────────────────────────
   const segments = pathname.split('/').filter(Boolean)
   const first = segments[0] ?? ''
-  const locales = await getActiveLocaleCodes()
+  const locales = await getCachedLocaleCodes()
 
   // URL already carries a non-default locale prefix.
   if (locales.includes(first) && first !== DEFAULT_LOCALE) {

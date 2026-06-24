@@ -1,5 +1,5 @@
 import 'server-only'
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
 import { db } from '@/lib/db'
 import { pageMetadata } from '@/lib/db/schema'
 import { PAGE_REGISTRY } from '@/lib/seo/pages-registry'

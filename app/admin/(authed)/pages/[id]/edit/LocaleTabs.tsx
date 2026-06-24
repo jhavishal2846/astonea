@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import { useNavTransition } from '@/app/_nav/AppLink'
 
 export type LocaleTab = {
   code: string
@@ -26,7 +27,7 @@ export default function LocaleTabs({
   const router = useRouter()
   const pathname = usePathname()
   const sp = useSearchParams()
-  const [pending, startTransition] = useTransition()
+  const [pending, startTransition] = useNavTransition()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const wrapperRef = useRef<HTMLDivElement>(null)

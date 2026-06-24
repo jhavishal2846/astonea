@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
 
 type Props = {
   total: number

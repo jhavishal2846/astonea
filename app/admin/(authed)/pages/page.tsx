@@ -1,5 +1,5 @@
 import 'server-only'
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
 import { db } from '@/lib/db'
 import { pages, pageBlocks } from '@/lib/db/schema'
 import { and, asc, ilike, or, sql, type SQL } from 'drizzle-orm'

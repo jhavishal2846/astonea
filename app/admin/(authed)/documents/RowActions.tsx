@@ -1,7 +1,8 @@
 'use client'
 
 import { useTransition, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
+import NextLink from 'next/link'
 import { deleteDocument, duplicateDocument, togglePublish } from './_actions'
 import { IconCopy, IconEdit, IconExternalLink, IconTrash } from '@/app/admin/_icons'
 import { useToast } from '@/app/admin/_components/Toast'
@@ -84,7 +85,7 @@ export function RowActions({
           <IconExternalLink className="w-3.5 h-3.5" />
         </a>
       )}
-      <Link
+      <NextLink
         href={publicUrl}
         target="_blank"
         rel="noopener noreferrer"
@@ -95,7 +96,7 @@ export function RowActions({
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
           <circle cx="12" cy="12" r="3" />
         </svg>
-      </Link>
+      </NextLink>
       <Link
         href={`/admin/documents/${id}/edit`}
         title="Edit"

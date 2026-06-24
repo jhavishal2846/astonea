@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
 import { asc, desc, sql } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { documents, groupCompanies, users, activityLog } from '@/lib/db/schema'
