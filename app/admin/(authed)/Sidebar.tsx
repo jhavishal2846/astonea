@@ -1,6 +1,8 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
+import { LinkPendingDot } from '@/app/_nav/AppLink'
+import NextLink from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
@@ -108,21 +110,22 @@ export default function Sidebar({
                 `}
               >
                 <Icon className="w-4 h-4 flex-shrink-0" />
-                <span>{link.label}</span>
+                <span className="flex-1">{link.label}</span>
+                <LinkPendingDot />
               </Link>
             )
           })}
         </nav>
 
         <div className="border-t border-white/10 p-3">
-          <Link
+          <NextLink
             href="/"
             target="_blank"
             rel="noopener noreferrer"
             className="block px-3 py-2 rounded-lg text-xs text-slate-400 hover:text-white hover:bg-white/5 transition-colors mb-2"
           >
             ↗ View public site
-          </Link>
+          </NextLink>
 
           <div className="px-3 py-2.5 rounded-lg bg-white/5 flex items-center gap-2.5 mb-2">
             <div className="w-8 h-8 rounded-full bg-primary/30 text-primary-light flex items-center justify-center text-xs font-bold flex-shrink-0">

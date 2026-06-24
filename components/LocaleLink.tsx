@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
 import { useLocale } from 'next-intl'
 import type { ComponentProps } from 'react'
 

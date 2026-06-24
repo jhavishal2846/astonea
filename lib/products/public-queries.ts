@@ -1,6 +1,8 @@
 import 'server-only'
+import { unstable_cache } from 'next/cache'
 import { and, asc, eq, ilike, isNull, ne, or, sql, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
+import { productCategoriesTag, PRODUCTS_ALL_TAG } from '@/lib/cms/cache-tags'
 import {
   languages,
   productCategories,
@@ -37,8 +39,8 @@ export type ActiveCategory = {
   productCount: number
 }
 
-export async function getActiveCategories(): Promise<ActiveCategory[]> {
-  const rows = await db
+async function fetchActiveCategories(): Promise<ActiveCategory[]> {
+  return db
     .select({
       id: productCategories.id,
       slug: productCategories.slug,
@@ -57,9 +59,13 @@ export async function getActiveCategories(): Promise<ActiveCategory[]> {
     .from(productCategories)
     .where(and(eq(productCategories.isActive, true), isNull(productCategories.deletedAt)))
     .orderBy(asc(productCategories.displayOrder), asc(productCategories.label))
-
-  return rows
 }
+
+export const getActiveCategories = unstable_cache(
+  fetchActiveCategories,
+  ['public:active-categories'],
+  { tags: [productCategoriesTag(), PRODUCTS_ALL_TAG], revalidate: 300 },
+)
 
 export async function getCategoryBySlug(slug: string) {
   return (

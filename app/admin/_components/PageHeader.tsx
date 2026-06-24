@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
 
 export type Crumb = { label: string; href?: string }
 

@@ -1,7 +1,8 @@
 'use client'
 
 import { useTransition, useState } from 'react'
-import Link from 'next/link'
+import Link from '@/app/_nav/AppLink'
+import NextLink from 'next/link'
 import {
   duplicateProduct,
   restoreProduct,
@@ -133,7 +134,7 @@ export function RowActions({
   return (
     <div className="flex items-center gap-1">
       {publicUrl && (
-        <Link
+        <NextLink
           href={publicUrl}
           target="_blank"
           rel="noopener noreferrer"
@@ -141,7 +142,7 @@ export function RowActions({
           className="p-1.5 rounded-md text-slate-500 hover:text-primary hover:bg-slate-100 transition-colors"
         >
           <IconExternalLink className="w-3.5 h-3.5" />
-        </Link>
+        </NextLink>
       )}
       <Link
         href={`/admin/products/${id}/edit`}

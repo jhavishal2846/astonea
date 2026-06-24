@@ -24,7 +24,18 @@
       "Bash(winget install *)",
       "Bash(pdftotext \"11th July, 2025.pdf\" -)",
       "Bash(ls \"C:\\\\Users\\\\DELL\\\\Downloads\" | head -50)",
-      "Read(//c/Users/DELL/Downloads/**)"
+      "Read(//c/Users/DELL/Downloads/**)",
+      "Bash(ls \"C:/Users/jhavi/.claude/plans/\" 2>&1 | head -5)",
+      "Read(//c/Users/jhavi/.claude/plans/**)",
+      "Bash(npx tsc *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\dev\\\\astonea\" -Filter \"README*\" -File)",
+      "Read(//c/dev/**)",
+      "Bash(vercel\" 2>/dev/null)",
+      "Bash(grep -r \"Image\" --include=\"*.tsx\" app/\\\\[locale\\\\] --include-dir=components)",
+      "Bash(ls c:/dev/astonea/.github)",
+      "Bash(ls c:/dev/astonea/.claude)",
+      "Bash(ls \"C:/Users/jhavi/.claude/plans/\")",
+      "Bash(ls \"C:/Users/jhavi/.claude/\")"
     ]
   }
 }

@@ -3,6 +3,9 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import { headers } from 'next/headers'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+import './_nav/nav-progress.css'
+import { NavProgressBar, NavProgressProvider } from './_nav/NavProgress'
+import RichTextLinkInterceptor from './_nav/RichTextLinkInterceptor'
 import { DEFAULT_LOCALE } from '@/lib/i18n/locales'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
@@ -90,7 +93,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       className={`${inter.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-bg text-ink font-sans">
-        {children}
+        <NavProgressProvider>
+          <NavProgressBar />
+          <RichTextLinkInterceptor />
+          {children}
+        </NavProgressProvider>
         <Analytics />
       </body>
     </html>
