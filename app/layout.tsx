@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import { headers } from 'next/headers'
-import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import './_nav/nav-progress.css'
 import { NavProgressBar, NavProgressProvider } from './_nav/NavProgress'
 import RichTextLinkInterceptor from './_nav/RichTextLinkInterceptor'
+import SiteAnalytics from './_components/SiteAnalytics'
 import { DEFAULT_LOCALE } from '@/lib/i18n/locales'
 
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
@@ -98,7 +98,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <RichTextLinkInterceptor />
           {children}
         </NavProgressProvider>
-        <Analytics />
+        <SiteAnalytics />
       </body>
     </html>
   )

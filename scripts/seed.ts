@@ -137,12 +137,19 @@ async function seedGroupCompanies() {
 
 type SeedDoc = Omit<NewDocument, 'displayOrder'>
 
+/**
+ * Annual report PDFs >25 MiB cannot live in Worker static assets, so they
+ * were uploaded to R2 under `static/`. Run `npm run migrate:static-to-r2`
+ * before this seed so the bucket has them — the seed only stores URLs.
+ */
+const CDN = 'https://cdn.youngfuel.com'
+
 const annualReports: SeedDoc[] = [
-  { category: 'annual_report', title: 'Annual Report FY 2024–2025', period: 'FY 2024–25', description: 'Consolidated annual report including audited financials, board report, and corporate governance disclosures for FY 2024-25.', fileUrl: '/pdf/Annual Report for the FY 2024-25.pdf' },
-  { category: 'annual_report', title: 'Annual Report FY 2023–2024', period: 'FY 2023–24', description: 'Full-year annual report covering financial performance, CSR activities, and regulatory disclosures for FY 2023-24.', fileUrl: '/pdf/Annual Report FY 2023-24.pdf' },
-  { category: 'annual_report', title: 'Annual Report FY 2022–2023', period: 'FY 2022–23', description: 'Annual report with audited financial statements, director\'s report, and shareholder information for FY 2022-23.', fileUrl: '/pdf/Annual Report FY 2022-23.pdf' },
-  { category: 'annual_report', title: 'Annual Report FY 2021–2022', period: 'FY 2021–22', description: 'Annual report covering the company\'s first full year as a listed entity on BSE.', fileUrl: '/pdf/Annual Report FY 2021-22.pdf' },
-  { category: 'annual_report', title: 'Annual Report FY 2020–2021', period: 'FY 2020–21', description: 'Annual report for FY 2020-21 with audited standalone financial statements and governance disclosures.', fileUrl: '/pdf/Annual Report FY 2020-21.pdf' },
+  { category: 'annual_report', title: 'Annual Report FY 2024–2025', period: 'FY 2024–25', description: 'Consolidated annual report including audited financials, board report, and corporate governance disclosures for FY 2024-25.', fileUrl: `${CDN}/static/annual-report-fy-2024-25.pdf` },
+  { category: 'annual_report', title: 'Annual Report FY 2023–2024', period: 'FY 2023–24', description: 'Full-year annual report covering financial performance, CSR activities, and regulatory disclosures for FY 2023-24.', fileUrl: `${CDN}/static/annual-report-fy-2023-24.pdf` },
+  { category: 'annual_report', title: 'Annual Report FY 2022–2023', period: 'FY 2022–23', description: 'Annual report with audited financial statements, director\'s report, and shareholder information for FY 2022-23.', fileUrl: `${CDN}/static/annual-report-fy-2022-23.pdf` },
+  { category: 'annual_report', title: 'Annual Report FY 2021–2022', period: 'FY 2021–22', description: 'Annual report covering the company\'s first full year as a listed entity on BSE.', fileUrl: `${CDN}/static/annual-report-fy-2021-22.pdf` },
+  { category: 'annual_report', title: 'Annual Report FY 2020–2021', period: 'FY 2020–21', description: 'Annual report for FY 2020-21 with audited standalone financial statements and governance disclosures.', fileUrl: `${CDN}/static/annual-report-fy-2020-21.pdf` },
   { category: 'annual_report', title: 'Annual Report FY 2019–2020', period: 'FY 2019–20', description: 'Annual report for FY 2019-20 with audited standalone financial statements and governance disclosures.', fileUrl: '/pdf/Annual Report FY 2019-20.pdf' },
 ]
 
@@ -150,9 +157,9 @@ const financialResults: SeedDoc[] = [
   // annual
   { category: 'financial_result', subcategory: 'annual', period: 'FY 2024–2025', title: 'Annual Financial Statements', fileUrl: '/pdf/Financial Statements FY 2024-25.pdf' },
   { category: 'financial_result', subcategory: 'annual', period: 'FY 2023–2024', title: 'Annual Financial Statements', fileUrl: '/pdf/Financial Statements FY 2023-24.pdf' },
-  { category: 'financial_result', subcategory: 'annual', period: 'FY 2022–2023', title: 'Annual Financial Statements', fileUrl: '/pdf/Annual Report FY 2022-23.pdf' },
-  { category: 'financial_result', subcategory: 'annual', period: 'FY 2021–2022', title: 'Annual Financial Statements', fileUrl: '/pdf/Annual Report FY 2021-22.pdf' },
-  { category: 'financial_result', subcategory: 'annual', period: 'FY 2020–2021', title: 'Annual Financial Statements', fileUrl: '/pdf/Annual Report FY 2020-21.pdf' },
+  { category: 'financial_result', subcategory: 'annual', period: 'FY 2022–2023', title: 'Annual Financial Statements', fileUrl: `${CDN}/static/annual-report-fy-2022-23.pdf` },
+  { category: 'financial_result', subcategory: 'annual', period: 'FY 2021–2022', title: 'Annual Financial Statements', fileUrl: `${CDN}/static/annual-report-fy-2021-22.pdf` },
+  { category: 'financial_result', subcategory: 'annual', period: 'FY 2020–2021', title: 'Annual Financial Statements', fileUrl: `${CDN}/static/annual-report-fy-2020-21.pdf` },
   // interim & restated
   { category: 'financial_result', subcategory: 'half_yearly', period: 'Half-Yearly — Sep 2025', title: 'Unaudited Financial Results for H1 FY2025-26', fileUrl: '/pdf/financialresults-Half Yearly Result- 30.09.2025.pdf' },
   { category: 'financial_result', subcategory: 'restated', period: 'Restated — Dec 31, 2024', title: 'Restated Financial Statements as at Dec 31, 2024' },

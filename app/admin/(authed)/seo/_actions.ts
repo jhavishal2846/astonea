@@ -3,9 +3,9 @@
 import { revalidatePath, updateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { after } from 'next/server'
-import { put } from '@vercel/blob'
 import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
+import { putObject } from '@/lib/storage'
 import { pageMetadata } from '@/lib/db/schema'
 import { getCurrentUser, type SessionUser } from '@/lib/auth/session'
 import { recordActivity } from '@/lib/cms/audit'
@@ -60,12 +60,8 @@ export async function upsertPageMetadata(
       }
       const safeName = file.name.replace(/[^a-zA-Z0-9._\- ]+/g, '_')
       const key = `og/${Date.now()}-${safeName}`
-      const blob = await put(key, file, {
-        access: 'public',
-        addRandomSuffix: false,
-        contentType: file.type || 'image/png',
-      })
-      ogImage = blob.url
+      const { url } = await putObject(key, file, file.type || 'image/png')
+      ogImage = url
     }
 
     await db
