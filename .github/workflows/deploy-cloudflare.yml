@@ -1,0 +1,54 @@
+name: Deploy to Cloudflare Workers
+
+# Pushes to main auto-deploy. workflow_dispatch lets you trigger manually
+# from the GitHub Actions UI (handy for re-running a failed deploy without
+# making a no-op commit).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time. cancel-in-progress = false means a newer push will
+# wait for the current deploy to finish rather than killing it mid-flight,
+# which is safer (a half-killed wrangler deploy can leave the cache pre-
+# populate step in an inconsistent state).
+concurrency:
+  group: deploy-cloudflare
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build OpenNext bundle
+        run: npm run build:cf
+        env:
+          # Needed for any module that reads process.env at build time
+          # (Drizzle's lazy proxy doesn't, but a stray top-level import
+          # somewhere else might). Cheap to provide; safer to include.
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # Optional: bakes the Cloudflare Web Analytics beacon into the
+          # client bundle. Leave the secret unset until you have the token
+          # — the beacon component just no-ops when undefined.
+          NEXT_PUBLIC_CF_ANALYTICS_TOKEN: ${{ secrets.NEXT_PUBLIC_CF_ANALYTICS_TOKEN }}
+
+      - name: Strip oversized static assets (Workers caps assets at 25 MiB)
+        run: find .open-next/assets -type f -size +25M -delete
+
+      - name: Deploy to Cloudflare Workers
+        run: npm run deploy:cf
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

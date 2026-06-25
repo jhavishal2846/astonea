@@ -1,0 +1,3 @@
+export const production = {"DATABASE_URL":"postgresql://neondb_owner:npg_uv35qaETsMzt@ep-flat-wind-aplcocz9-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require","MYMEMORY_EMAIL":"\"jhavishal523@gmail.com"};
+export const development = {"DATABASE_URL":"postgresql://neondb_owner:npg_uv35qaETsMzt@ep-flat-wind-aplcocz9-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require","MYMEMORY_EMAIL":"\"jhavishal523@gmail.com"};
+export const test = {"DATABASE_URL":"postgresql://neondb_owner:npg_uv35qaETsMzt@ep-flat-wind-aplcocz9-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require","MYMEMORY_EMAIL":"\"jhavishal523@gmail.com"};

@@ -4,8 +4,8 @@ import { revalidatePath, updateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { after } from 'next/server'
 import { eq } from 'drizzle-orm'
-import { put } from '@vercel/blob'
 import { db } from '@/lib/db'
+import { putObject } from '@/lib/storage'
 import { documents, type NewDocument, type DocumentCategory } from '@/lib/db/schema'
 import { getCurrentUser, type SessionUser } from '@/lib/auth/session'
 import { isValidCategory, CATEGORY_LABELS } from '@/lib/cms/categories'
@@ -19,7 +19,7 @@ function invalidateCategory(category: DocumentCategory, entityId?: string | null
 
 export type ActionState = { error?: string; ok?: boolean }
 
-const MAX_UPLOAD_BYTES = 25 * 1024 * 1024 // 25 MB ceiling
+const MAX_UPLOAD_BYTES = 100 * 1024 * 1024 // 100 MB ceiling — matches Workers request-body cap
 
 async function requireAdmin(): Promise<SessionUser> {
   const u = await getCurrentUser()
@@ -52,12 +52,8 @@ async function readFormToValues(formData: FormData) {
     }
     const safeName = file.name.replace(/[^a-zA-Z0-9._\- ]+/g, '_')
     const key = `documents/${Date.now()}-${safeName}`
-    const blob = await put(key, file, {
-      access: 'public',
-      addRandomSuffix: false,
-      contentType: file.type || 'application/pdf',
-    })
-    fileUrl = blob.url
+    const { url } = await putObject(key, file, file.type || 'application/pdf')
+    fileUrl = url
     fileSizeBytes = file.size
   }
 
