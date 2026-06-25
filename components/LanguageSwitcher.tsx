@@ -35,7 +35,7 @@ export default function LanguageSwitcher({
   languages,
   currentLocale,
   transparent,
-}: { 
+}: {
   languages: LocaleOption[]
   currentLocale: string
   transparent?: boolean
