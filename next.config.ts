@@ -16,8 +16,16 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    loader: 'custom',
-    loaderFile: './lib/images/cf-loader.ts',
+    // Cloudflare Image Resizing (which the `cf-loader.ts` custom loader
+    // targets) requires the Workers Paid plan. On the free plan, leave
+    // `unoptimized: true` so <Image> falls back to a plain <img src=...>
+    // and the browser fetches the asset directly.
+    //
+    // To re-enable on paid plan: remove `unoptimized`, add
+    //   loader: 'custom',
+    //   loaderFile: './lib/images/cf-loader.ts',
+    // and confirm Cloudflare Images is enabled for the zone.
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.youngfuel.com' },
       { protocol: 'https', hostname: 'www.youngfuel.com' },
