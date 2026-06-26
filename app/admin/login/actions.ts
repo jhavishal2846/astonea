@@ -7,7 +7,7 @@ import { users } from '@/lib/db/schema'
 import { verifyPassword } from '@/lib/auth/password'
 import { createSession, setSessionCookie } from '@/lib/auth/session'
 
-export type LoginState = { error?: string }
+export type LoginState = { error?: string; email?: string }
 
 export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const email = String(formData.get('email') ?? '').trim().toLowerCase()
@@ -15,14 +15,14 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   const next = String(formData.get('next') ?? '/admin')
 
   if (!email || !password) {
-    return { error: 'Email and password are required.' }
+    return { error: 'Email and password are required.', email }
   }
 
   const row = (await db.select().from(users).where(eq(users.email, email)).limit(1))[0]
-  if (!row) return { error: 'Invalid email or password.' }
+  if (!row) return { error: 'Invalid email or password.', email }
 
   const ok = await verifyPassword(password, row.passwordHash)
-  if (!ok) return { error: 'Invalid email or password.' }
+  if (!ok) return { error: 'Invalid email or password.', email }
 
   const session = await createSession(row.id)
   await setSessionCookie(session.id, session.expiresAt)
