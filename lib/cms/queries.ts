@@ -13,7 +13,6 @@ import {
 } from '@/lib/db/schema'
 import { DOCUMENTS_ALL_TAG, documentsTag } from '@/lib/cms/cache-tags'
 import { DEFAULT_LOCALE } from '@/lib/i18n/locales'
-import { withRetry } from '@/lib/db/retry'
 
 /**
  * Read the current request locale. Safe to call even outside a request scope
@@ -39,21 +38,19 @@ async function overlayTranslations(
 ): Promise<DocumentRow[]> {
   if (locale === DEFAULT_LOCALE || rows.length === 0) return rows
   const ids = rows.map((r) => r.id)
-  const translations = await withRetry(() =>
-    db
-      .select({
-        documentId: documentTranslations.documentId,
-        title: documentTranslations.title,
-        description: documentTranslations.description,
-      })
-      .from(documentTranslations)
-      .where(
-        and(
-          eq(documentTranslations.locale, locale),
-          inArray(documentTranslations.documentId, ids),
-        ),
+  const translations = await db
+    .select({
+      documentId: documentTranslations.documentId,
+      title: documentTranslations.title,
+      description: documentTranslations.description,
+    })
+    .from(documentTranslations)
+    .where(
+      and(
+        eq(documentTranslations.locale, locale),
+        inArray(documentTranslations.documentId, ids),
       ),
-  )
+    )
   if (translations.length === 0) return rows
   const byId = new Map(translations.map((t) => [t.documentId, t]))
   return rows.map((r) => {
@@ -68,13 +65,11 @@ async function overlayTranslations(
 }
 
 async function fetchPublishedByCategory(category: DocumentCategory): Promise<DocumentRow[]> {
-  return withRetry(() =>
-    db
-      .select()
-      .from(documents)
-      .where(and(eq(documents.category, category), eq(documents.isPublished, true)))
-      .orderBy(asc(documents.displayOrder), asc(documents.title))
-  )
+  return db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.category, category), eq(documents.isPublished, true)))
+    .orderBy(asc(documents.displayOrder), asc(documents.title))
 }
 
 /**
@@ -99,13 +94,11 @@ export async function listPublishedByCategory(category: DocumentCategory): Promi
 }
 
 async function fetchReg30Events(): Promise<DocumentRow[]> {
-  return withRetry(() =>
-    db
-      .select()
-      .from(documents)
-      .where(and(eq(documents.category, 'reg30'), eq(documents.isPublished, true)))
-      .orderBy(desc(documents.eventDate), asc(documents.displayOrder))
-  )
+  return db
+    .select()
+    .from(documents)
+    .where(and(eq(documents.category, 'reg30'), eq(documents.isPublished, true)))
+    .orderBy(desc(documents.eventDate), asc(documents.displayOrder))
 }
 
 /**
@@ -134,13 +127,11 @@ export async function listByCategoryByDate(category: DocumentCategory): Promise<
   const locale = await currentLocale()
   const cached = unstable_cache(
     async () => {
-      const rows = await withRetry(() =>
-        db
-          .select()
-          .from(documents)
-          .where(and(eq(documents.category, category), eq(documents.isPublished, true)))
-          .orderBy(desc(documents.eventDate), asc(documents.displayOrder)),
-      )
+      const rows = await db
+        .select()
+        .from(documents)
+        .where(and(eq(documents.category, category), eq(documents.isPublished, true)))
+        .orderBy(desc(documents.eventDate), asc(documents.displayOrder))
       return overlayTranslations(rows, locale)
     },
     ['documents-by-category-by-date', category, locale],
@@ -164,12 +155,10 @@ export async function listPublishedByIds(ids: string[]): Promise<DocumentRow[]> 
   const sortedKey = ids.slice().sort().join(',')
   const cached = unstable_cache(
     async () => {
-      const rows = await withRetry(() =>
-        db
-          .select()
-          .from(documents)
-          .where(and(inArray(documents.id, ids), eq(documents.isPublished, true))),
-      )
+      const rows = await db
+        .select()
+        .from(documents)
+        .where(and(inArray(documents.id, ids), eq(documents.isPublished, true)))
       return overlayTranslations(rows, locale)
     },
     ['documents-by-ids', sortedKey, locale],
@@ -196,9 +185,7 @@ export function groupBySubcategory(rows: DocumentRow[]): GroupedDocs {
 }
 
 async function fetchGroupCompanies(): Promise<GroupCompany[]> {
-  return withRetry(() =>
-    db.select().from(groupCompanies).orderBy(asc(groupCompanies.displayOrder), asc(groupCompanies.name))
-  )
+  return db.select().from(groupCompanies).orderBy(asc(groupCompanies.displayOrder), asc(groupCompanies.name))
 }
 
 export async function listGroupCompanies(): Promise<GroupCompany[]> {
@@ -221,13 +208,11 @@ export async function listGroupCompaniesWithFinancials(): Promise<CompanyWithDoc
   const cached = unstable_cache(
     async () => {
       const companies = await fetchGroupCompanies()
-      const subDocs = await withRetry(() =>
-        db
-          .select()
-          .from(documents)
-          .where(and(eq(documents.category, 'subsidiary_financial'), eq(documents.isPublished, true)))
-          .orderBy(asc(documents.displayOrder)),
-      )
+      const subDocs = await db
+        .select()
+        .from(documents)
+        .where(and(eq(documents.category, 'subsidiary_financial'), eq(documents.isPublished, true)))
+        .orderBy(asc(documents.displayOrder))
       const translated = await overlayTranslations(subDocs, locale)
       const byEntity = new Map<string, DocumentRow[]>()
       for (const d of translated) {

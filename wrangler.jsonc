@@ -14,6 +14,22 @@
     "R2_PUBLIC_BASE": "https://cdn.youngfuel.com"
   },
 
+  // Primary application database. Run `wrangler d1 create astonea-prod` and
+  // paste the returned UUID into `database_id` before the first deploy.
+  // `migrations_dir` points wrangler at the drizzle-kit output so
+  // `wrangler d1 migrations apply DB` is the canonical migrate command.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "astonea-prod",
+      "database_id": "cf61ac36-2d9f-42a4-b5e6-8015a0d7c236",
+      "migrations_dir": "drizzle"
+      // Flip to `"remote": true` (and add Workers Scripts:Edit to the API
+      // token) to make `npm run dev` hit the live remote D1 instead of the
+      // local sqlite file. Default is local — sandboxed, no prod risk.
+    }
+  ],
+
   "r2_buckets": [
     {
       "binding": "R2_UPLOADS",
@@ -29,6 +45,13 @@
     {
       "binding": "NEXT_TAG_CACHE_KV",
       "id": "bd53eb66807241899c6e3bac426a1b55"
+    },
+    // L2 cache for session lookups so authenticated requests don't hit D1 on
+    // every page load. Provision with `wrangler kv namespace create SESSION_CACHE`
+    // and paste the returned id below.
+    {
+      "binding": "SESSION_CACHE",
+      "id": "a88e152a68384f2aaa594ce15802f441"
     }
   ],
 

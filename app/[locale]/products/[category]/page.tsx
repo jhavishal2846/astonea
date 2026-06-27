@@ -14,7 +14,9 @@ import {
   type CategorySchema,
 } from '@/lib/products/category-schemas'
 
-export const revalidate = 300
+// Refresh hourly. Admin saves invalidate via updateTag() in _actions.ts, so
+// stale lists only persist until the next save or this window expires.
+export const revalidate = 3600
 
 const PER_PAGE = 25
 

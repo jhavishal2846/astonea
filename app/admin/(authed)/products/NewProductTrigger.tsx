@@ -2,17 +2,20 @@
 
 import { useState } from 'react'
 import Modal from '@/app/admin/_components/Modal'
-import ProductForm, { type FormLanguage } from './ProductForm'
+import ProductForm, { type FormCategory, type FormLanguage } from './ProductForm'
 import { createProduct } from './_actions'
 import { IconPlus } from '@/app/admin/_icons'
-import { CATEGORY_SCHEMAS, type CategorySlug } from '@/lib/products/category-schemas'
 
 export default function NewProductTrigger({
   presetCategory,
   languages,
+  categories,
+  existingSubCategories,
 }: {
-  presetCategory?: CategorySlug
+  presetCategory?: string
   languages: FormLanguage[]
+  categories: FormCategory[]
+  existingSubCategories: string[]
 }) {
   const [open, setOpen] = useState(false)
 
@@ -35,8 +38,10 @@ export default function NewProductTrigger({
         <ProductForm
           action={createProduct}
           languages={languages}
+          categories={categories}
+          existingSubCategories={existingSubCategories}
           initialValue={{
-            categorySlug: presetCategory ?? (Object.keys(CATEGORY_SCHEMAS)[0] as CategorySlug),
+            categorySlug: presetCategory ?? categories[0]?.slug,
             status: 'draft',
             displayOrder: 0,
           }}

@@ -1,4 +1,5 @@
-import { and, desc, ilike, or, sql, type SQL } from 'drizzle-orm'
+import { and, desc, or, sql, type SQL } from 'drizzle-orm'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import { db } from '@/lib/db'
 import { activityLog } from '@/lib/db/schema'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
@@ -27,16 +28,16 @@ export default async function ActivityPage({
     // excluded from text search.
     conditions.push(
       or(
-        ilike(activityLog.entityTitle, like),
-        ilike(activityLog.detail, like),
-        ilike(activityLog.userEmail, like),
+        ilikeCi(activityLog.entityTitle, like),
+        ilikeCi(activityLog.detail, like),
+        ilikeCi(activityLog.userEmail, like),
       )!,
     )
   }
   const where = conditions.length ? and(...conditions) : undefined
 
   const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(activityLog)
     .where(where)
   const total = count ?? 0

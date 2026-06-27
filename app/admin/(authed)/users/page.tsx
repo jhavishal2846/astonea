@@ -1,4 +1,5 @@
-import { and, asc, ilike, or, sql, type SQL } from 'drizzle-orm'
+import { and, asc, or, sql, type SQL } from 'drizzle-orm'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import { db } from '@/lib/db'
 import { users } from '@/lib/db/schema'
 import { getCurrentUser } from '@/lib/auth/session'
@@ -26,13 +27,13 @@ export default async function AdminUsersPage({
   const conditions: SQL[] = []
   if (search) {
     const like = `%${search}%`
-    conditions.push(or(ilike(users.email, like), ilike(users.name, like))!)
+    conditions.push(or(ilikeCi(users.email, like), ilikeCi(users.name, like))!)
   }
   const where = conditions.length ? and(...conditions) : undefined
 
   const me = await getCurrentUser()
   const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(users)
     .where(where)
   const total = count ?? 0

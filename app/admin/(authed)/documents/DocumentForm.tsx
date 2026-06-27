@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useEffect, useMemo, useState } from 'react'
 import Link from '@/app/_nav/AppLink'
 import { CATEGORY_LABELS, SUBCATEGORY_OPTIONS, ALL_CATEGORIES } from '@/lib/cms/categories'
 import type { DocumentCategory, GroupCompany } from '@/lib/db/schema'
@@ -30,6 +30,7 @@ export default function DocumentForm({
   action,
   initialValue,
   groupCompanies,
+  existingSubcategoriesByCategory = {},
   submitLabel,
   onSuccess,
   successMessage = 'Document saved',
@@ -38,6 +39,8 @@ export default function DocumentForm({
   action: (prev: ActionState, formData: FormData) => Promise<ActionState>
   initialValue?: DocumentDraft
   groupCompanies: Pick<GroupCompany, 'id' | 'name'>[]
+  /** Distinct subcategory values per document category — surfaced as datalist suggestions. */
+  existingSubcategoriesByCategory?: Partial<Record<DocumentCategory, string[]>>
   submitLabel: string
   onSuccess?: () => void
   successMessage?: string
@@ -60,6 +63,15 @@ export default function DocumentForm({
   const showEventDate = category === 'reg30'
   const showEntity = category === 'subsidiary_financial'
 
+  // Datalist combines schema-suggested values with any other distinct values
+  // seen in the DB for the current category.
+  const subcatSuggestions = useMemo(() => {
+    const schema = subcatOptions.map((o) => o.value)
+    const fromDb = existingSubcategoriesByCategory[category] ?? []
+    const extras = fromDb.filter((s) => !schema.includes(s))
+    return { schema: subcatOptions, extras }
+  }, [subcatOptions, existingSubcategoriesByCategory, category])
+
   return (
     <form action={formAction} className="space-y-8" encType="multipart/form-data">
       {/* Section: Classification */}
@@ -81,21 +93,30 @@ export default function DocumentForm({
             </select>
           </Field>
 
-          {subcatOptions.length > 0 && (
-            <Field label="Subcategory" htmlFor="subcategory">
-              <select
-                id="subcategory"
-                name="subcategory"
-                defaultValue={initialValue?.subcategory ?? ''}
-                className={selectClass}
-              >
-                <option value="">— None —</option>
-                {subcatOptions.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-            </Field>
-          )}
+          <Field
+            label="Subcategory"
+            help="Free text. Suggestions show schema-defined buckets plus any other values already used in this category."
+            htmlFor="subcategory"
+          >
+            <input
+              id="subcategory"
+              name="subcategory"
+              list={`subcategory-suggestions-${category}`}
+              defaultValue={initialValue?.subcategory ?? ''}
+              key={category}
+              className={inputClass}
+              placeholder={subcatOptions[0]?.label ?? 'e.g. quarterly'}
+              autoComplete="off"
+            />
+            <datalist id={`subcategory-suggestions-${category}`}>
+              {subcatSuggestions.schema.map((o) => (
+                <option key={`schema-${o.value}`} value={o.value} label={o.label} />
+              ))}
+              {subcatSuggestions.extras.map((s) => (
+                <option key={`db-${s}`} value={s} />
+              ))}
+            </datalist>
+          </Field>
 
           {showEntity && (
             <Field label="Group company" required htmlFor="entityId">

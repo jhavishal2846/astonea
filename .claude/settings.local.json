@@ -35,7 +35,19 @@
       "Bash(ls c:/dev/astonea/.github)",
       "Bash(ls c:/dev/astonea/.claude)",
       "Bash(ls \"C:/Users/jhavi/.claude/plans/\")",
-      "Bash(ls \"C:/Users/jhavi/.claude/\")"
+      "Bash(ls \"C:/Users/jhavi/.claude/\")",
+      "Bash(findstr /i \"international\\\\|language\\\\|locale\")",
+      "Bash(ls c:\\\\dev\\\\astonea\\\\drizzle)",
+      "Bash(ls c:\\\\dev\\\\astonea\\\\drizzle\\\\meta)",
+      "Bash(dir c:\\\\dev\\\\astonea\\\\drizzle 2>nul)",
+      "Bash(dir c:\\\\dev\\\\astonea\\\\drizzle)",
+      "Bash(mkdir -p \"/c/Users/jhavi/.claude/plans\" 2>&1 | head -3; ls \"/c/Users/jhavi/.claude/plans\" 2>&1 | head -5)",
+      "Bash(awk '{print $3}')",
+      "Bash(sed \"s/=.*//\")"
+    ],
+    "additionalDirectories": [
+      "C:\\dev\\astonea",
+      "C:\\Users\\jhavi\\.claude\\plans"
     ]
   }
 }

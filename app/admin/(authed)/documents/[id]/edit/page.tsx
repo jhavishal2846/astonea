@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { asc, eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import { documents, groupCompanies } from '@/lib/db/schema'
+import { documents, groupCompanies, type DocumentCategory } from '@/lib/db/schema'
 import DocumentForm from '../../DocumentForm'
 import { updateDocument, type ActionState } from '../../_actions'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
@@ -18,10 +18,29 @@ export default async function EditDocumentPage({
   const row = (await db.select().from(documents).where(eq(documents.id, id)).limit(1))[0]
   if (!row) notFound()
 
-  const companies = await db
-    .select({ id: groupCompanies.id, name: groupCompanies.name })
-    .from(groupCompanies)
-    .orderBy(asc(groupCompanies.displayOrder))
+  const [companies, subcatRows] = await Promise.all([
+    db
+      .select({ id: groupCompanies.id, name: groupCompanies.name })
+      .from(groupCompanies)
+      .orderBy(asc(groupCompanies.displayOrder)),
+    db
+      .selectDistinct({
+        category: documents.category,
+        subcategory: documents.subcategory,
+      })
+      .from(documents),
+  ])
+
+  const existingSubcategoriesByCategory = subcatRows.reduce<Partial<Record<DocumentCategory, string[]>>>(
+    (acc, r) => {
+      if (!r.subcategory) return acc
+      const bucket = acc[r.category] ?? []
+      if (!bucket.includes(r.subcategory)) bucket.push(r.subcategory)
+      acc[r.category] = bucket
+      return acc
+    },
+    {},
+  )
 
   const boundUpdate = async (prev: ActionState, formData: FormData) => {
     'use server'
@@ -58,6 +77,7 @@ export default async function EditDocumentPage({
             isPublished: row.isPublished,
           }}
           groupCompanies={companies}
+          existingSubcategoriesByCategory={existingSubcategoriesByCategory}
           submitLabel="Save changes"
         />
       </div>

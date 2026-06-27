@@ -16,7 +16,6 @@ import {
 } from '@/lib/cms/blocks'
 import { pageTag, pageLocaleTag } from '@/lib/cms/pages'
 import { DEFAULT_LOCALE } from '@/lib/i18n/locales'
-import { withRetry } from '@/lib/db/retry'
 
 export type ActionState = { error?: string; ok?: boolean }
 
@@ -113,15 +112,18 @@ export async function restorePageVersion(versionId: string) {
 
   await db.delete(pageBlocks).where(eq(pageBlocks.pageId, version.pageId))
   if (blocksToRestore.length > 0) {
-    await db.insert(pageBlocks).values(
-      blocksToRestore.map((b) => ({
-        pageId: version.pageId,
-        blockType: b.blockType,
-        displayOrder: b.displayOrder,
-        isLocked: b.isLocked,
-        props: b.props as Record<string, unknown>,
-      })),
-    )
+    const rows = blocksToRestore.map((b) => ({
+      pageId: version.pageId,
+      blockType: b.blockType,
+      displayOrder: b.displayOrder,
+      isLocked: b.isLocked,
+      props: b.props as Record<string, unknown>,
+    }))
+    // D1 caps bound params at 100/statement; pageBlocks has 8 cols → 12 rows/batch
+    const CHUNK = 12
+    for (let i = 0; i < rows.length; i += CHUNK) {
+      await db.insert(pageBlocks).values(rows.slice(i, i + CHUNK))
+    }
   }
 
   const path = await getPagePath(version.pageId)

@@ -32,13 +32,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Apply D1 migrations
+        # D1 tracks applied migrations in its own system table, so this is
+        # idempotent — no-op when there's nothing new to apply.
+        run: npx wrangler d1 migrations apply DB --remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
       - name: Build OpenNext bundle
         run: npm run build:cf
         env:
-          # Needed for any module that reads process.env at build time
-          # (Drizzle's lazy proxy doesn't, but a stray top-level import
-          # somewhere else might). Cheap to provide; safer to include.
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           # Optional: bakes the Cloudflare Web Analytics beacon into the
           # client bundle. Leave the secret unset until you have the token
           # — the beacon component just no-ops when undefined.

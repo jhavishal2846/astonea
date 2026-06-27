@@ -64,10 +64,26 @@ function slugify(s: string): string {
     .replace(/-+/g, '-')
 }
 
-function getSchemaOrThrow(slug: string): CategorySchema {
-  const schema = (CATEGORY_SCHEMAS as Record<string, CategorySchema>)[slug]
-  if (!schema) throw new Error(`Unknown category: ${slug}`)
-  return schema
+/**
+ * Categories are DB-driven. When a category exists in productCategories but has
+ * no entry in CATEGORY_SCHEMAS, fall back to a bare-bones schema with no
+ * category-specific attributes — the product still works, it just has only the
+ * universal fields (name, description, synonyms, slug, status). Adding a code
+ * schema later lights up the per-category attribute fields without any data
+ * migration.
+ */
+function getSchema(slug: string): CategorySchema {
+  const existing = (CATEGORY_SCHEMAS as Record<string, CategorySchema>)[slug]
+  if (existing) return existing
+  return {
+    slug,
+    label: slug,
+    subCategories: [],
+    attributes: [],
+    listingColumns: ['name', 'subCategory'],
+    filters: [],
+    searchableAttributes: [],
+  }
 }
 
 /**
@@ -77,7 +93,7 @@ function getSchemaOrThrow(slug: string): CategorySchema {
  */
 async function readFormToValues(formData: FormData, opts?: { existingSlug?: string }) {
   const categorySlug = String(formData.get('categorySlug') ?? '')
-  const schema = getSchemaOrThrow(categorySlug)
+  const schema = getSchema(categorySlug)
 
   const name = String(formData.get('name') ?? '').trim()
   if (!name) throw new Error('Name is required')
@@ -190,7 +206,7 @@ async function defaultLocale(): Promise<string> {
 async function ensureCategoryRow(slug: string) {
   const existing = (await db.select().from(productCategoriesTable).where(eq(productCategoriesTable.slug, slug)).limit(1))[0]
   if (existing) return existing
-  const schema = getSchemaOrThrow(slug)
+  const schema = getSchema(slug)
   const [row] = await db
     .insert(productCategoriesTable)
     .values({

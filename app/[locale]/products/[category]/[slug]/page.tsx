@@ -11,7 +11,9 @@ import { getCategorySchema } from '@/lib/products/category-schemas'
 import type { DocumentType, ProductDetail } from '@/lib/products/types'
 import ProductDetailClient from './ProductDetailClient'
 
-export const revalidate = 300
+// Refresh hourly. Admin saves invalidate via updateTag() in _actions.ts, so
+// stale detail pages only persist until the next save or this window expires.
+export const revalidate = 3600
 
 type Params = { locale: string; category: string; slug: string }
 

@@ -1,7 +1,8 @@
 import Link from '@/app/_nav/AppLink'
-import { and, asc, eq, or, ilike, sql, type SQL } from 'drizzle-orm'
+import { and, asc, eq, or, sql, type SQL } from 'drizzle-orm'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import { db } from '@/lib/db'
-import { documents, groupCompanies } from '@/lib/db/schema'
+import { documents, groupCompanies, type DocumentCategory } from '@/lib/db/schema'
 import { CATEGORY_LABELS, CATEGORY_PLURAL, SUBCATEGORY_LABELS, ALL_CATEGORIES, isValidCategory } from '@/lib/cms/categories'
 import { publicUrlForCategory } from '@/lib/cms/public-urls'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
@@ -31,16 +32,16 @@ export default async function DocumentsListPage({
     const like = `%${search}%`
     conditions.push(
       or(
-        ilike(documents.title, like),
-        ilike(documents.period, like),
-        ilike(documents.fileUrl, like),
+        ilikeCi(documents.title, like),
+        ilikeCi(documents.period, like),
+        ilikeCi(documents.fileUrl, like),
       )!,
     )
   }
   const where = conditions.length ? and(...conditions) : undefined
 
   const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(documents)
     .where(where)
   const total = count ?? 0
@@ -48,7 +49,7 @@ export default async function DocumentsListPage({
   const page = Math.min(Math.max(1, requested), totalPages)
   const offset = (page - 1) * PER_PAGE
 
-  const [rows, companies] = await Promise.all([
+  const [rows, companies, subcatRows] = await Promise.all([
     db
       .select({
         id: documents.id,
@@ -72,7 +73,26 @@ export default async function DocumentsListPage({
       .select({ id: groupCompanies.id, name: groupCompanies.name })
       .from(groupCompanies)
       .orderBy(asc(groupCompanies.displayOrder)),
+    // Distinct (category, subcategory) pairs already in use — surfaced as
+    // datalist suggestions in DocumentForm.
+    db
+      .selectDistinct({
+        category: documents.category,
+        subcategory: documents.subcategory,
+      })
+      .from(documents),
   ])
+
+  const existingSubcategoriesByCategory = subcatRows.reduce<Partial<Record<DocumentCategory, string[]>>>(
+    (acc, r) => {
+      if (!r.subcategory) return acc
+      const bucket = acc[r.category] ?? []
+      if (!bucket.includes(r.subcategory)) bucket.push(r.subcategory)
+      acc[r.category] = bucket
+      return acc
+    },
+    {},
+  )
 
   const exportHref = `/admin/documents/export.csv?${activeCategory ? `category=${activeCategory}&` : ''}${search ? `q=${encodeURIComponent(search)}` : ''}`
 
@@ -97,6 +117,7 @@ export default async function DocumentsListPage({
             <NewDocumentTrigger
               groupCompanies={companies}
               presetCategory={activeCategory ?? undefined}
+              existingSubcategoriesByCategory={existingSubcategoriesByCategory}
             />
           </>
         }
