@@ -1,20 +1,24 @@
 /**
- * Seed Neon Postgres with the existing hardcoded CMS data.
+ * Seed the local D1 database with the hardcoded CMS data.
  *
  * Run with: `npm run seed`
  *
  * The script is idempotent:
  *   - Admin user is upserted by email.
  *   - Group companies are upserted by slug.
- *   - Documents are upserted by (category, title) — re-running won't dupe rows.
+ *   - Documents are upserted by (category, title, period, entityId).
  *
- * Requires DATABASE_URL in .env.local. If ADMIN_EMAIL + ADMIN_PASSWORD are
- * set, the first admin is created/refreshed automatically.
+ * Talks to the local D1 SQLite file directly via better-sqlite3 — make sure
+ * `npm run db:migrate:local` has been run first so the schema exists.
+ *
+ * If ADMIN_EMAIL + ADMIN_PASSWORD are set the first admin is upserted too.
  */
 import { and, eq, isNull, type SQL } from 'drizzle-orm'
-import { db } from '../lib/db'
+import { openLocalDb } from '../lib/db/script-client'
 import { documents, groupCompanies, languages, users, type NewDocument } from '../lib/db/schema'
 import { hashPassword } from '../lib/auth/password'
+
+const db = openLocalDb()
 
 /* ─── Admin bootstrap ────────────────────────────────────────────────────── */
 

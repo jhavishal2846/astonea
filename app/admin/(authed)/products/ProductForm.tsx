@@ -5,13 +5,37 @@ import Link from '@/app/_nav/AppLink'
 import {
   CATEGORY_SCHEMAS,
   type CategorySchema,
-  type CategorySlug,
 } from '@/lib/products/category-schemas'
 import type { ProductStatus } from '@/lib/db/schema'
 import { Field, inputClass, selectClass, textareaClass } from '@/app/admin/_components/Field'
 import { useToast } from '@/app/admin/_components/Toast'
 import DynamicField from './DynamicField'
 import type { ActionState } from './_actions'
+
+/** DB-driven category entry. Slug must be present; label is shown in the dropdown. */
+export type FormCategory = {
+  slug: string
+  label: string
+}
+
+/**
+ * Fall back to a bare-bones schema when a DB category has no matching code
+ * schema. The form still renders — it just skips the category-specific
+ * attribute section. Mirrors `getSchema()` in [_actions.ts](./_actions.ts).
+ */
+function schemaFor(slug: string, label: string): CategorySchema {
+  const existing = (CATEGORY_SCHEMAS as Record<string, CategorySchema>)[slug]
+  if (existing) return existing
+  return {
+    slug,
+    label,
+    subCategories: [],
+    attributes: [],
+    listingColumns: ['name', 'subCategory'],
+    filters: [],
+    searchableAttributes: [],
+  }
+}
 
 const initial: ActionState = {}
 
@@ -59,6 +83,8 @@ export default function ProductForm({
   action,
   initialValue,
   languages,
+  categories,
+  existingSubCategories = [],
   submitLabel,
   onSuccess,
   successMessage = 'Product saved',
@@ -68,6 +94,10 @@ export default function ProductForm({
   action: (prev: ActionState, formData: FormData) => Promise<ActionState>
   initialValue?: ProductDraft
   languages: FormLanguage[]
+  /** Active categories from productCategories table. First one is selected by default. */
+  categories: FormCategory[]
+  /** Distinct sub-category values already used in productToCategories — surfaced as datalist suggestions. */
+  existingSubCategories?: string[]
   submitLabel: string
   onSuccess?: () => void
   successMessage?: string
@@ -75,12 +105,16 @@ export default function ProductForm({
   cancelHref?: string
 }) {
   const [state, formAction, pending] = useActionState(action, initial)
-  const [categorySlug, setCategorySlug] = useState<CategorySlug>(
-    (initialValue?.categorySlug as CategorySlug) ??
-      (Object.keys(CATEGORY_SCHEMAS)[0] as CategorySlug),
+  const firstCategorySlug = categories[0]?.slug ?? ''
+  const [categorySlug, setCategorySlug] = useState<string>(
+    initialValue?.categorySlug ?? firstCategorySlug,
   )
   const toast = useToast()
-  const schema: CategorySchema = CATEGORY_SCHEMAS[categorySlug]
+  const currentCategory = categories.find((c) => c.slug === categorySlug)
+  const schema: CategorySchema = useMemo(
+    () => schemaFor(categorySlug, currentCategory?.label ?? categorySlug),
+    [categorySlug, currentCategory?.label],
+  )
 
   const defaultLang = useMemo(
     () => languages.find((l) => l.isDefault) ?? languages[0],
@@ -151,28 +185,46 @@ export default function ProductForm({
               <select
                 id="categorySlug-picker"
                 value={categorySlug}
-                onChange={(e) => setCategorySlug(e.target.value as CategorySlug)}
+                onChange={(e) => setCategorySlug(e.target.value)}
                 className={selectClass}
               >
-                {Object.values(CATEGORY_SCHEMAS).map((c) => (
+                {categories.length === 0 && (
+                  <option value="" disabled>
+                    No categories — create one in /admin/products/categories first
+                  </option>
+                )}
+                {categories.map((c) => (
                   <option key={c.slug} value={c.slug}>{c.label}</option>
                 ))}
               </select>
             </Field>
 
-            <Field label="Sub-category" help="Drives filter chips on the public listing." htmlFor="subCategory">
-              <select
+            <Field
+              label="Sub-category"
+              help="Free text. Drives filter chips on the public listing. Suggestions are values already used elsewhere."
+              htmlFor="subCategory"
+            >
+              <input
                 id="subCategory"
                 name="subCategory"
+                list="subcategory-suggestions"
                 defaultValue={initialValue?.subCategory ?? schema.defaultSubCategory ?? ''}
                 key={categorySlug}
-                className={selectClass}
-              >
-                <option value="">— None —</option>
+                className={inputClass}
+                placeholder="e.g. Antiviral"
+                autoComplete="off"
+              />
+              <datalist id="subcategory-suggestions">
+                {/* Schema-suggested values first, then any other distinct values seen in the DB. */}
                 {schema.subCategories.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={`schema-${s}`} value={s} />
                 ))}
-              </select>
+                {existingSubCategories
+                  .filter((s) => !schema.subCategories.includes(s))
+                  .map((s) => (
+                    <option key={`db-${s}`} value={s} />
+                  ))}
+              </datalist>
             </Field>
           </div>
         </section>
@@ -241,16 +293,18 @@ export default function ProductForm({
           </div>
         </section>
 
-        <section className="mt-8" key={`attrs-default-${categorySlug}`}>
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">
-            {schema.label} attributes
-          </h3>
-          <div className="space-y-4">
-            {schema.attributes.map((def) => (
-              <DynamicField key={def.key} def={def} initial={mergedAttrs[def.key]} />
-            ))}
-          </div>
-        </section>
+        {schema.attributes.length > 0 && (
+          <section className="mt-8" key={`attrs-default-${categorySlug}`}>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">
+              {schema.label} attributes
+            </h3>
+            <div className="space-y-4">
+              {schema.attributes.map((def) => (
+                <DynamicField key={def.key} def={def} initial={mergedAttrs[def.key]} />
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mt-8">
           <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-3">

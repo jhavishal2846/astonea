@@ -157,7 +157,7 @@ export async function deleteCategory(id: string): Promise<CategoryState> {
   const user = await requireAdmin()
   // Refuse if any products still reference it
   const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(productToCategories)
     .where(eq(productToCategories.categoryId, id))
   if ((count ?? 0) > 0) {

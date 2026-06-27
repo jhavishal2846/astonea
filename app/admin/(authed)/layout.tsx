@@ -1,6 +1,10 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
-import { getCurrentUser, deleteCurrentSession } from '@/lib/auth/session'
+import {
+  getCurrentUser,
+  deleteCurrentSession,
+  clearSessionCookie,
+} from '@/lib/auth/session'
 import Sidebar from './Sidebar'
 import { ToastProvider, ToastFromQuery } from '@/app/admin/_components/Toast'
 
@@ -14,7 +18,14 @@ async function logout() {
 
 export default async function AdminAuthedLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser()
-  if (!user) redirect('/admin/login')
+  if (!user) {
+    // Cookie exists but the session row no longer does (DB wipe, expired
+    // server-side cleanup, etc). Without clearing the cookie here, the
+    // middleware sees a cookie on the redirect to /admin/login, assumes
+    // we're authenticated, and bounces us back to /admin — infinite loop.
+    await clearSessionCookie()
+    redirect('/admin/login')
+  }
 
   return (
     <ToastProvider>

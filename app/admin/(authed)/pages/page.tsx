@@ -2,7 +2,8 @@ import 'server-only'
 import Link from '@/app/_nav/AppLink'
 import { db } from '@/lib/db'
 import { pages, pageBlocks } from '@/lib/db/schema'
-import { and, asc, ilike, or, sql, type SQL } from 'drizzle-orm'
+import { and, asc, or, sql, type SQL } from 'drizzle-orm'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
 import AdminPagination from '@/app/admin/_components/Pagination'
 import AdminSearchInput from '@/app/admin/_components/SearchInput'
@@ -24,20 +25,25 @@ const PER_PAGE = 20
  * design stays in place until an editor adds blocks (then it overrides).
  *
  * Idempotent: re-runs on every page-list load with `onConflictDoNothing()`.
+ *
+ * Batched at 12 rows per statement because D1 caps bound parameters at 100
+ * per query; 12 rows × 7 cols = 84 binds, comfortably under the limit.
  */
 async function ensureRegistryPagesSeeded() {
   if (PAGE_REGISTRY.length === 0) return
-  await db
-    .insert(pages)
-    .values(
-      PAGE_REGISTRY.map((entry) => ({
-        path: entry.path,
-        label: entry.label,
-        isPublished: true,
-        showInNav: false,
-      })),
-    )
-    .onConflictDoNothing({ target: pages.path })
+  const rows = PAGE_REGISTRY.map((entry) => ({
+    path: entry.path,
+    label: entry.label,
+    isPublished: true,
+    showInNav: false,
+  }))
+  const CHUNK = 12
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    await db
+      .insert(pages)
+      .values(rows.slice(i, i + CHUNK))
+      .onConflictDoNothing({ target: pages.path })
+  }
 }
 
 export default async function PagesListPage({
@@ -54,12 +60,12 @@ export default async function PagesListPage({
   const conditions: SQL[] = []
   if (search) {
     const like = `%${search}%`
-    conditions.push(or(ilike(pages.label, like), ilike(pages.path, like))!)
+    conditions.push(or(ilikeCi(pages.label, like), ilikeCi(pages.path, like))!)
   }
   const where = conditions.length ? and(...conditions) : undefined
 
   const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(pages)
     .where(where)
   const total = count ?? 0

@@ -24,7 +24,7 @@ export default async function EditProductPage({
   const row = (await db.select().from(products).where(eq(products.id, id)).limit(1))[0]
   if (!row) notFound()
 
-  const [primaryPivot, langs, allTranslations] = await Promise.all([
+  const [primaryPivot, langs, allTranslations, categoryRows, subCatRows] = await Promise.all([
     db
       .select({
         categoryId: productToCategories.categoryId,
@@ -52,7 +52,20 @@ export default async function EditProductPage({
       .select()
       .from(productTranslations)
       .where(eq(productTranslations.productId, id)),
+    db
+      .select({ slug: productCategories.slug, label: productCategories.label })
+      .from(productCategories)
+      .where(eq(productCategories.isActive, true))
+      .orderBy(asc(productCategories.displayOrder)),
+    db
+      .selectDistinct({ subCategory: productToCategories.subCategory })
+      .from(productToCategories),
   ])
+
+  const existingSubCategories = subCatRows
+    .map((r) => r.subCategory)
+    .filter((s): s is string => typeof s === 'string' && s.length > 0)
+    .sort((a, b) => a.localeCompare(b))
 
   const formLanguages: FormLanguage[] = langs.length
     ? langs
@@ -96,6 +109,8 @@ export default async function EditProductPage({
         <ProductForm
           action={boundUpdate}
           languages={formLanguages}
+          categories={categoryRows}
+          existingSubCategories={existingSubCategories}
           initialValue={{
             id: row.id,
             categorySlug: primaryPivot?.categorySlug ?? undefined,

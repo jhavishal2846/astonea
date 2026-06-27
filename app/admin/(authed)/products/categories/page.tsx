@@ -19,7 +19,7 @@ export default async function ProductCategoriesPage() {
       displayOrder: productCategories.displayOrder,
       isActive: productCategories.isActive,
       productCount: sql<number>`(
-        select count(*)::int from ${productToCategories}
+        select count(*) from ${productToCategories}
         where ${productToCategories.categoryId} = ${productCategories.id}
       )`,
     })

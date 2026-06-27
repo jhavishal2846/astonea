@@ -1,5 +1,5 @@
 import Link from '@/app/_nav/AppLink'
-import { and, asc, desc, eq, ilike, isNull, isNotNull, or, sql, type SQL } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, isNotNull, or, sql, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import {
   languages,
@@ -7,6 +7,7 @@ import {
   products,
   productToCategories,
 } from '@/lib/db/schema'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
 import AdminPagination from '@/app/admin/_components/Pagination'
 import AdminSearchInput from '@/app/admin/_components/SearchInput'
@@ -44,9 +45,9 @@ export default async function ProductsListPage({
     const like = `%${search}%`
     conds.push(
       or(
-        ilike(products.name, like),
-        ilike(products.slug, like),
-        ilike(sql`coalesce(${products.attributes}->>'casNumber','')`, like),
+        ilikeCi(products.name, like),
+        ilikeCi(products.slug, like),
+        ilikeCi(sql`coalesce(json_extract(${products.attributes}, '$.casNumber'), '')`, like),
       )!,
     )
   }
@@ -55,7 +56,7 @@ export default async function ProductsListPage({
   const requested = Number(pageRaw) || 1
 
   const [{ count: total }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(products)
     .leftJoin(
       productToCategories,
@@ -71,7 +72,7 @@ export default async function ProductsListPage({
   const page = Math.min(Math.max(1, requested), totalPages)
   const offset = (page - 1) * PER_PAGE
 
-  const [rows, categoryRows, langRows] = await Promise.all([
+  const [rows, categoryRows, langRows, subCatRows] = await Promise.all([
     db
       .select({
         id: products.id,
@@ -81,8 +82,8 @@ export default async function ProductsListPage({
         deletedAt: products.deletedAt,
         updatedAt: products.updatedAt,
         publishedAt: products.publishedAt,
-        cas: sql<string | null>`${products.attributes}->>'casNumber'`,
-        grade: sql<string | null>`${products.attributes}->>'grade'`,
+        cas: sql<string | null>`json_extract(${products.attributes}, '$.casNumber')`,
+        grade: sql<string | null>`json_extract(${products.attributes}, '$.grade')`,
         categorySlug: productCategories.slug,
         categoryLabel: productCategories.label,
         subCategory: productToCategories.subCategory,
@@ -118,7 +119,17 @@ export default async function ProductsListPage({
       .from(languages)
       .where(eq(languages.isActive, true))
       .orderBy(asc(languages.displayOrder), asc(languages.code)),
+    // Distinct sub-category values across all products. Used as datalist
+    // suggestions in ProductForm so admins see what's already in use.
+    db
+      .selectDistinct({ subCategory: productToCategories.subCategory })
+      .from(productToCategories),
   ])
+
+  const existingSubCategories = subCatRows
+    .map((r) => r.subCategory)
+    .filter((s): s is string => typeof s === 'string' && s.length > 0)
+    .sort((a, b) => a.localeCompare(b))
 
   const formLanguages = langRows.length
     ? langRows
@@ -142,7 +153,11 @@ export default async function ProductsListPage({
             >
               <IconBuilding className="w-3.5 h-3.5" /> Categories
             </Link>
-            <NewProductTrigger languages={formLanguages} />
+            <NewProductTrigger
+              languages={formLanguages}
+              categories={categoryRows}
+              existingSubCategories={existingSubCategories}
+            />
           </>
         }
       />

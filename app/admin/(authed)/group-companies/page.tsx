@@ -1,4 +1,5 @@
-import { and, asc, ilike, sql, type SQL } from 'drizzle-orm'
+import { and, asc, sql, type SQL } from 'drizzle-orm'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import { db } from '@/lib/db'
 import { groupCompanies } from '@/lib/db/schema'
 import { createCompany, deleteCompany } from './_actions'
@@ -23,12 +24,12 @@ export default async function GroupCompaniesPage({
 
   const conditions: SQL[] = []
   if (search) {
-    conditions.push(ilike(groupCompanies.name, `%${search}%`))
+    conditions.push(ilikeCi(groupCompanies.name, `%${search}%`))
   }
   const where = conditions.length ? and(...conditions) : undefined
 
   const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(groupCompanies)
     .where(where)
   const total = count ?? 0

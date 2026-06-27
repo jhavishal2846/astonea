@@ -7,9 +7,12 @@ config({ path: '.env' })
 export default {
   schema: './lib/db/schema.ts',
   out: './drizzle',
-  dialect: 'postgresql',
+  dialect: 'sqlite',
+  driver: 'd1-http',
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    accountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
+    databaseId: process.env.D1_DATABASE_ID!,
+    token: process.env.CLOUDFLARE_API_TOKEN!,
   },
   verbose: true,
   strict: true,

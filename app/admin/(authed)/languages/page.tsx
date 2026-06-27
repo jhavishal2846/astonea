@@ -1,5 +1,6 @@
 import 'server-only'
-import { and, asc, desc, ilike, or, sql, type SQL } from 'drizzle-orm'
+import { and, asc, desc, or, sql, type SQL } from 'drizzle-orm'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import { db } from '@/lib/db'
 import { languages, translationJobs } from '@/lib/db/schema'
 import AdminPageHeader from '@/app/admin/_components/PageHeader'
@@ -34,16 +35,16 @@ export default async function LanguagesPage({
     const like = `%${search}%`
     conditions.push(
       or(
-        ilike(languages.code, like),
-        ilike(languages.name, like),
-        ilike(languages.nativeName, like),
+        ilikeCi(languages.code, like),
+        ilikeCi(languages.name, like),
+        ilikeCi(languages.nativeName, like),
       )!,
     )
   }
   const where = conditions.length ? and(...conditions) : undefined
 
   const [{ count }] = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: sql<number>`count(*)` })
     .from(languages)
     .where(where)
   const total = count ?? 0

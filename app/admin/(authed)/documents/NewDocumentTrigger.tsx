@@ -10,9 +10,11 @@ import { IconPlus } from '@/app/admin/_icons'
 export default function NewDocumentTrigger({
   groupCompanies,
   presetCategory,
+  existingSubcategoriesByCategory,
 }: {
   groupCompanies: Pick<GroupCompany, 'id' | 'name'>[]
   presetCategory?: DocumentCategory
+  existingSubcategoriesByCategory?: Partial<Record<DocumentCategory, string[]>>
 }) {
   const [open, setOpen] = useState(false)
 
@@ -36,6 +38,7 @@ export default function NewDocumentTrigger({
           action={createDocument}
           initialValue={{ category: presetCategory, isPublished: true, displayOrder: 0 }}
           groupCompanies={groupCompanies}
+          existingSubcategoriesByCategory={existingSubcategoriesByCategory}
           submitLabel="Create document"
           successMessage="Document created"
           hideCancel

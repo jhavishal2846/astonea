@@ -14,12 +14,12 @@ export const dynamic = 'force-dynamic'
 export default async function AdminDashboardPage() {
   const [docCounts, draftCount, companyCount, userCount, recentDocs, recentActivity, companies] = await Promise.all([
     db
-      .select({ category: documents.category, count: sql<number>`count(*)::int` })
+      .select({ category: documents.category, count: sql<number>`count(*)` })
       .from(documents)
       .groupBy(documents.category),
-    db.select({ count: sql<number>`count(*)::int` }).from(documents).where(sql`${documents.isPublished} = false`),
-    db.select({ count: sql<number>`count(*)::int` }).from(groupCompanies),
-    db.select({ count: sql<number>`count(*)::int` }).from(users),
+    db.select({ count: sql<number>`count(*)` }).from(documents).where(sql`${documents.isPublished} = false`),
+    db.select({ count: sql<number>`count(*)` }).from(groupCompanies),
+    db.select({ count: sql<number>`count(*)` }).from(users),
     db
       .select({
         id: documents.id,

@@ -407,33 +407,6 @@ async function setJobStatus(
     .where(eq(translationJobs.id, id))
 }
 
-/**
- * Retry a transient DB op (Neon HTTP can drop one-off connections) up to
- * `attempts` times with exponential backoff. Returns null after exhausting
- * retries — the caller decides whether to treat that as fatal or skip. We
- * use this around the in-loop progress flush so a single connection blip
- * can't stall the bar at 27% or push the whole job to "failed".
- */
-async function withRetry<T>(
-  label: string,
-  op: () => Promise<T>,
-  attempts = 3,
-): Promise<T | null> {
-  let lastErr: unknown
-  for (let i = 0; i < attempts; i++) {
-    try {
-      return await op()
-    } catch (e) {
-      lastErr = e
-      if (i < attempts - 1) {
-        await new Promise((r) => setTimeout(r, 1_000 * (i + 1)))
-      }
-    }
-  }
-  console.error(`[translation-job] ${label} failed after ${attempts} attempts:`, lastErr)
-  return null
-}
-
 async function persistTranslations(
   targetLocale: string,
   translated: TranslatedBatch,
@@ -759,19 +732,9 @@ export async function generateTranslationsForLocale(
         done++
 
         if (done - lastFlushAt >= PERSIST_EVERY) {
-          // Retry the flush so a transient Neon connection blip doesn't
-          // freeze the bar or push the whole job to "failed". If it still
-          // fails after retries we skip this flush and keep translating —
-          // the final post-loop flush (also retried) picks up the slack.
-          const result = await withRetry('persistTranslations', () =>
-            persistTranslations(locale, accumulator),
-          )
-          if (result) {
-            for (const p of result.affectedPagePaths) affectedPagePaths.add(p)
-          }
-          await withRetry('setJobStatus', () =>
-            setJobStatus(job.id, { completedItems: done }),
-          )
+          const result = await persistTranslations(locale, accumulator)
+          for (const p of result.affectedPagePaths) affectedPagePaths.add(p)
+          await setJobStatus(job.id, { completedItems: done })
           lastFlushAt = done
         }
       }

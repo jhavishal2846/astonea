@@ -1,6 +1,6 @@
 import 'server-only'
 import { unstable_cache } from 'next/cache'
-import { and, asc, eq, ilike, isNull, ne, or, sql, type SQL } from 'drizzle-orm'
+import { and, asc, eq, isNull, ne, sql, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { productCategoriesTag, PRODUCTS_ALL_TAG } from '@/lib/cms/cache-tags'
 import {
@@ -11,6 +11,7 @@ import {
   productTranslations,
   productUrlAliases,
 } from '@/lib/db/schema'
+import { ftsQuery } from '@/lib/db/sqlite-helpers'
 
 /**
  * Read helpers for the public `/products/...` routes.
@@ -49,7 +50,7 @@ async function fetchActiveCategories(): Promise<ActiveCategory[]> {
       heroImage: productCategories.heroImage,
       icon: productCategories.icon,
       productCount: sql<number>`(
-        select count(*)::int
+        select count(*)
         from ${productToCategories} ptc
         join ${products} p on p.id = ptc.product_id
         where ptc.category_id = "product_categories"."id"
@@ -64,10 +65,10 @@ async function fetchActiveCategories(): Promise<ActiveCategory[]> {
 export const getActiveCategories = unstable_cache(
   fetchActiveCategories,
   ['public:active-categories'],
-  { tags: [productCategoriesTag(), PRODUCTS_ALL_TAG], revalidate: 300 },
+  { tags: [productCategoriesTag(), PRODUCTS_ALL_TAG], revalidate: 3600 },
 )
 
-export async function getCategoryBySlug(slug: string) {
+async function fetchCategoryBySlug(slug: string) {
   return (
     await db
       .select()
@@ -81,6 +82,18 @@ export async function getCategoryBySlug(slug: string) {
       )
       .limit(1)
   )[0]
+}
+
+export async function getCategoryBySlug(slug: string) {
+  const cached = unstable_cache(
+    () => fetchCategoryBySlug(slug),
+    ['public:category-by-slug', slug],
+    {
+      tags: [productCategoriesTag(), PRODUCTS_ALL_TAG, `category:${slug}`],
+      revalidate: 3600,
+    },
+  )
+  return cached()
 }
 
 export type CatalogRow = {
@@ -118,22 +131,26 @@ export async function listProductsByCategory(
   ]
   if (opts.subCategory) conds.push(eq(productToCategories.subCategory, opts.subCategory))
 
-  if (opts.q && opts.q.trim()) {
-    const like = `%${opts.q.trim()}%`
+  // FTS5 search via the `products_fts` contentless virtual table — replaces
+  // the prior Postgres ilike-over-JSONB pattern. The MATCH expression is
+  // tokenised + prefix-suffixed by `ftsQuery()`; BM25 ordering is applied
+  // below when search is active.
+  const ftsMatch = ftsQuery(opts.q)
+  if (ftsMatch) {
+    // `rowid` is the implicit SQLite row id used by FTS5 contentless tables —
+    // not a named column on the Drizzle schema, so we reference it as a raw
+    // qualified ident on the source table.
     conds.push(
-      or(
-        ilike(products.name, like),
-        ilike(sql`coalesce(${products.attributes}->>'casNumber','')`, like),
-        ilike(sql`coalesce(${products.attributes}->>'eNumber','')`, like),
-        ilike(sql`coalesce(${products.attributes}->>'colourIndex','')`, like),
-      )!,
+      sql`products.rowid IN (
+        SELECT rowid FROM products_fts WHERE products_fts MATCH ${ftsMatch}
+      )`,
     )
   }
 
   const where = and(...conds)
 
   const [{ total }] = await db
-    .select({ total: sql<number>`count(*)::int` })
+    .select({ total: sql<number>`count(*)` })
     .from(products)
     .innerJoin(
       productToCategories,
@@ -141,7 +158,7 @@ export async function listProductsByCategory(
     )
     .where(where)
 
-  const rows = await db
+  const baseQuery = db
     .select({
       id: products.id,
       slug: products.slug,
@@ -161,7 +178,20 @@ export async function listProductsByCategory(
       and(eq(productTranslations.productId, products.id), eq(productTranslations.locale, locale)),
     )
     .where(where)
-    .orderBy(asc(productToCategories.displayOrder), asc(products.name))
+
+  const rows = await (ftsMatch
+    ? baseQuery.orderBy(
+        // When searching, sort by FTS relevance first. BM25 returns a negative
+        // real; smaller (more-negative) values mean better matches, so ASC.
+        sql`(
+          SELECT bm25(products_fts) FROM products_fts
+          WHERE products_fts.rowid = products.rowid AND products_fts MATCH ${ftsMatch}
+        )`,
+        asc(productToCategories.displayOrder),
+        asc(products.name),
+      )
+    : baseQuery.orderBy(asc(productToCategories.displayOrder), asc(products.name))
+  )
     .limit(opts.limit)
     .offset(opts.offset)
 
@@ -208,12 +238,11 @@ export type PublicProduct = {
   categoryLabel: string
 }
 
-export async function getProductByCategoryAndSlug(
+async function fetchProductByCategoryAndSlug(
   catSlug: string,
   prodSlug: string,
-  opts?: { locale?: string },
+  locale: string,
 ): Promise<PublicProduct | null> {
-  const locale = opts?.locale ?? (await defaultLocale())
   const row = (
     await db
       .select({
@@ -264,6 +293,27 @@ export async function getProductByCategoryAndSlug(
   }
 }
 
+export async function getProductByCategoryAndSlug(
+  catSlug: string,
+  prodSlug: string,
+  opts?: { locale?: string },
+): Promise<PublicProduct | null> {
+  const locale = opts?.locale ?? (await defaultLocale())
+  const cached = unstable_cache(
+    () => fetchProductByCategoryAndSlug(catSlug, prodSlug, locale),
+    ['public:product-by-slug', catSlug, prodSlug, locale],
+    {
+      tags: [
+        PRODUCTS_ALL_TAG,
+        `product:${prodSlug}`,
+        `category:${catSlug}`,
+      ],
+      revalidate: 3600,
+    },
+  )
+  return cached()
+}
+
 export type RelatedProduct = {
   id: string
   slug: string
@@ -287,8 +337,8 @@ export async function getRelatedProducts(
       id: products.id,
       slug: products.slug,
       name: products.name,
-      cas: sql<string | null>`${products.attributes}->>'casNumber'`,
-      grade: sql<string | null>`${products.attributes}->>'grade'`,
+      cas: sql<string | null>`json_extract(${products.attributes}, '$.casNumber')`,
+      grade: sql<string | null>`json_extract(${products.attributes}, '$.grade')`,
       translatedName: productTranslations.name,
     })
     .from(products)

@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
 import path from "path";
 import createNextIntlPlugin from "next-intl/plugin";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+
+// Wires getCloudflareContext() so `next dev` (turbopack) can see Worker
+// bindings — including the local D1 file at
+// .wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite — without
+// having to use `wrangler dev`. Reads `wrangler.jsonc` for the binding set.
+initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
   turbopack: {

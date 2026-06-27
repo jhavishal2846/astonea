@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
-import { and, asc, eq, ilike, or, type SQL } from 'drizzle-orm'
+import { and, asc, eq, or, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { documents, groupCompanies } from '@/lib/db/schema'
+import { ilikeCi } from '@/lib/db/sqlite-helpers'
 import { getCurrentUser } from '@/lib/auth/session'
 import { CATEGORY_LABELS, SUBCATEGORY_LABELS, isValidCategory } from '@/lib/cms/categories'
 
@@ -31,9 +32,9 @@ export async function GET(req: Request) {
     const like = `%${q}%`
     conditions.push(
       or(
-        ilike(documents.title, like),
-        ilike(documents.period, like),
-        ilike(documents.fileUrl, like),
+        ilikeCi(documents.title, like),
+        ilikeCi(documents.period, like),
+        ilikeCi(documents.fileUrl, like),
       )!,
     )
   }
