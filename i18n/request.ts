@@ -1,3 +1,4 @@
+import { headers } from 'next/headers'
 import { getRequestConfig } from 'next-intl/server'
 import { hasLocale } from 'next-intl'
 import { DEFAULT_LOCALE, getActiveLocaleCodes } from '@/lib/i18n/locales'
@@ -5,7 +6,19 @@ import { getUiStrings, nestStrings } from '@/lib/i18n/ui-strings'
 import { DEFAULT_UI_STRINGS_EN } from '@/lib/i18n/default-messages'
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  const requested = await requestLocale
+  // Prefer the middleware-set `x-locale` header — it's set unconditionally on
+  // every public request and survives async-context boundaries. `requestLocale`
+  // depends on `setRequestLocale()` propagating through next-intl's
+  // AsyncLocalStorage, which silently breaks on Next 16 server components and
+  // leaves the navbar/footer rendered in English under a Spanish page.
+  let requested: string | undefined
+  try {
+    const h = await headers()
+    requested = h.get('x-locale') ?? undefined
+  } catch {
+    // headers() unavailable — fall back to requestLocale.
+  }
+  if (!requested) requested = await requestLocale
   const active = await getActiveLocaleCodes()
   const locale = hasLocale(active, requested) ? requested : DEFAULT_LOCALE
 
