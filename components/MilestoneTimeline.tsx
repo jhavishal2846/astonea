@@ -10,7 +10,7 @@ import {
   useScroll,
   useSpring,
 } from 'framer-motion'
-import { usePageText } from './PageTextProvider'
+import { useCmsEditMode, useCmsMarkers, usePageText } from './PageTextProvider'
 
 const E = [0.16, 1, 0.3, 1] as const
 
@@ -113,7 +113,15 @@ function parseStat(value: string) {
   }
 }
 
-function StatValue({ value }: { value: string }) {
+function StatValue({
+  value,
+  editableAttrs,
+  editable,
+}: {
+  value: string
+  editableAttrs?: React.HTMLAttributes<HTMLElement>
+  editable?: boolean
+}) {
   const ref = useRef<HTMLParagraphElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const reduce = useReducedMotion()
@@ -138,7 +146,11 @@ function StatValue({ value }: { value: string }) {
   const initialText = !parsed || reduce ? value : `${parsed.prefix}0${parsed.suffix}`
 
   return (
-    <p ref={ref} className="font-display text-3xl font-bold text-white mb-1 tabular-nums">
+    <p
+      ref={ref}
+      className={`font-display text-3xl font-bold text-white mb-1 tabular-nums${editable ? ' cms-editable' : ''}`}
+      {...editableAttrs}
+    >
       {initialText}
     </p>
   )
@@ -166,6 +178,8 @@ export function MilestoneStats({
   keyPrefix?: string
 }) {
   const t = usePageText()
+  const editMode = useCmsEditMode()
+  const markers = useCmsMarkers()
   return (
     <div style={{ background: 'var(--color-primary)' }}>
       <div className="container-wide">
@@ -177,6 +191,7 @@ export function MilestoneStats({
             const label = keyPrefix
               ? t(`${keyPrefix}_${i}.label`, s.label)
               : s.label
+            const valueAttrs = keyPrefix ? markers(`${keyPrefix}_${i}.value`, s.value) : undefined
             return (
               <div
                 key={i}
@@ -187,7 +202,11 @@ export function MilestoneStats({
                   i < 2 ? 'border-b border-white/20 lg:border-b-0' : '',
                 ].join(' ')}
               >
-                <StatValue value={value} />
+                <StatValue
+                  value={value}
+                  editable={editMode && !!keyPrefix}
+                  editableAttrs={valueAttrs}
+                />
                 <p
                   className="text-xs font-medium uppercase tracking-widest"
                   style={{ color: 'rgba(255,255,255,0.72)' }}
@@ -230,7 +249,8 @@ function MilestoneRow({
 
   return (
     <div ref={ref} className="relative pl-[68px] sm:pl-24">
-      {/* ghost year (editorial depth, static) */}
+      {/* ghost year (editorial depth, static — aria-hidden, so we do NOT
+          mark this one editable; the visible year below is the editable one) */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute right-0 -top-8 hidden select-none font-display font-bold leading-none lg:block"

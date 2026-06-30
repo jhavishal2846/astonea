@@ -57,7 +57,32 @@ const ACTIVITY_ENTITIES = [
   'user',
   'product',
   'product_category',
+  'ticket',
+  'ticket_category',
+  'ticket_tag',
 ] as const
+
+const TICKET_STATUSES = ['open', 'in_progress', 'waiting', 'resolved', 'closed'] as const
+const TICKET_PRIORITIES = ['low', 'normal', 'high', 'urgent'] as const
+const TICKET_SOURCES = ['support_form', 'admin_created'] as const
+const TICKET_MESSAGE_AUTHOR_TYPES = ['admin', 'submitter', 'system'] as const
+const TICKET_MESSAGE_VISIBILITIES = ['public', 'internal'] as const
+const TICKET_ATTACHMENT_UPLOADER_TYPES = ['admin', 'submitter'] as const
+const TICKET_EVENT_TYPES = [
+  'status_changed',
+  'priority_changed',
+  'assigned',
+  'unassigned',
+  'category_changed',
+  'tag_added',
+  'tag_removed',
+  'reopened',
+  'due_changed',
+] as const
+const TICKET_EVENT_ACTOR_TYPES = ['admin', 'submitter', 'system'] as const
+
+const OTP_CHANNELS = ['email', 'sms', 'whatsapp'] as const
+const OTP_PURPOSES = ['ticket_create', 'ticket_reply', 'ticket_lookup'] as const
 
 const PRODUCT_STATUSES = [
   'draft',
@@ -645,6 +670,249 @@ export const productUrlAliases = sqliteTable(
   ],
 )
 
+/* ─── Tickets ─────────────────────────────────────────────────────────────── */
+
+/**
+ * Customer-support ticket. Created from public forms (contact / career) after
+ * phone-OTP verification. Carries its own `public_token` for the submitter's
+ * status page (read-only without a fresh OTP). `short_code` is the human-
+ * friendly id displayed in the UI ("AST-1042").
+ */
+export const ticketCategories = sqliteTable(
+  'ticket_categories',
+  {
+    id: uuidPk(),
+    slug: text('slug').notNull().unique(),
+    defaultAssignedToUserId: text('default_assigned_to_user_id').references(
+      () => users.id,
+      { onDelete: 'set null' },
+    ),
+    /** When set, ticket.due_by defaults to created_at + slaHours hours. */
+    slaHours: integer('sla_hours', { mode: 'number' }),
+    isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
+    sortOrder: integer('sort_order', { mode: 'number' }).notNull().default(0),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [index('ticket_categories_active_sort_idx').on(t.isActive, t.sortOrder)],
+)
+
+export const ticketCategoryTranslations = sqliteTable(
+  'ticket_category_translations',
+  {
+    categoryId: text('category_id')
+      .notNull()
+      .references(() => ticketCategories.id, { onDelete: 'cascade' }),
+    locale: text('locale')
+      .notNull()
+      .references(() => languages.code, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.categoryId, t.locale] }),
+    index('ticket_category_translations_locale_idx').on(t.locale),
+  ],
+)
+
+export const ticketTags = sqliteTable(
+  'ticket_tags',
+  {
+    id: uuidPk(),
+    slug: text('slug').notNull().unique(),
+    label: text('label').notNull(),
+    /** Optional hex colour (e.g. '#ef4444') for the pill in the admin UI. */
+    color: text('color'),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+)
+
+export const tickets = sqliteTable(
+  'tickets',
+  {
+    id: uuidPk(),
+    /** HMAC-signed random token for the public /support/<token> page. */
+    publicToken: text('public_token').notNull().unique(),
+    /** Human-friendly id like "AST-1042". Stored not derived so the value is stable across renames. */
+    shortCode: text('short_code').notNull().unique(),
+
+    submitterName: text('submitter_name').notNull(),
+    submitterEmail: text('submitter_email').notNull(),
+    /** E.164 normalised, e.g. "+919812345678". */
+    submitterPhone: text('submitter_phone').notNull(),
+    submitterCompany: text('submitter_company'),
+    submitterCity: text('submitter_city'),
+    submitterLocale: text('submitter_locale').notNull().default('en'),
+    /** Set at ticket creation; OTP gate asserted this. */
+    phoneVerifiedAt: integer('phone_verified_at', { mode: 'timestamp_ms' }).notNull(),
+
+    subject: text('subject').notNull(),
+    source: text('source', { enum: TICKET_SOURCES }).notNull(),
+    categoryId: text('category_id').references(() => ticketCategories.id, {
+      onDelete: 'set null',
+    }),
+
+    status: text('status', { enum: TICKET_STATUSES }).notNull().default('open'),
+    priority: text('priority', { enum: TICKET_PRIORITIES }).notNull().default('normal'),
+    assignedToUserId: text('assigned_to_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+
+    dueBy: integer('due_by', { mode: 'timestamp_ms' }),
+    firstResponseAt: integer('first_response_at', { mode: 'timestamp_ms' }),
+    resolvedAt: integer('resolved_at', { mode: 'timestamp_ms' }),
+    closedAt: integer('closed_at', { mode: 'timestamp_ms' }),
+
+    /** sha256(ip + daily_salt) — abuse tracking without storing raw IP. */
+    ipAddressHash: text('ip_address_hash'),
+    userAgent: text('user_agent'),
+
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [
+    index('tickets_status_created_idx').on(t.status, desc(t.createdAt)),
+    index('tickets_assignee_status_idx').on(t.assignedToUserId, t.status),
+    index('tickets_category_idx').on(t.categoryId),
+    index('tickets_submitter_email_idx').on(t.submitterEmail),
+  ],
+)
+
+export const ticketMessages = sqliteTable(
+  'ticket_messages',
+  {
+    id: uuidPk(),
+    ticketId: text('ticket_id')
+      .notNull()
+      .references(() => tickets.id, { onDelete: 'cascade' }),
+    authorType: text('author_type', { enum: TICKET_MESSAGE_AUTHOR_TYPES }).notNull(),
+    authorUserId: text('author_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    visibility: text('visibility', { enum: TICKET_MESSAGE_VISIBILITIES })
+      .notNull()
+      .default('public'),
+    body: text('body').notNull(),
+    emailSentAt: integer('email_sent_at', { mode: 'timestamp_ms' }),
+    /** RFC 5322 Message-ID of the outbound email — used for inbound reply threading. */
+    emailMessageId: text('email_message_id'),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [index('ticket_messages_ticket_created_idx').on(t.ticketId, t.createdAt)],
+)
+
+export const ticketAttachments = sqliteTable(
+  'ticket_attachments',
+  {
+    id: uuidPk(),
+    ticketId: text('ticket_id')
+      .notNull()
+      .references(() => tickets.id, { onDelete: 'cascade' }),
+    /** Null = attached at ticket-create time (lives on the ticket, not a specific message). */
+    messageId: text('message_id').references(() => ticketMessages.id, {
+      onDelete: 'set null',
+    }),
+    uploadedByType: text('uploaded_by_type', {
+      enum: TICKET_ATTACHMENT_UPLOADER_TYPES,
+    }).notNull(),
+    uploadedByUserId: text('uploaded_by_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    filename: text('filename').notNull(),
+    mimeType: text('mime_type').notNull(),
+    sizeBytes: integer('size_bytes', { mode: 'number' }).notNull(),
+    r2Key: text('r2_key').notNull().unique(),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [index('ticket_attachments_ticket_idx').on(t.ticketId)],
+)
+
+export const ticketToTags = sqliteTable(
+  'ticket_to_tags',
+  {
+    ticketId: text('ticket_id')
+      .notNull()
+      .references(() => tickets.id, { onDelete: 'cascade' }),
+    tagId: text('tag_id')
+      .notNull()
+      .references(() => ticketTags.id, { onDelete: 'cascade' }),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.ticketId, t.tagId] }),
+    index('ticket_to_tags_tag_idx').on(t.tagId),
+  ],
+)
+
+/**
+ * Append-only audit trail of state transitions (status / priority / assignee /
+ * category / tag / due-date). Drives the "Event log" panel on the ticket detail
+ * page and feeds into compliance-friendly history.
+ */
+export const ticketEvents = sqliteTable(
+  'ticket_events',
+  {
+    id: uuidPk(),
+    ticketId: text('ticket_id')
+      .notNull()
+      .references(() => tickets.id, { onDelete: 'cascade' }),
+    eventType: text('event_type', { enum: TICKET_EVENT_TYPES }).notNull(),
+    /** Free-text snapshots (e.g. status names, user ids, tag slugs). Null for create-side events. */
+    fromValue: text('from_value'),
+    toValue: text('to_value'),
+    actorType: text('actor_type', { enum: TICKET_EVENT_ACTOR_TYPES }).notNull(),
+    actorUserId: text('actor_user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [index('ticket_events_ticket_created_idx').on(t.ticketId, t.createdAt)],
+)
+
+/**
+ * Issued OTP codes. Code itself is bcrypt-hashed; the plaintext only ever lives
+ * in the outbound message (SMS/email) and the user's brain. Single-use:
+ * `consumed_at` is set atomically on first successful verify; further attempts
+ * with the same code are rejected.
+ */
+export const otpVerifications = sqliteTable(
+  'otp_verifications',
+  {
+    id: uuidPk(),
+    channel: text('channel', { enum: OTP_CHANNELS }).notNull(),
+    /** Email or E.164 phone — never the OTP code. */
+    destination: text('destination').notNull(),
+    purpose: text('purpose', { enum: OTP_PURPOSES }).notNull(),
+    /** bcrypt hash of the 6-digit code. NEVER stored in plaintext. */
+    codeHash: text('code_hash').notNull(),
+    attemptsRemaining: integer('attempts_remaining', { mode: 'number' }).notNull().default(5),
+    expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+    consumedAt: integer('consumed_at', { mode: 'timestamp_ms' }),
+    ipAddressHash: text('ip_address_hash'),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' }).$defaultFn(() => new Date()).notNull(),
+  },
+  (t) => [
+    index('otp_verifications_lookup_idx').on(t.destination, t.purpose, t.expiresAt),
+  ],
+)
+
+/**
+ * Sliding-window counters keyed by `ip:<sha256>` or `dest:<sha256>` (and
+ * `country:<iso>` for per-country SMS-pumping defence). Bucketed into 15-min
+ * windows so cleanup is a simple `DELETE WHERE window_start < now - 1d`.
+ */
+export const otpRateLimits = sqliteTable(
+  'otp_rate_limits',
+  {
+    key: text('key').notNull(),
+    /** floor(now_ms / windowMs) * windowMs */
+    windowStart: integer('window_start', { mode: 'number' }).notNull(),
+    count: integer('count', { mode: 'number' }).notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.key, t.windowStart] })],
+)
+
 /* ─── Inferred types ──────────────────────────────────────────────────────── */
 
 export type ActivityRow = typeof activityLog.$inferSelect
@@ -715,3 +983,42 @@ export type NewProductImageTranslation = typeof productImageTranslations.$inferI
 
 export type ProductUrlAlias = typeof productUrlAliases.$inferSelect
 export type NewProductUrlAlias = typeof productUrlAliases.$inferInsert
+
+export type TicketStatus = (typeof TICKET_STATUSES)[number]
+export type TicketPriority = (typeof TICKET_PRIORITIES)[number]
+export type TicketSource = (typeof TICKET_SOURCES)[number]
+export type TicketMessageAuthorType = (typeof TICKET_MESSAGE_AUTHOR_TYPES)[number]
+export type TicketMessageVisibility = (typeof TICKET_MESSAGE_VISIBILITIES)[number]
+export type TicketAttachmentUploaderType = (typeof TICKET_ATTACHMENT_UPLOADER_TYPES)[number]
+export type TicketEventType = (typeof TICKET_EVENT_TYPES)[number]
+export type TicketEventActorType = (typeof TICKET_EVENT_ACTOR_TYPES)[number]
+export type OtpChannel = (typeof OTP_CHANNELS)[number]
+export type OtpPurpose = (typeof OTP_PURPOSES)[number]
+
+export const TICKET_STATUS_VALUES = TICKET_STATUSES
+export const TICKET_PRIORITY_VALUES = TICKET_PRIORITIES
+export const TICKET_SOURCE_VALUES = TICKET_SOURCES
+export const TICKET_EVENT_TYPE_VALUES = TICKET_EVENT_TYPES
+export const OTP_CHANNEL_VALUES = OTP_CHANNELS
+export const OTP_PURPOSE_VALUES = OTP_PURPOSES
+
+export type TicketCategory = typeof ticketCategories.$inferSelect
+export type NewTicketCategory = typeof ticketCategories.$inferInsert
+export type TicketCategoryTranslation = typeof ticketCategoryTranslations.$inferSelect
+export type NewTicketCategoryTranslation = typeof ticketCategoryTranslations.$inferInsert
+export type TicketTag = typeof ticketTags.$inferSelect
+export type NewTicketTag = typeof ticketTags.$inferInsert
+export type Ticket = typeof tickets.$inferSelect
+export type NewTicket = typeof tickets.$inferInsert
+export type TicketMessage = typeof ticketMessages.$inferSelect
+export type NewTicketMessage = typeof ticketMessages.$inferInsert
+export type TicketAttachment = typeof ticketAttachments.$inferSelect
+export type NewTicketAttachment = typeof ticketAttachments.$inferInsert
+export type TicketToTag = typeof ticketToTags.$inferSelect
+export type NewTicketToTag = typeof ticketToTags.$inferInsert
+export type TicketEvent = typeof ticketEvents.$inferSelect
+export type NewTicketEvent = typeof ticketEvents.$inferInsert
+export type OtpVerification = typeof otpVerifications.$inferSelect
+export type NewOtpVerification = typeof otpVerifications.$inferInsert
+export type OtpRateLimit = typeof otpRateLimits.$inferSelect
+export type NewOtpRateLimit = typeof otpRateLimits.$inferInsert

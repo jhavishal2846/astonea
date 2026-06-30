@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, type HTMLAttributes, type ReactNode } from 'react'
 import { useMessages } from 'next-intl'
 
 type PageTextMap = Record<string, string>
@@ -58,6 +58,40 @@ export default function PageTextProvider({
     [overrides, path, locale, editMode],
   )
   return <PageTextContext.Provider value={value}>{children}</PageTextContext.Provider>
+}
+
+/**
+ * Whether the current request is being rendered in the `?edit=1` overlay mode.
+ * Use this to opt extra UI in/out of edit chrome (e.g. swap a non-editable
+ * animated counter for an editable static span).
+ */
+export function useCmsEditMode(): boolean {
+  return useContext(PageTextContext).editMode
+}
+
+/**
+ * Returns a `(key, fallback) => attrs` helper that yields the
+ * `data-cms-key` / `data-cms-path` / `data-cms-locale` / `data-cms-default`
+ * attributes for an element that should be click-to-editable in edit mode.
+ * Returns an empty object outside of edit mode.
+ *
+ * Use this when the text can't be wrapped in a `<span>` directly — e.g. it
+ * gets fed into a word-by-word animation, an animated counter, or an `alt=`
+ * attribute. Spread the returned attrs on the visual container so the overlay
+ * can still locate and edit it, then pair with `className="cms-editable"` so
+ * the dashed outline appears.
+ */
+export function useCmsMarkers() {
+  const ctx = useContext(PageTextContext)
+  return (key: string, fallback: string): HTMLAttributes<HTMLElement> => {
+    if (!ctx.editMode || !ctx.path) return {}
+    return {
+      'data-cms-key': key,
+      'data-cms-path': ctx.path,
+      'data-cms-locale': ctx.locale,
+      'data-cms-default': fallback,
+    } as HTMLAttributes<HTMLElement>
+  }
 }
 
 /**

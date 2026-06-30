@@ -16,16 +16,19 @@ import {
   IconLanguages,
   IconPages,
   IconProducts,
+  IconTickets,
 } from '@/app/admin/_icons'
 
 type NavLink = {
   href: string
   label: string
   icon: (p: { className?: string }) => React.ReactElement
+  badge?: number
 }
 
 const LINKS: NavLink[] = [
   { href: '/admin',                 label: 'Dashboard',      icon: IconDashboard },
+  { href: '/admin/tickets',         label: 'Tickets',        icon: IconTickets    },
   { href: '/admin/pages',           label: 'Pages',          icon: IconPages      },
   { href: '/admin/products',        label: 'Products',       icon: IconProducts   },
   { href: '/admin/documents',       label: 'Documents',      icon: IconDocs       },

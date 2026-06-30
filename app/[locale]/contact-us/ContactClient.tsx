@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import Link from '@/components/LocaleLink'
 import { PageHeader } from '@/components/PageHeader'
-import { Reveal, StaggerReveal } from '@/components/StaggerReveal'
+import { Reveal } from '@/components/StaggerReveal'
 import { usePageText } from '@/components/PageTextProvider'
+import TicketFormShell from '@/app/[locale]/_tickets/TicketFormShell'
 
 const offices = [
   {
@@ -21,25 +22,18 @@ const offices = [
 ]
 
 const contacts = [
-  { dept: 'Business Development', email: 'bdm.astonea@gmail.com', phone: '+91-9997774840' },
+  { dept: 'Business Development', email: 'bdm.astonea@gmail.com' },
   { dept: 'Export Enquiries', email: 'export@astonea.org' },
   { dept: 'Procurement', email: 'purchase@astonea.org' },
   { dept: 'Investor Relations', email: 'cs@astonea.org' },
 ]
 
-export default function ContactUsPage() {
+export default function ContactUsPage({
+  categoryOptions,
+}: {
+  categoryOptions: Array<{ slug: string; label: string }>
+}) {
   const t = usePageText()
-  const [form, setForm] = useState({ name: '', company: '', mobile: '', email: '', city: '', message: '' })
-  const [submitted, setSubmitted] = useState(false)
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setSubmitted(true)
-  }
 
   return (
     <div className="flex-1 flex flex-col">
@@ -76,7 +70,7 @@ export default function ContactUsPage() {
             ))}
           </div>
 
-          {/* Contact table */}
+          {/* Contact directories */}
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: 'var(--color-primary)' }}>
               {t('contact.directory_label', 'Contact Directories')}
@@ -91,11 +85,6 @@ export default function ContactUsPage() {
                     <a href={`mailto:${c.email}`} className="text-sm font-medium hover:underline" style={{ color: 'var(--color-primary)' }}>
                       {t(`contact.c_${i}.email`, c.email)}
                     </a>
-                    {c.phone && (
-                      <p className="mt-1 text-sm" style={{ color: 'var(--color-ink-muted)' }}>
-                        <a href={`tel:${c.phone}`} className="hover:underline">{t(`contact.c_${i}.phone`, c.phone)}</a>
-                      </p>
-                    )}
                   </div>
                 </div>
               </Reveal>
@@ -104,6 +93,12 @@ export default function ContactUsPage() {
           <Reveal>
             <p className="text-sm" style={{ color: 'var(--color-ink-subtle)' }}>
               {t('contact.business_hours', 'Business Hours: Monday – Saturday, 10 AM – 6 PM (IST)')}
+            </p>
+            <p className="text-sm mt-2" style={{ color: 'var(--color-ink-subtle)' }}>
+              {t('contact.support_redirect_prefix', 'Have a support issue or complaint?')}{' '}
+              <Link href="/support" className="font-semibold underline" style={{ color: 'var(--color-primary)' }}>
+                {t('contact.support_redirect_cta', 'Raise a support ticket →')}
+              </Link>
             </p>
           </Reveal>
         </div>
@@ -130,7 +125,7 @@ export default function ContactUsPage() {
 
                 <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
                   <iframe
-                    src="https://maps.google.com/maps?q=Astonea+Labs+Limited,+Haripur,+Haryana&ll=30.5483669,76.9880911&hl=en&z=16&output=embed"
+                    src="https://www.google.com/maps?q=astonea+labs+pvt+ltd+panchkula&z=15&output=embed"
                     title="Astonea Labs Limited — Location on Google Maps"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
@@ -142,69 +137,45 @@ export default function ContactUsPage() {
             </Reveal>
 
             <Reveal delay={100}>
-              {submitted ? (
-                <div className="p-10 rounded-2xl border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
-                  <p className="font-mono text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--color-primary-light)' }}>{t('contact.form.success_label', 'MESSAGE RECEIVED')}</p>
-                  <h3 className="font-display text-xl font-semibold text-white mb-3">{t('contact.form.success_heading', 'Thank you for reaching out.')}</h3>
-                  <p className="text-sm" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                    {t('contact.form.success_body', 'Our team will contact you within one business day.')}
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {[
-                    { name: 'name', label: 'Full Name', type: 'text', required: true },
-                    { name: 'company', label: 'Company Name', type: 'text', required: false },
-                    { name: 'mobile', label: 'Mobile Number', type: 'tel', required: true },
-                    { name: 'email', label: 'Email Address', type: 'email', required: true },
-                    { name: 'city', label: 'City', type: 'text', required: false },
-                  ].map((field) => (
-                    <div key={field.name}>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                        {field.label}{field.required && ' *'}
-                      </label>
-                      <input
-                        type={field.type}
-                        name={field.name}
-                        required={field.required}
-                        value={form[field.name as keyof typeof form]}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2 transition-all"
-                        style={{
-                          background: 'rgba(255,255,255,0.06)',
-                          border: '1px solid rgba(255,255,255,0.1)',
-                          color: 'white',
-                        }}
-                      />
-                    </div>
-                  ))}
-                  <div>
-                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                      Message *
-                    </label>
-                    <textarea
-                      name="message"
-                      required
-                      rows={4}
-                      value={form.message}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2 transition-all resize-none"
-                      style={{
-                        background: 'rgba(255,255,255,0.06)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        color: 'white',
-                      }}
-                    />
+              <TicketFormShell
+                source="support_form"
+                defaultCategorySlug="business-development"
+                categoryOptions={categoryOptions}
+                submitLabel={t('contact.form.submit', 'Send verification code →') as string}
+                extraFields={[
+                  { kind: 'text', name: 'company', label: t('contact.form.field.company', 'Company Name') as string },
+                  { kind: 'text', name: 'city', label: t('contact.form.field.city', 'City') as string },
+                ]}
+                renderSuccess={({ statusHref, shortCode }) => (
+                  <div className="p-10 rounded-2xl border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
+                    <p className="font-mono text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--color-primary-light)' }}>
+                      {t('contact.form.success_label', 'ENQUIRY RECEIVED') as string} · {shortCode}
+                    </p>
+                    <h3 className="font-display text-xl font-semibold text-white mb-3">{t('contact.form.success_heading', 'Thank you for reaching out.') as string}</h3>
+                    <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.72)' }}>
+                      {t('contact.form.success_body', "Our team will contact you within one business day. A confirmation email is on its way with a link to track this enquiry.") as string}
+                    </p>
+                    <a
+                      href={statusHref}
+                      className="inline-block px-5 py-2.5 rounded-full text-sm font-bold transition-all"
+                      style={{ background: 'var(--color-accent)', color: 'var(--color-slate-950)' }}
+                    >
+                      {t('contact.form.success_cta', 'Track this enquiry →') as string}
+                    </a>
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full py-3.5 rounded-full text-sm font-bold transition-all active:scale-95"
-                    style={{ background: 'var(--color-accent)', color: 'var(--color-slate-950)' }}
-                  >
-                    {t('contact.form.submit', 'Send Enquiry →')}
-                  </button>
-                </form>
-              )}
+                )}
+                classes={{
+                  label: 'block text-xs font-medium mb-1.5 text-white/70',
+                  input: 'w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2 transition-all bg-white/[0.06] border border-white/10 text-white placeholder-white/30',
+                  select: 'w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2 transition-all bg-white/[0.06] border border-white/10 text-white',
+                  textarea: 'w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2 transition-all bg-white/[0.06] border border-white/10 text-white resize-none min-h-[8rem]',
+                  button: 'w-full py-3.5 rounded-full text-sm font-bold transition-all active:scale-95 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-accent)] text-[var(--color-slate-950)]',
+                  secondaryLink: 'text-white/60 hover:text-white underline-offset-2 hover:underline disabled:opacity-40',
+                  hintMuted: 'text-xs text-white/50',
+                  errorBox: 'px-3 py-2 rounded-lg bg-rose-500/15 border border-rose-400/30 text-rose-200 text-xs',
+                  otpBox: 'p-5 rounded-2xl border border-white/10 bg-white/[0.04]',
+                }}
+              />
             </Reveal>
           </div>
         </div>

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import Link from '@/components/LocaleLink'
 import { PageHeader } from '@/components/PageHeader'
 import { Reveal } from '@/components/StaggerReveal'
 import { usePageText } from '@/components/PageTextProvider'
+import TicketFormShell from '@/app/[locale]/_tickets/TicketFormShell'
 
 const whyJoin = [
   {
@@ -53,19 +54,12 @@ const candidateTraits = [
   'Fresh graduates and experienced professionals are both welcome',
 ]
 
-export default function CareerPage() {
+export default function CareerPage({
+  categoryOptions,
+}: {
+  categoryOptions: Array<{ slug: string; label: string }>
+}) {
   const t = usePageText()
-  const [form, setForm] = useState({ name: '', mobile: '', email: '', department: '', experience: '', message: '' })
-  const [submitted, setSubmitted] = useState(false)
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setSubmitted(true)
-  }
 
   return (
     <div className="flex-1 flex flex-col">
@@ -157,104 +151,83 @@ export default function CareerPage() {
                 <h2 className="font-display text-3xl lg:text-4xl font-bold leading-snug mb-5 text-balance" style={{ color: 'var(--color-ink)' }}>
                   {t('career.form.heading', 'Ready to join the Astonea team?')}
                 </h2>
-                <p className="text-base leading-relaxed" style={{ color: 'var(--color-ink-muted)' }}>
+                <p className="text-base leading-relaxed mb-3" style={{ color: 'var(--color-ink-muted)' }}>
                   {t(
                     'career.form.body',
-                    "Fill in the form with your details and we'll be in touch. Alternatively, send your CV directly to cs@astonea.org.",
+                    "Fill in the form with your details and attach your CV. You'll receive an email confirmation with a tracking link.",
                   )}
+                </p>
+                <p className="text-sm" style={{ color: 'var(--color-ink-subtle)' }}>
+                  {t('career.form.support_redirect_prefix', 'Already applied and want to follow up?')}{' '}
+                  <Link href="/support" className="font-semibold underline" style={{ color: 'var(--color-primary)' }}>
+                    {t('career.form.support_redirect_cta', 'Use your tracking link →')}
+                  </Link>
                 </p>
               </div>
             </Reveal>
 
             <Reveal delay={80}>
-              {submitted ? (
-                <div className="p-10 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
-                  <p className="font-mono text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--color-primary)' }}>{t('career.form.success_label', 'APPLICATION SUBMITTED')}</p>
-                  <h3 className="font-display text-xl font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>{t('career.form.success_heading', "We've received your application.")}</h3>
-                  <p className="text-sm" style={{ color: 'var(--color-ink-muted)' }}>
-                    {t('career.form.success_body', 'Thank you for your interest. Our HR team will review your application and reach out shortly.')}
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {[
-                    { name: 'name', label: 'Full Name', type: 'text', required: true },
-                    { name: 'mobile', label: 'Mobile Number', type: 'tel', required: true },
-                    { name: 'email', label: 'Email Address', type: 'email', required: true },
-                  ].map((field) => (
-                    <div key={field.name}>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-ink-muted)' }}>
-                        {field.label} *
-                      </label>
-                      <input
-                        type={field.type}
-                        name={field.name}
-                        required={field.required}
-                        value={form[field.name as keyof typeof form]}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl text-sm border outline-none focus:ring-2 transition-all"
-                        style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
-                      />
-                    </div>
-                  ))}
-
-                  <div>
-                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-ink-muted)' }}>
-                      Department Applying For *
-                    </label>
-                    <select
-                      name="department"
-                      required
-                      value={form.department}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl text-sm border outline-none focus:ring-2 transition-all"
-                      style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
+              <TicketFormShell
+                source="support_form"
+                defaultCategorySlug="careers"
+                categoryOptions={categoryOptions}
+                submitLabel={t('career.form.submit', 'Send verification code →') as string}
+                extraFields={[
+                  {
+                    kind: 'text',
+                    name: 'subject',
+                    label: t('career.form.field.role', 'Role you\'re applying for') as string,
+                    required: true,
+                    placeholder: t('career.form.field.role_placeholder', 'e.g. QA Officer · 3 yrs') as string,
+                  },
+                  {
+                    kind: 'select',
+                    name: 'department_label',
+                    label: t('career.form.field.department', 'Department') as string,
+                    required: true,
+                    options: departments.map((d, i) => ({ value: d, label: t(`career.dept_${i}`, d) as string })),
+                  },
+                  {
+                    kind: 'file',
+                    name: 'attachments',
+                    label: t('career.form.field.cv', 'CV / Resume') as string,
+                    accept: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    required: true,
+                    help: t('career.form.field.cv_help', 'PDF or Word document up to 25 MB.') as string,
+                  },
+                ]}
+                renderSuccess={({ statusHref, shortCode }) => (
+                  <div className="p-10 rounded-2xl border" style={{ borderColor: 'var(--color-border)' }}>
+                    <p className="font-mono text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--color-primary)' }}>
+                      {t('career.form.success_label', 'APPLICATION SUBMITTED') as string} · {shortCode}
+                    </p>
+                    <h3 className="font-display text-xl font-semibold mb-3" style={{ color: 'var(--color-ink)' }}>
+                      {t('career.form.success_heading', "We've received your application.") as string}
+                    </h3>
+                    <p className="text-sm mb-5" style={{ color: 'var(--color-ink-muted)' }}>
+                      {t('career.form.success_body', 'Thank you for your interest. Our HR team will review your application and reach out shortly. A confirmation email with a tracking link is on its way.') as string}
+                    </p>
+                    <a
+                      href={statusHref}
+                      className="inline-block px-5 py-2.5 rounded-full text-white text-sm font-bold transition-all"
+                      style={{ background: 'var(--color-primary)' }}
                     >
-                      <option value="">Select a department</option>
-                      {departments.map((d) => <option key={d} value={d}>{d}</option>)}
-                    </select>
+                      {t('career.form.success_cta', 'Track your application →') as string}
+                    </a>
                   </div>
-
-                  <div>
-                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-ink-muted)' }}>
-                      Years of Experience
-                    </label>
-                    <input
-                      type="text"
-                      name="experience"
-                      placeholder="e.g. Fresher, 2 years, 10+ years"
-                      value={form.experience}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl text-sm border outline-none focus:ring-2 transition-all"
-                      style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--color-ink-muted)' }}>
-                      Message / Additional Info *
-                    </label>
-                    <textarea
-                      name="message"
-                      required
-                      rows={4}
-                      placeholder="Tell us about yourself, your experience, and what role you're interested in..."
-                      value={form.message}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl text-sm border outline-none focus:ring-2 transition-all resize-none"
-                      style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink)' }}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full py-3.5 rounded-full text-white text-sm font-bold transition-all active:scale-95 hover:opacity-90"
-                    style={{ background: 'var(--color-primary)' }}
-                  >
-                    {t('career.form.submit', 'Submit Application →')}
-                  </button>
-                </form>
-              )}
+                )}
+                classes={{
+                  label: 'block text-xs font-medium mb-1.5 text-[var(--color-ink-muted)]',
+                  input: 'w-full px-4 py-3 rounded-xl text-sm border border-[var(--color-border)] outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)]/40 transition-all text-[var(--color-ink)] bg-white',
+                  select: 'w-full px-4 py-3 rounded-xl text-sm border border-[var(--color-border)] outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)]/40 transition-all text-[var(--color-ink)] bg-white',
+                  textarea: 'w-full px-4 py-3 rounded-xl text-sm border border-[var(--color-border)] outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)]/40 transition-all text-[var(--color-ink)] bg-white resize-none min-h-[8rem]',
+                  button: 'w-full py-3.5 rounded-full text-white text-sm font-bold transition-all active:scale-95 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-primary)]',
+                  secondaryLink: 'text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] underline-offset-2 hover:underline disabled:opacity-40',
+                  hintMuted: 'text-xs text-[var(--color-ink-subtle)]',
+                  errorBox: 'px-3 py-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs',
+                  otpBox: 'p-5 rounded-2xl border border-[var(--color-border)] bg-white',
+                }}
+              />
             </Reveal>
           </div>
         </div>

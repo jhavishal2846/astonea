@@ -83,6 +83,9 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'nav.aria.home':                    'Astonea Labs — home',
   'nav.aria.mobile':                  'Mobile navigation',
 
+  // ─── Breadcrumb ─────────────────────────────────────────────────────────
+  'breadcrumb.home':                  'Home',
+
   // ─── Footer ─────────────────────────────────────────────────────────────
   'footer.cta.heading':               'Ready to manufacture with confidence?',
   'footer.cta.subtext':               'Speak with our team about formulation, third-party manufacturing, or investor enquiries.',
@@ -112,6 +115,7 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'footer.link.csr':                  'CSR',
   'footer.link.career':               'Career',
   'footer.link.contact_us':           'Contact Us',
+  'footer.link.support':              'Customer Support',
   'footer.link.sebi_lodr_46':         'SEBI LODR Reg. 46',
   'footer.link.sebi_lodr_30':         'SEBI LODR Reg. 30',
   'footer.link.financial_results':    'Financial Results',
@@ -186,6 +190,7 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'home.industries.item_4.desc': 'Animal health tablets, oral suspensions, and feed-grade premixes manufactured to GMP norms.',
   'home.industries.item_5.name': 'OTC & Wellness',
   'home.industries.item_5.desc': 'Pain relief, digestives, immunity boosters, and lifestyle SKUs ready for distribution at scale.',
+  'home.industries.sector_prefix': 'Sector',
 
   // Fade chapters (scroll-driven backdrop section)
   'home.fade.chapter_0.kicker': 'Chapter 01',
@@ -251,6 +256,8 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   // ─── Home — Scroll hero ────────────────────────────────────────────────
   'home.hero.kicker':            'Inside Astonea Labs · Chandigarh',
   'home.hero.chapter':           '01 / Manufacturing',
+  'home.hero.headline':          'Trusted Pharmaceutical Manufacturing for Brands Ready to Scale.',
+  'home.hero.supporting':        'WHO-GMP certified manufacturer of tablets, capsules, syrups, topical formulations, and cosmetics. Helping healthcare, nutraceutical, and personal care brands launch faster with consistent quality.',
   'home.hero.cta_primary':       'Explore Capabilities',
   'home.hero.cta_secondary':     'Enquire Now',
   'home.hero.tag_0':             'EST. 2017',
@@ -260,6 +267,7 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'home.hero.caption_primary':   'Analytical Bench / QC Release',
   'home.hero.caption_secondary': 'Finished Dosage',
   'home.hero.scroll_cue':        'Scroll',
+  'home.hero.sr_h1':             'Astonea Labs — BSE-SME pharma and cosmetics manufacturer for 2,000+ brands.',
 
   // ─── Contact page ──────────────────────────────────────────────────────
   'contact.offices.label':         'Our Offices',
@@ -289,6 +297,12 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'contact.form.success_heading':  'Thank you for reaching out.',
   'contact.form.success_body':     'Our team will contact you within one business day.',
   'contact.form.submit':           'Send Enquiry →',
+  'contact.form.field.name':       'Full Name',
+  'contact.form.field.company':    'Company Name',
+  'contact.form.field.mobile':     'Mobile Number',
+  'contact.form.field.email':      'Email Address',
+  'contact.form.field.city':       'City',
+  'contact.form.field.message':    'Message',
 
   // ─── Career page ───────────────────────────────────────────────────────
   'career.why.label':              'Why Astonea',
@@ -339,6 +353,15 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'career.form.success_heading':   "We've received your application.",
   'career.form.success_body':      'Thank you for your interest. Our HR team will review your application and reach out shortly.',
   'career.form.submit':            'Submit Application →',
+  'career.form.field.name':        'Full Name',
+  'career.form.field.mobile':      'Mobile Number',
+  'career.form.field.email':       'Email Address',
+  'career.form.field.department':  'Department Applying For',
+  'career.form.field.department_placeholder': 'Select a department',
+  'career.form.field.experience':  'Years of Experience',
+  'career.form.field.experience_placeholder': 'e.g. Fresher, 2 years, 10+ years',
+  'career.form.field.message':     'Message / Additional Info',
+  'career.form.field.message_placeholder': "Tell us about yourself, your experience, and what role you're interested in...",
 
   // ─── Products — landing / catalog / detail ─────────────────────────────
   // Hero (the /products listing page)
@@ -431,4 +454,91 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'products.doc.COPP':                'Certificate of Pharma Product',
   'products.doc.FSSAI':               'FSSAI Compliance',
   'products.doc.WHO_GMP':             'WHO-GMP Certificate',
+
+  // ─── Career form (extra-field labels shared with TicketFormShell) ──────
+  'career.form.field.role':                    "Role you're applying for",
+  'career.form.field.role_placeholder':        'e.g. QA Officer · 3 yrs',
+  'career.form.field.cv':                      'CV / Resume',
+  'career.form.field.cv_help':                 'PDF or Word document up to 25 MB.',
+  'career.form.body':                          "Fill in the form with your details and attach your CV. You'll receive an email confirmation with a tracking link.",
+  'career.form.support_redirect_prefix':       'Already applied and want to follow up?',
+  'career.form.support_redirect_cta':          'Use your tracking link →',
+  'career.form.success_cta':                   'Track your application →',
+
+  // ─── Contact form (extras shared with TicketFormShell) ────────────────
+  'contact.form.success_cta':                  'Track this enquiry →',
+  'contact.support_redirect_prefix':           'Have a support issue or complaint?',
+  'contact.support_redirect_cta':              'Raise a support ticket →',
+
+  // ─── Ticket form shell — UI chrome shared by /contact-us, /career, /support/new ─
+  'ticket.step.details':                       'Details',
+  'ticket.step.verify':                        'Verify',
+  'ticket.step.aria':                          'Form progress',
+  'ticket.field.name':                         'Full name',
+  'ticket.field.name_placeholder':             'Your name',
+  'ticket.field.email':                        'Email address',
+  'ticket.field.email_placeholder':            'you@example.com',
+  'ticket.field.mobile':                       'Mobile number',
+  'ticket.field.mobile_placeholder':           'Mobile number',
+  'ticket.field.mobile_hint':                  "We'll text a 6-digit verification code.",
+  'ticket.field.department':                   'Department',
+  'ticket.field.department_placeholder':       'Choose a department…',
+  'ticket.field.message':                      'Message',
+  'ticket.field.message_placeholder':          "Tell us what's going on…",
+  'ticket.field.select_placeholder':           '— Select —',
+  'ticket.country.search_placeholder':         'Search country or +code…',
+  'ticket.country.no_matches':                 'No matches',
+  'ticket.country.aria_label':                 'Country dial code: +{dial} ({iso2})',
+  'ticket.country.list_aria':                  'Countries',
+  'ticket.otp.sent_sms':                       'Code sent by SMS to',
+  'ticket.otp.sent_email':                     'Code sent by email to',
+  'ticket.otp.cell_aria':                      'Digit {index} of {length}',
+  'ticket.otp.expires':                        'Code expires in 10 minutes · Resend in {seconds}s',
+  'ticket.otp.didnt_get':                      "Didn't get it?",
+  'ticket.otp.resend':                         'Resend code',
+  'ticket.otp.enter_full':                     'Enter the {length}-digit code.',
+  'ticket.otp.verify_submit':                  'Verify & submit',
+  'ticket.otp.edit_details':                   '← Edit details',
+  'ticket.otp.switch_to_email':                'Get code by email instead',
+  'ticket.otp.switch_to_sms':                  'Get code by SMS instead',
+  'ticket.button.working':                     'Working…',
+  'ticket.disclaimer.step1':                   "Step 1 of 2 · We'll send a 6-digit code to verify your mobile.",
+  'ticket.validation.name_required':           'Please enter your name.',
+  'ticket.validation.email_invalid':           'Please enter a valid email address.',
+  'ticket.validation.phone_required':          'Please enter your mobile number.',
+  'ticket.validation.message_short':           'Please write a short message (at least 5 characters).',
+  'ticket.validation.field_required':          '{label} is required.',
+  'ticket.validation.field_select':            'Please select {label}.',
+
+  // ─── Support landing & status page ────────────────────────────────────
+  'support.status.enquiry_prefix':             'Enquiry',
+  'support.status.status_prefix':              'Status:',
+  'support.status.breadcrumb':                 'Support',
+  'support.conversation.title':                'Conversation',
+  'support.conversation.opened_prefix':        'Opened',
+  'support.conversation.opened_by':            'by',
+  'support.author.you':                        'You',
+  'support.author.admin':                      'Astonea Team',
+  'support.author.system':                     'System',
+  'support.reply.start':                       '+ Post a follow-up',
+  'support.reply.your_reply':                  'Your reply',
+  'support.reply.attachments':                 'Attachments',
+  'support.reply.required':                    'Please write a message first.',
+  'support.reply.code_sent_to':                'We sent a 6-digit code to',
+  'support.reply.code_expires':                'It expires in 10 minutes.',
+  'support.reply.switch_to_sms':               'Send code by SMS instead',
+  'support.reply.switch_to_email':             'Send code by email instead',
+  'support.reply.edit_message':                '← Edit message',
+  'support.reply.cancel':                      'Cancel',
+  'support.reply.send_code':                   'Send verification code →',
+  'support.reply.posting_state':               'Posting…',
+  'support.reply.sending_state':               'Sending code…',
+  'support.reply.post':                        'Post reply →',
+
+  // ─── Ticket status labels (server-rendered, displayed publicly) ────────
+  'ticket.status.open':                        'Open',
+  'ticket.status.in_progress':                 'In progress',
+  'ticket.status.waiting':                     'Waiting on customer',
+  'ticket.status.resolved':                    'Resolved',
+  'ticket.status.closed':                      'Closed',
 }

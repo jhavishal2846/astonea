@@ -1437,6 +1437,66 @@ const CAREER: PageDefaults = {
   ],
 }
 
+const SUPPORT: PageDefaults = {
+  path: '/support',
+  slots: [
+    ...hero(
+      'Customer Support',
+      'How can we help?',
+      "Raise a support ticket or file a complaint. We'll respond by email and the same status link lets you follow up.",
+    ),
+
+    /* ── Two-door grid ─────────────────────────────────────────── */
+    { key: 'support.door_1.kicker', label: 'Door 1 kicker', widget: 'text', defaultValue: '01', group: 'Doors' },
+    { key: 'support.door_1.title', label: 'Door 1 title', widget: 'text', defaultValue: 'Raise a new ticket', group: 'Doors' },
+    { key: 'support.door_1.body', label: 'Door 1 body', widget: 'textarea', defaultValue: "Describe your issue, verify your phone with a 6-digit code, and you'll receive a tracking link by email.", group: 'Doors' },
+    { key: 'support.door_1.cta', label: 'Door 1 CTA', widget: 'text', defaultValue: 'Start a ticket →', group: 'Doors' },
+    { key: 'support.door_2.kicker', label: 'Door 2 kicker', widget: 'text', defaultValue: '02', group: 'Doors' },
+    { key: 'support.door_2.title', label: 'Door 2 title', widget: 'text', defaultValue: 'I already have a ticket', group: 'Doors' },
+    { key: 'support.door_2.body', label: 'Door 2 body', widget: 'textarea', defaultValue: 'The confirmation email we sent you contains a status link in the form /support/<token>. Open it to view replies and post follow-ups.', group: 'Doors' },
+    { key: 'support.door_2.lost_email', label: 'Door 2 lost-email line', widget: 'textarea', defaultValue: "Lost the email? Raise a new ticket and mention your previous one — we'll merge them.", group: 'Doors' },
+
+    /* ── What support covers ───────────────────────────────────── */
+    { key: 'support.covers.title', label: 'Coverage title', widget: 'text', defaultValue: 'What support covers', group: 'Coverage' },
+    { key: 'support.covers.item_0', label: 'Coverage item 1', widget: 'text', defaultValue: 'Issues with a product or order you received from Astonea Labs', group: 'Coverage' },
+    { key: 'support.covers.item_1', label: 'Coverage item 2', widget: 'text', defaultValue: 'Complaints about quality, packaging, delivery, or service', group: 'Coverage' },
+    { key: 'support.covers.item_2', label: 'Coverage item 3', widget: 'text', defaultValue: 'Questions about an existing engagement (open POs, in-flight shipments, prior correspondence)', group: 'Coverage' },
+    { key: 'support.covers.redirect_prefix', label: 'Coverage redirect prefix', widget: 'textarea', defaultValue: 'For new business enquiries or job applications, please use the', group: 'Coverage' },
+    { key: 'support.covers.contact_link', label: 'Coverage — contact link text', widget: 'text', defaultValue: 'contact', group: 'Coverage' },
+    { key: 'support.covers.or_word', label: 'Coverage — "or" connector', widget: 'text', defaultValue: 'or', group: 'Coverage' },
+    { key: 'support.covers.career_link', label: 'Coverage — career link text', widget: 'text', defaultValue: 'career', group: 'Coverage' },
+    { key: 'support.covers.redirect_suffix', label: 'Coverage redirect suffix', widget: 'text', defaultValue: 'page instead.', group: 'Coverage' },
+  ],
+}
+
+const SUPPORT_NEW: PageDefaults = {
+  path: '/support/new',
+  slots: [
+    ...hero(
+      'Customer Support',
+      'Raise a support ticket',
+      "Tell us what's wrong and we'll pick it up. You'll get an email confirmation and a link to track replies.",
+    ),
+    { key: 'support_new.breadcrumb.parent', label: 'Breadcrumb — Support', widget: 'text', defaultValue: 'Support', group: 'Breadcrumb' },
+    { key: 'support_new.breadcrumb.self', label: 'Breadcrumb — New ticket', widget: 'text', defaultValue: 'New ticket', group: 'Breadcrumb' },
+    { key: 'support_new.sms_disclaimer', label: 'SMS disclaimer', widget: 'textarea', defaultValue: "We'll send a 6-digit code to your mobile to confirm you. Standard SMS rates may apply.", group: 'Disclaimer' },
+
+    /* ── New-ticket form copy (rendered inside the form shell) ──── */
+    { key: 'support_new.form.submit', label: 'Submit button', widget: 'text', defaultValue: 'Send verification code →', group: 'Form' },
+    { key: 'support_new.form.field.subject', label: 'Subject field label', widget: 'text', defaultValue: 'Subject', group: 'Form' },
+    { key: 'support_new.form.field.subject_placeholder', label: 'Subject placeholder', widget: 'text', defaultValue: 'Short summary of the issue', group: 'Form' },
+    { key: 'support_new.form.field.company', label: 'Company field label', widget: 'text', defaultValue: 'Company (optional)', group: 'Form' },
+    { key: 'support_new.form.field.attachments', label: 'Attachments field label', widget: 'text', defaultValue: 'Attachments (optional)', group: 'Form' },
+    { key: 'support_new.form.field.attachments_help', label: 'Attachments help text', widget: 'text', defaultValue: 'Screenshots, invoices, photos. PDF / image / text up to 25 MB each.', group: 'Form' },
+
+    /* ── Success card ──────────────────────────────────────────── */
+    { key: 'support_new.success.label', label: 'Success badge label', widget: 'text', defaultValue: 'TICKET LOGGED', group: 'Success' },
+    { key: 'support_new.success.heading', label: 'Success heading', widget: 'text', defaultValue: "We've received your ticket.", group: 'Success' },
+    { key: 'support_new.success.body', label: 'Success body', widget: 'textarea', defaultValue: 'A confirmation email is on its way with the same tracking link. You can keep this page open or visit it later.', group: 'Success' },
+    { key: 'support_new.success.cta', label: 'Success CTA', widget: 'text', defaultValue: 'View ticket status →', group: 'Success' },
+  ],
+}
+
 const CONTACT_US: PageDefaults = {
   path: '/contact-us',
   slots: [
@@ -1792,6 +1852,8 @@ const REGISTRY: PageDefaults[] = [
   CSR,
   CAREER,
   CONTACT_US,
+  SUPPORT,
+  SUPPORT_NEW,
   MANUFACTURING_FACILITY,
   CERTIFICATIONS,
   KEY_MILESTONE,
@@ -2215,6 +2277,164 @@ const REGISTRY: PageDefaults[] = [
       /* ── Breadcrumb ─────────────────────────────────────────────── */
       { key: 'po.crumb.investors', label: 'Breadcrumb — Investors', widget: 'text', defaultValue: 'Investors', group: 'Breadcrumb' },
       { key: 'po.crumb.self', label: 'Breadcrumb — Public Offering', widget: 'text', defaultValue: 'Public Offering', group: 'Breadcrumb' },
+    ],
+  },
+  {
+    path: '/agm',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Meetings' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Annual General Meetings (AGM)' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Notices, corrigenda, proceedings and scrutinizer reports of Annual General Meetings of Astonea Labs Limited.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No AGM documents have been published yet.' },
+    ],
+  },
+  {
+    path: '/annual-reports',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Investor Relations' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Annual Reports' },
+      { key: 'doc.archive.eyebrow', label: 'doc.archive.eyebrow', widget: 'text', defaultValue: 'Reports Archive' },
+      { key: 'doc.archive.heading', label: 'doc.archive.heading', widget: 'text', defaultValue: 'Annual reports for every financial year' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No annual reports have been published yet.' },
+      { key: 'doc.disclaimer', label: 'doc.disclaimer', widget: 'textarea', defaultValue: 'Annual Reports are filed with BSE in accordance with SEBI LODR Regulations. CIN: L24304CH2017PLC041482 — Astonea Labs Limited, Chandigarh, India. For the most current filings, refer to the exchange portals or contact cs@astonea.org.' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Astonea Labs Limited\'s complete annual reports — financial statements, governance, and corporate disclosures.' },
+    ],
+  },
+  {
+    path: '/board-meetings',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Meetings' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Board Meetings' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Intimations and outcomes of meetings of the Board of Directors of Astonea Labs Limited.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No board meeting documents have been published yet.' },
+    ],
+  },
+  {
+    path: '/codes',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Governance' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Codes' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Codes of conduct governing insider trading, fair disclosure and conduct of Board & Senior Management.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No codes have been published yet.' },
+    ],
+  },
+  {
+    path: '/corporate-announcements',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Investor Relations' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Corporate Announcements' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Material events, intimations and corporate announcements filed by Astonea Labs Limited with the exchange.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No corporate announcements have been published yet.' },
+    ],
+  },
+  {
+    path: '/corporate-documents',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Governance' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Corporate Documents' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Memorandum and Articles of Association and other corporate documents of Astonea Labs Limited.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No corporate documents have been published yet.' },
+    ],
+  },
+  {
+    path: '/egm',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Meetings' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Extra-Ordinary General Meetings (EGM)' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Notices, proceedings and scrutinizer reports of Extra-Ordinary General Meetings of Astonea Labs Limited.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No EGM documents have been published yet.' },
+    ],
+  },
+  {
+    path: '/financial-results',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Investor Relations' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Financial Results' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No financial results have been published yet.' },
+      { key: 'doc.disclaimer', label: 'doc.disclaimer', widget: 'textarea', defaultValue: 'The financial results listed above are submitted to BSE as per SEBI LODR Regulations. For the latest filings, please also refer to the BSE India portal using CIN L24304CH2017PLC041482.' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Astonea Labs Limited\'s audited annual financial statements, half-yearly results and restated financial statements.' },
+    ],
+  },
+  {
+    path: '/frameworks',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Governance' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Frameworks' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Frameworks governing compliance, evaluation and board processes at Astonea Labs Limited.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No frameworks have been published yet.' },
+    ],
+  },
+  {
+    path: '/integrated-finance',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Integrated Filings' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Integrated Finance' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Half-yearly and yearly integrated financial filings of Astonea Labs Limited submitted to the stock exchange.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No integrated finance filings have been published yet.' },
+    ],
+  },
+  {
+    path: '/integrated-governance',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Integrated Filings' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Integrated Governance' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Quarterly integrated governance filings of Astonea Labs Limited submitted under the SEBI integrated filing framework.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No integrated governance filings have been published yet.' },
+    ],
+  },
+  {
+    path: '/newspaper-publications',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Investor Relations' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Newspaper Publications' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Statutory financial results and notices of Astonea Labs Limited published in approved newspapers.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No newspaper publications have been published yet.' },
+    ],
+  },
+  {
+    path: '/policies',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Governance' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Policies' },
+      { key: 'header.description', label: 'header.description', widget: 'text', defaultValue: 'Board-approved governance policies of Astonea Labs Limited.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No policies have been published yet.' },
+    ],
+  },
+  {
+    path: '/related-party-transactions',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Investor Relations' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Related Party Transactions' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Half-yearly and yearly disclosures of related party transactions of Astonea Labs Limited filed under Regulation 23 of SEBI LODR.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No related party transaction disclosures have been published yet.' },
+    ],
+  },
+  {
+    path: '/sebi-lodr-regulation-30-disclosures',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'SEBI Disclosures' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'SEBI LODR Regulation 30 Disclosures' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Event-based material disclosures filed with BSE under Regulation 30 of the SEBI Listing Obligations and Disclosure Requirements Regulations, 2015.' },
+      { key: 'reg30.intro', label: 'reg30.intro', widget: 'textarea', defaultValue: 'Regulation 30 — SEBI LODR, 2015: All listed companies must promptly disclose material events and information to the stock exchanges. The following disclosures have been filed with BSE by Astonea Labs Limited (CIN: L24304CH2017PLC041482).' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No Regulation 30 disclosures have been published yet.' },
+    ],
+  },
+  {
+    path: '/shareholding-pattern',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Investor Relations' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Shareholding Pattern' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Half-yearly shareholding pattern filings submitted by Astonea Labs Limited under Regulation 31 of SEBI LODR.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No shareholding pattern filings have been published yet.' },
+    ],
+  },
+  {
+    path: '/trading-window-closure',
+    slots: [
+      { key: 'header.eyebrow', label: 'header.eyebrow', widget: 'text', defaultValue: 'Investor Relations' },
+      { key: 'header.title', label: 'header.title', widget: 'text', defaultValue: 'Trading Window Closure' },
+      { key: 'header.description', label: 'header.description', widget: 'textarea', defaultValue: 'Intimations of trading window closure of Astonea Labs Limited under SEBI (Prohibition of Insider Trading) Regulations, 2015.' },
+      { key: 'doc.empty', label: 'doc.empty', widget: 'text', defaultValue: 'No trading window closure intimations have been published yet.' },
     ],
   },
 ]

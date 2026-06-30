@@ -28,6 +28,7 @@ const businessLinks = [
   { labelKey: 'footer.link.csr',              href: '/csr' },
   { labelKey: 'footer.link.career',           href: '/career' },
   { labelKey: 'footer.link.contact_us',       href: '/contact-us' },
+  { labelKey: 'footer.link.support',          href: '/support' },
 ]
 
 const socials = [

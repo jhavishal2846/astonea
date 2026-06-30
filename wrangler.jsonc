@@ -23,10 +23,11 @@
       "binding": "DB",
       "database_name": "astonea-prod",
       "database_id": "cf61ac36-2d9f-42a4-b5e6-8015a0d7c236",
-      "migrations_dir": "drizzle"
-      // Flip to `"remote": true` (and add Workers Scripts:Edit to the API
-      // token) to make `npm run dev` hit the live remote D1 instead of the
-      // local sqlite file. Default is local — sandboxed, no prod risk.
+      "migrations_dir": "drizzle",
+      "remote": true
+      // `remote: true` → `npm run dev` hits the live remote D1 instead of
+      // the local sqlite file. Requires the API token to have Workers
+      // Scripts:Edit. ⚠️ Writes go straight to production.
     }
   ],
 
@@ -53,6 +54,15 @@
       "binding": "SESSION_CACHE",
       "id": "a88e152a68384f2aaa594ce15802f441"
     }
+  ],
+
+  // Outbound transactional mail (OTP, ticket notifications). The destination
+  // address must be verified in the Cloudflare dashboard before this binding
+  // accepts sends. Provision: dashboard → Email → Email Workers → create
+  // destination address. All ticket-system mail is sent FROM and TO the same
+  // verified mailbox via Email Routing rules.
+  "send_email": [
+    { "name": "EMAIL", "destination_address": "support@astonea.org" }
   ],
 
   "observability": {

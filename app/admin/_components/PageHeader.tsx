@@ -9,7 +9,7 @@ export default function AdminPageHeader({
   actions,
 }: {
   title: string
-  description?: string
+  description?: React.ReactNode
   breadcrumbs?: Crumb[]
   actions?: React.ReactNode
 }) {
@@ -33,7 +33,7 @@ export default function AdminPageHeader({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">{title}</h1>
-          {description && <p className="text-sm text-slate-600 mt-1">{description}</p>}
+          {description && <div className="text-sm text-slate-600 mt-1">{description}</div>}
         </div>
         {actions && <div className="flex items-center gap-2 flex-wrap">{actions}</div>}
       </div>

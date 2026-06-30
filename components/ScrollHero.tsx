@@ -5,7 +5,7 @@ import Link from '@/components/LocaleLink'
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import Magnetic from './Magnetic'
-import { usePageText } from './PageTextProvider'
+import { useCmsEditMode, useCmsMarkers, usePageText } from './PageTextProvider'
 
 const E = [0.16, 1, 0.3, 1] as const
 
@@ -116,6 +116,9 @@ export default function ScrollHero() {
   const reduce = useReducedMotion()
   const sectionRef = useRef<HTMLElement>(null)
   const t = usePageText()
+  const editMode = useCmsEditMode()
+  const markers = useCmsMarkers()
+  const HEADLINE_DEFAULT = 'Trusted Pharmaceutical Manufacturing for Brands Ready to Scale.'
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -128,7 +131,7 @@ export default function ScrollHero() {
   const headlineY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 60])
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0.35])
 
-  const headline = textOf(t, 'home.hero.headline', 'Trusted Pharmaceutical Manufacturing for Brands Ready to Scale.')
+  const headline = textOf(t, 'home.hero.headline', HEADLINE_DEFAULT)
 
   return (
     <section
@@ -142,7 +145,7 @@ export default function ScrollHero() {
       aria-label="Astonea Labs home hero"
     >
       <h1 className="sr-only">
-        Astonea Labs — BSE-SME pharma and cosmetics manufacturer for 2,000+ brands.
+        {t('home.hero.sr_h1', 'Astonea Labs — BSE-SME pharma and cosmetics manufacturer for 2,000+ brands.')}
       </h1>
 
       {/* Faint grid overlay (matches the dark Capabilities section downstream) */}
@@ -208,7 +211,10 @@ export default function ScrollHero() {
           </motion.p>
 
           {/* split-text headline */}
-          <div className="mt-4 max-w-[640px]">
+          <div
+            className={`mt-4 max-w-[640px]${editMode ? ' cms-editable' : ''}`}
+            {...markers('home.hero.headline', HEADLINE_DEFAULT)}
+          >
             <SplitHeadline text={headline} />
           </div>
 
