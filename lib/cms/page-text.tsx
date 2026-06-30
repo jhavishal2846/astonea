@@ -16,6 +16,21 @@ export function pageTextLocaleTag(path: string, locale: string) {
 }
 
 async function currentLocale(): Promise<string> {
+  // Prefer the middleware-set `x-locale` header — it's set unconditionally
+  // before the layout runs and survives whether or not `setRequestLocale()`
+  // propagated to this async scope. `getLocale()` from next-intl only works
+  // when setRequestLocale has been seen in the SAME async context (it uses
+  // AsyncLocalStorage), which silently breaks inside child pages on Next 16
+  // server components and was the cause of pages rendering English bodies
+  // under a Spanish hero.
+  try {
+    const h = await headers()
+    const headerLocale = h.get('x-locale')
+    if (headerLocale && headerLocale.length > 0) return headerLocale
+  } catch {
+    // headers() may throw outside a request context (e.g. unstable_cache
+    // inner function) — fall through to getLocale.
+  }
   try {
     return await getLocale()
   } catch {

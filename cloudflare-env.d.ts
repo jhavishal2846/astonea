@@ -60,6 +60,41 @@ declare global {
     NEXT_TAG_CACHE_KV: MinimalKVNamespace
     // Static-asset binding produced by OpenNext.
     ASSETS: { fetch(request: Request): Promise<Response> }
+
+    // Outbound transactional email. Provisioned via the `send_email` binding
+    // in wrangler.jsonc. The runtime expects an `EmailMessage` from the
+    // `cloudflare:email` module — see lib/email/index.ts.
+    EMAIL?: { send(message: unknown): Promise<unknown> }
+
+    // ─── Ticketing system secrets (set via `wrangler secret put`) ────────
+    // HMAC key for tickets.public_token signing (>= 32 chars).
+    TICKET_TOKEN_SECRET?: string
+    // Default From: address + display name for outbound mail.
+    EMAIL_FROM_ADDRESS?: string
+    EMAIL_FROM_NAME?: string
+    // Where new-ticket notifications are sent to (defaults to support@astonea.org).
+    TICKET_NOTIFY_ADDRESS?: string
+
+    // ─── Twilio Programmable SMS (primary OTP channel) ───────────────────
+    TWILIO_ACCOUNT_SID?: string
+    TWILIO_AUTH_TOKEN?: string
+    // Use either TWILIO_FROM_NUMBER (single sender) or TWILIO_MESSAGING_SERVICE_SID
+    // (sender pool / sticky sender). The SMS channel prefers the messaging service
+    // when both are set.
+    TWILIO_FROM_NUMBER?: string
+    TWILIO_MESSAGING_SERVICE_SID?: string
+
+    // ─── OTP guardrails (optional but recommended for production) ────────
+    // Comma-separated ISO-2 list (e.g. "IN,US,GB,AE,SG"). Refuses SMS/WA to
+    // anything outside this list — the cheapest defence against toll fraud.
+    OTP_ALLOWED_COUNTRY_CODES?: string
+    // Per-country hourly issue cap (default 200). Tune down for stricter
+    // toll-fraud protection on origins that don't host real submitters.
+    OTP_COUNTRY_HOURLY_CAP?: string
+
+    // ─── Turnstile (bot gate on the public form) ─────────────────────────
+    TURNSTILE_SECRET_KEY?: string
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY?: string
   }
 }
 

@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from '@/components/LocaleLink'
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import { usePageText } from '@/components/PageTextProvider'
 
 interface PageHeaderProps {
@@ -102,6 +103,7 @@ export function PageHeader({
   // Admin-set overrides take precedence; the props passed in by the page
   // are treated as fallbacks when no override is stored.
   const t = usePageText()
+  const tg = useTranslations()
   const eyebrowText = t('header.eyebrow', eyebrow)
   const titleText = t('header.title', title)
   const descriptionText = t('header.description', description)
@@ -181,7 +183,7 @@ export function PageHeader({
           className="mb-6 flex items-center gap-2 text-xs font-medium"
           style={{ color: 'rgba(255,255,255,0.5)' }}
         >
-          <Link href="/" className="hover:text-white transition-colors">Home</Link>
+          <Link href="/" className="hover:text-white transition-colors">{tg('breadcrumb.home')}</Link>
           {breadcrumb.map((crumb, i) => (
             <span key={i} className="flex items-center gap-2">
               <span>/</span>

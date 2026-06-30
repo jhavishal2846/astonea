@@ -102,6 +102,7 @@ async function uploadOne(source: string, key: string, contentType: string) {
       Key: key,
       Body: body,
       ContentType: contentType,
+      CacheControl: 'public, max-age=31536000, immutable',
     }),
   )
   console.log(`uploaded ${source} -> ${key} (${size.toLocaleString()} B)`)

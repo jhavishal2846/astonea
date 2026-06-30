@@ -43,7 +43,15 @@
       "Bash(dir c:\\\\dev\\\\astonea\\\\drizzle)",
       "Bash(mkdir -p \"/c/Users/jhavi/.claude/plans\" 2>&1 | head -3; ls \"/c/Users/jhavi/.claude/plans\" 2>&1 | head -5)",
       "Bash(awk '{print $3}')",
-      "Bash(sed \"s/=.*//\")"
+      "Bash(sed \"s/=.*//\")",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(Get-ChildItem -Recurse -Depth 2 -Name)",
+      "Bash(Select-String -Pattern '\\\\.\\(sql|ts|js\\)$')",
+      "Bash(Select-String -Pattern '\\(schema|migration|db|drizzle|prisma\\)')",
+      "Bash(npx tsx *)",
+      "Bash(node scripts/translate-es-bulk.mjs)",
+      "Bash(npm run *)",
+      "Bash(npx wrangler *)"
     ],
     "additionalDirectories": [
       "C:\\dev\\astonea",

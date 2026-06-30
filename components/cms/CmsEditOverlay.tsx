@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { savePageTextOne } from '@/app/admin/(authed)/pages/_text-actions'
 
 type EditTarget = {
@@ -30,6 +31,7 @@ export default function CmsEditOverlay() {
   const [toast, setToast] = useState<string | null>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const router = useRouter()
 
   const showToast = (msg: string) => {
     setToast(msg)
@@ -188,7 +190,17 @@ export default function CmsEditOverlay() {
     startTransition(async () => {
       try {
         await savePageTextOne(target.path, target.locale, target.key, value)
-        target.el.innerText = value === '' ? target.defaultValue : value
+        // Optimistic text update — but ONLY when the element has no React-managed
+        // element children. For wrappers around <Counter>, <SplitHeadline>, etc.,
+        // overwriting innerText destroys nodes React still references and the
+        // next reconcile throws `Failed to execute 'removeChild' on 'Node'`.
+        // In that case we rely on the server-action revalidate + router.refresh()
+        // to bring the new value in cleanly.
+        const hasElementChildren = target.el.childElementCount > 0
+        if (!hasElementChildren) {
+          target.el.innerText = value === '' ? target.defaultValue : value
+        }
+        router.refresh()
         setSavedAt(Date.now())
         setTimeout(() => {
           target.el.classList.remove('cms-editing')

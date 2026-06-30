@@ -7,7 +7,7 @@ import { animate, motion, useInView, useMotionValue, useScroll, useTransform } f
 import type { MotionValue } from 'framer-motion'
 import Magnetic from './Magnetic'
 import TiltCard from './TiltCard'
-import { usePageText } from './PageTextProvider'
+import { useCmsEditMode, useCmsMarkers, usePageText } from './PageTextProvider'
 
 const E = [0.16, 1, 0.3, 1] as [number, number, number, number]
 
@@ -217,6 +217,8 @@ function ProofSection() {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
   const t = usePageText()
+  const editMode = useCmsEditMode()
+  const markers = useCmsMarkers()
 
   return (
     <section
@@ -318,8 +320,9 @@ function ProofSection() {
             return (
               <div key={i} className="min-h-[158px] p-6 sm:p-7" style={{ background: 'var(--color-surface)' }}>
                 <p
-                  className="font-display font-bold leading-none tracking-tight"
+                  className={`font-display font-bold leading-none tracking-tight${editMode ? ' cms-editable' : ''}`}
                   style={{ color: 'var(--color-ink)', fontSize: numeric ? 'clamp(2.35rem, 4vw, 4rem)' : 'clamp(2rem, 3vw, 3rem)' }}
+                  {...markers(`home.proof.stat_${i}.value`, String(stat.value))}
                 >
                   {numeric ? <Counter to={Number(rawValue)} suffix={suffix} /> : `${rawValue}${suffix}`}
                 </p>
@@ -497,7 +500,7 @@ function IndustriesSection() {
                     <div className="flex items-center gap-3">
                       <span className="h-px w-10" style={{ background: ind.accent }} />
                       <p className="text-[11px] font-extrabold uppercase tracking-[0.28em]" style={{ color: ind.accent }}>
-                        Sector 0{i + 1}
+                        {t('home.industries.sector_prefix', 'Sector')} 0{i + 1}
                       </p>
                     </div>
                     <h3 className="mt-4 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">
@@ -785,7 +788,7 @@ function LabGallerySection() {
                 <span
                   className="absolute left-4 top-4 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-white/60 transition-colors duration-500 group-hover:text-cyan-300/90 sm:left-5 sm:top-5"
                 >
-                  {String(i + 1).padStart(2, '0')} / 06
+                  {String(i + 1).padStart(2, '0')} / {String(labGalleryImages.length).padStart(2, '0')}
                 </span>
                 {/* caption row */}
                 <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4 sm:p-5">

@@ -179,3 +179,10 @@ export const IconProducts = (p: Props) => (
     <line x1="12" y1="22.08" x2="12" y2="12" />
   </svg>
 )
+
+export const IconTickets = (p: Props) => (
+  <svg {...base(p)}>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <path d="M22 4 12 14.01l-3-3" />
+  </svg>
+)

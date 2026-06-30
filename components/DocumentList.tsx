@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { Reveal } from '@/components/StaggerReveal'
 import type { DocumentRow } from '@/lib/db/schema'
 
@@ -14,7 +15,7 @@ function formatDate(d: string | null): string {
   }
 }
 
-export function DocumentList({
+export async function DocumentList({
   items,
   emptyMessage = 'No documents have been published yet.',
   showIndex = true,
@@ -27,6 +28,10 @@ export function DocumentList({
   showDate?: boolean
   showPeriod?: boolean
 }) {
+  const t = await getTranslations()
+  const pdfLabel = t('cta.view_pdf')
+  const linkLabel = t('cta.link')
+  const soonLabel = t('cta.coming_soon')
   if (items.length === 0) {
     return (
       <Reveal>
@@ -92,7 +97,7 @@ export function DocumentList({
                   className="text-xs font-medium px-2.5 py-1 rounded-full shrink-0 border self-start transition-colors hover:bg-blue-50"
                   style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
                 >
-                  PDF
+                  {pdfLabel}
                 </a>
               ) : item.externalLink ? (
                 <a
@@ -102,14 +107,14 @@ export function DocumentList({
                   className="text-xs font-medium px-2.5 py-1 rounded-full shrink-0 border self-start transition-colors hover:bg-blue-50"
                   style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
                 >
-                  Link
+                  {linkLabel}
                 </a>
               ) : (
                 <span
                   className="text-xs font-medium px-2.5 py-1 rounded-full shrink-0 border self-start"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-ink-subtle)' }}
                 >
-                  Soon
+                  {soonLabel}
                 </span>
               )}
             </div>

@@ -1,0 +1,10 @@
+{
+  "tcat::cat_general-enquiry::name": "Consulta General",
+  "tcat::cat_business-development::name": "Desarrollo Comercial",
+  "tcat::cat_export::name": "Consulta de Exportación",
+  "tcat::cat_procurement::name": "Compras",
+  "tcat::cat_investor-relations::name": "Relaciones con Inversores",
+  "tcat::cat_careers::name": "Empleo / Postulación Laboral",
+  "tcat::cat_manufacturing-partnership::name": "Alianza de Fabricación",
+  "tcat::cat_complaint::name": "Queja / Problema de Calidad"
+}

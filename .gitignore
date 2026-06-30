@@ -35,6 +35,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.dev.vars
+.dev.vars.*
 
 # Cloudflare / D1 local state — includes the local D1 sqlite file and
 # any session bookmarks. Never commit.
