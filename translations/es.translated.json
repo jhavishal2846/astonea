@@ -6,5 +6,17 @@
   "tcat::cat_investor-relations::name": "Relaciones con Inversores",
   "tcat::cat_careers::name": "Empleo / Postulación Laboral",
   "tcat::cat_manufacturing-partnership::name": "Alianza de Fabricación",
-  "tcat::cat_complaint::name": "Queja / Problema de Calidad"
+  "tcat::cat_complaint::name": "Queja / Problema de Calidad",
+  "ui::contact.c_4.dept": "Operaciones de la Filial en EE. UU.",
+  "ui::contact.c_4.email": "usa@astonea.org",
+  "ui::contact.c_5.dept": "Reclamaciones de Inversores",
+  "ui::contact.c_5.email": "investorgrievance@astonea.org",
+  "ui::contact.c_6.dept": "Damaira Pharmaceuticals",
+  "ui::contact.c_6.email": "bdm@damaira.com",
+  "pagetext::/contact-us::contact.c_4.dept": "Operaciones de la Filial en EE. UU.",
+  "pagetext::/contact-us::contact.c_4.email": "usa@astonea.org",
+  "pagetext::/contact-us::contact.c_5.dept": "Reclamaciones de Inversores",
+  "pagetext::/contact-us::contact.c_5.email": "investorgrievance@astonea.org",
+  "pagetext::/contact-us::contact.c_6.dept": "Damaira Pharmaceuticals",
+  "pagetext::/contact-us::contact.c_6.email": "bdm@damaira.com"
 }

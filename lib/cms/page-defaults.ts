@@ -1569,6 +1569,12 @@ const CONTACT_US: PageDefaults = {
     { key: 'contact.c_3.dept', label: 'Contact 4 department', widget: 'text', defaultValue: 'Investor Relations', group: 'Department contacts' },
     { key: 'contact.c_3.email', label: 'Contact 4 email', widget: 'text', defaultValue: 'cs@astonea.org', group: 'Department contacts' },
     { key: 'contact.c_3.phone', label: 'Contact 4 phone (blank if none)', widget: 'text', defaultValue: '', group: 'Department contacts' },
+    { key: 'contact.c_4.dept', label: 'Contact 5 department', widget: 'text', defaultValue: 'USA Subsidiary Operations', group: 'Department contacts' },
+    { key: 'contact.c_4.email', label: 'Contact 5 email', widget: 'text', defaultValue: 'usa@astonea.org', group: 'Department contacts' },
+    { key: 'contact.c_5.dept', label: 'Contact 6 department', widget: 'text', defaultValue: 'Investor Grievance', group: 'Department contacts' },
+    { key: 'contact.c_5.email', label: 'Contact 6 email', widget: 'text', defaultValue: 'investorgrievance@astonea.org', group: 'Department contacts' },
+    { key: 'contact.c_6.dept', label: 'Contact 7 department', widget: 'text', defaultValue: 'Damaira Pharmaceuticals', group: 'Department contacts' },
+    { key: 'contact.c_6.email', label: 'Contact 7 email', widget: 'text', defaultValue: 'bdm@damaira.com', group: 'Department contacts' },
   ],
 }
 

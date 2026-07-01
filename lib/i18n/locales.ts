@@ -9,15 +9,16 @@ export const DEFAULT_LOCALE = 'en'
 export const LOCALES_TAG = 'i18n:locales'
 
 async function fetchActiveLocales(): Promise<Language[]> {
-  try {
-    return await db
-      .select()
-      .from(languages)
-      .where(eq(languages.isActive, true))
-      .orderBy(asc(languages.displayOrder), asc(languages.code))
-  } catch {
-    return []
-  }
+  // Do NOT swallow DB errors here: this function is wrapped in `unstable_cache`,
+  // which would otherwise persist an empty result for the full revalidate window
+  // and break every non-default locale until the tag is invalidated. Let the
+  // error propagate so nothing gets cached; callers (middleware) decide how to
+  // degrade for the current request.
+  return db
+    .select()
+    .from(languages)
+    .where(eq(languages.isActive, true))
+    .orderBy(asc(languages.displayOrder), asc(languages.code))
 }
 
 export const getActiveLocales = unstable_cache(

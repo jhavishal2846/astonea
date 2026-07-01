@@ -289,6 +289,12 @@ export const DEFAULT_UI_STRINGS_EN: Record<string, string> = {
   'contact.c_2.email':             'purchase@astonea.org',
   'contact.c_3.dept':              'Investor Relations',
   'contact.c_3.email':             'cs@astonea.org',
+  'contact.c_4.dept':              'USA Subsidiary Operations',
+  'contact.c_4.email':             'usa@astonea.org',
+  'contact.c_5.dept':              'Investor Grievance',
+  'contact.c_5.email':             'investorgrievance@astonea.org',
+  'contact.c_6.dept':              'Damaira Pharmaceuticals',
+  'contact.c_6.email':             'bdm@damaira.com',
   'contact.business_hours':        'Business Hours: Monday – Saturday, 10 AM – 6 PM (IST)',
 
   'contact.form.label':            'Enquiry Form',
