@@ -26,6 +26,9 @@ const contacts = [
   { dept: 'Export Enquiries', email: 'export@astonea.org' },
   { dept: 'Procurement', email: 'purchase@astonea.org' },
   { dept: 'Investor Relations', email: 'cs@astonea.org' },
+  { dept: 'USA Subsidiary Operations', email: 'usa@astonea.org' },
+  { dept: 'Investor Grievance', email: 'investorgrievance@astonea.org' },
+  { dept: 'Damaira Pharmaceuticals', email: 'bdm@damaira.com' },
 ]
 
 export default function ContactUsPage({

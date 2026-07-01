@@ -13,9 +13,17 @@ let localesCache: { codes: string[]; expiresAt: number } | null = null
 async function getCachedLocaleCodes(): Promise<string[]> {
   const now = Date.now()
   if (localesCache && localesCache.expiresAt > now) return localesCache.codes
-  const codes = await getActiveLocaleCodes()
-  localesCache = { codes, expiresAt: now + LOCALES_TTL_MS }
-  return codes
+  try {
+    const codes = await getActiveLocaleCodes()
+    localesCache = { codes, expiresAt: now + LOCALES_TTL_MS }
+    return codes
+  } catch {
+    // D1 not warm yet (cold start) or a transient failure. Fail open with the
+    // default locale for this request only — do NOT populate `localesCache`,
+    // so the next request retries instead of serving broken non-default
+    // locales for the full TTL.
+    return [DEFAULT_LOCALE]
+  }
 }
 
 // Kick off the locale fetch as soon as the middleware module loads so the
